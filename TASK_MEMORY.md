@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add bin packing benchmark`
-Current phase: Phase 3 - Evolution Loop
-Main blocker: mutation/evolution loop, tournament selection, elite archive reporting, and evolution-loop tests are not created yet
-Next recommended action: create `src/program_search/tournament_selection.py`, `src/program_search/evolution_loop.py`, update archive reporting as needed, and add `tests/test_evolution_loop.py`
+Latest commit: `feat: add evolution loop`
+Current phase: Phase 4 - Simple Routing Benchmark
+Main blocker: simple routing instances, baselines, evaluator, local-search bridge, and routing validity tests are not created yet
+Next recommended action: create `src/benchmarks/routing/instances.py`, `src/benchmarks/routing/baselines.py`, `src/benchmarks/routing/evaluator.py`, `src/benchmarks/routing/local_search.py`, and `tests/test_routing_validity.py`
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, and bin packing evaluator tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, and evolution-loop tests.
 
 ## Completed Phases
 
@@ -111,6 +111,40 @@ Known limitations:
 - The best seed candidate improves over random and worst-fit baselines on the default validation suite, but does not beat decreasing offline baselines.
 - Runtime metrics are captured, but the evaluator is optimized for correctness and reproducibility rather than high-throughput search.
 - Reports are returned as serializable dictionaries; no file-based report artifact is generated yet.
+
+### Phase 3: Evolution Loop
+
+Commit: `feat: add evolution loop`
+
+What changed:
+
+- Created deterministic tournament selection in `src/program_search/tournament_selection.py`.
+- Created exact-code novelty filtering in `src/program_search/novelty_filter.py`.
+- Created score accounting and program complexity tracking in `src/program_search/scoring.py`.
+- Created deterministic mutation/crossover evolution loop, generation reports, failure taxonomy, elite archive reporting, and top-candidate reruns in `src/program_search/evolution_loop.py`.
+- Added `tests/test_evolution_loop.py`.
+- Added Phase 3 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-04-30: `python3 -m pytest tests/test_evolution_loop.py -q` failed as expected before implementation because `program_search.evolution_loop` did not exist.
+- 2026-04-30: `python3 -m pytest tests/test_evolution_loop.py -q` passed, 7 tests.
+- 2026-04-30: `python3 -m pytest tests/test_evolution_loop.py -v` passed, 7 tests.
+- 2026-04-30: `python3 -m pytest -q` passed, 38 tests.
+- 2026-04-30: `python3 -m pytest` passed, 38 tests.
+- 2026-04-30: `python3 -m ruff check .` passed.
+- 2026-04-30: `python3 -m ruff format --check .` passed.
+- 2026-04-30: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 3 smoke check printed deterministic generation and rerun values.
+- 2026-04-30: `git diff --check -- .` passed.
+- 2026-04-30: required workflow docs plus `README.md` are present and non-empty.
+
+Known limitations:
+
+- Live LLM mutation remains deferred; mutation and crossover are deterministic local templates.
+- Default final-score weighting tracks runtime but uses zero runtime penalty so generation curves stay reproducible on local hardware.
+- Novelty filtering rejects exact normalized code duplicates only.
+- Evolution reports are returned as serializable dictionaries; no plotted generation-vs-score artifact is generated yet.
 
 ## Latest Strategic Decision
 
@@ -234,7 +268,7 @@ reporting tables and plots
 - [x] Create `src/benchmarks/bin_packing/evaluator.py`.
 - [x] Add `tests/test_bin_packing_evaluator.py`.
 - [x] Implement a non-LLM seed heuristic archive.
-- [ ] Add the mutation loop only after sandbox and evaluator tests pass.
+- [x] Add the mutation loop only after sandbox and evaluator tests pass.
 
 ## First Milestone Definition
 

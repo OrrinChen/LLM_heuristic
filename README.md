@@ -12,7 +12,10 @@ Current status:
   execution, mutation interface, evaluator records, archive, and lineage.
 - Phase 2 complete: online bin packing instances, baselines, evaluator, seed
   candidate sweep, held-out report, and seed archive.
-- Current phase: Phase 3, evolution loop.
+- Phase 3 complete: deterministic mutation/crossover evolution loop,
+  tournament selection, novelty filtering, generation metrics, complexity
+  tracking, elite archive reporting, and rerunnable top candidates.
+- Current phase: Phase 4, simple routing benchmark.
 
 ## Setup
 
@@ -40,6 +43,12 @@ Bin packing validation:
 
 ```bash
 python3 -m pytest tests/test_bin_packing_evaluator.py -v
+```
+
+Evolution-loop validation:
+
+```bash
+python3 -m pytest tests/test_evolution_loop.py -v
 ```
 
 ## Smoke Check
@@ -94,6 +103,43 @@ seed-000-tight_fit
 12
 ```
 
+## Evolution Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from program_search.evolution_loop import EvolutionConfig, build_phase3_report
+
+report = build_phase3_report(
+    config=EvolutionConfig(
+        generations=3,
+        population_size=16,
+        offspring_per_generation=12,
+        elite_size=4,
+        tournament_size=3,
+        random_seed=23,
+    ),
+    item_count=20,
+)
+print(report["generation_count"])
+print(report["generation_curve"][-1]["best_score"])
+print(report["generation_curve"][-1]["median_score"])
+print(report["rerun_top"]["ok"])
+print(round(report["rerun_top"]["score"], 4))
+print(sorted(report["failure_taxonomy"]))
+PY
+```
+
+Expected output:
+
+```text
+4
+7.547333
+7.555333
+True
+7.75
+['dangerous_call']
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -117,3 +163,14 @@ The seed candidate sweep evaluates constrained `score_bin` programs through the
 same sandbox boundary used for generated code. Invalid seed programs are
 retained in the archive as structured failures instead of being silently
 discarded.
+
+## Evolution Loop
+
+The Phase 3 loop evolves bin-packing `score_bin` programs through deterministic
+local mutation and crossover operators. It uses seeded tournament selection,
+exact-code novelty filtering, an elite archive, generation-level best/median
+score and failure-rate metrics, program complexity tracking, and reruns of top
+archived candidates against held-out instances.
+
+Live LLM calls remain deferred; the current loop is designed to prove the
+search/evaluation/archive contract before paid API usage is introduced.

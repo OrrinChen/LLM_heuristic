@@ -9,10 +9,13 @@ Completed:
   evaluator records, archive, and lineage.
 - Phase 2: Online bin packing instances, baselines, score-function evaluator,
   seed candidate sweep, held-out reporting, and seed archive.
+- Phase 3: Deterministic mutation/crossover evolution loop, tournament
+  selection, novelty filtering, generation metrics, complexity tracking, elite
+  archive reporting, and rerunnable top candidates.
 
 Current phase:
 
-- Phase 3: Evolution Loop.
+- Phase 4: Simple Routing Benchmark.
 
 Deferred:
 
@@ -26,7 +29,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Create mutation/evolution loop, tournament selection, elite archive reporting, and evolution-loop tests.
+Create simple routing instances, baselines, evaluator, validity tests, and local-search bridge.
 ```
 
 ## Project Positioning
@@ -289,14 +292,14 @@ Goal: turn one-shot generation into actual search.
 
 Mechanisms:
 
-- [ ] Seed programs.
-- [ ] Mutation.
-- [ ] Crossover.
-- [ ] Tournament selection.
-- [ ] Elite archive.
-- [ ] Novelty filter.
-- [ ] Regression test suite.
-- [ ] Generalization score.
+- [x] Seed programs.
+- [x] Mutation.
+- [x] Crossover.
+- [x] Tournament selection.
+- [x] Elite archive.
+- [x] Novelty filter.
+- [x] Regression test suite.
+- [x] Generalization score.
 
 Scoring:
 
@@ -310,20 +313,20 @@ final_score =
 
 Anti-cheating constraints:
 
-- [ ] No hardcoded instance IDs.
-- [ ] No access to test labels.
-- [ ] No file access.
-- [ ] No network access.
-- [ ] No imports outside a whitelist.
-- [ ] No global mutable hacks.
-- [ ] Deterministic output required.
+- [x] No hardcoded instance IDs.
+- [x] No access to test labels.
+- [x] No file access.
+- [x] No network access.
+- [x] No imports outside a whitelist.
+- [x] No global mutable hacks.
+- [x] Deterministic output required.
 
 Acceptance criteria:
 
-- Each generation reports best score, median score, and failure rate.
-- Generation-vs-score curves are reproducible.
-- Program complexity is tracked.
-- Top candidates can be rerun from archived code.
+- [x] Each generation reports best score, median score, and failure rate.
+- [x] Generation-vs-score curves are reproducible.
+- [x] Program complexity is tracked.
+- [x] Top candidates can be rerun from archived code.
 
 ## Phase 4: Simple Routing Benchmark
 
