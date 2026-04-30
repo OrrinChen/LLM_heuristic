@@ -10,7 +10,9 @@ Current status:
 - Phase 0 complete: project direction, roadmap, task memory, and workflow docs.
 - Phase 1 complete: program-search skeleton, static checks, restricted
   execution, mutation interface, evaluator records, archive, and lineage.
-- Current phase: Phase 2, online bin packing benchmark and baselines.
+- Phase 2 complete: online bin packing instances, baselines, evaluator, seed
+  candidate sweep, held-out report, and seed archive.
+- Current phase: Phase 3, evolution loop.
 
 ## Setup
 
@@ -32,6 +34,12 @@ Sandbox-specific validation:
 
 ```bash
 python3 -m pytest tests/test_program_sandbox.py -v
+```
+
+Bin packing validation:
+
+```bash
+python3 -m pytest tests/test_bin_packing_evaluator.py -v
 ```
 
 ## Smoke Check
@@ -59,6 +67,33 @@ Expected output:
 True 6.0
 ```
 
+## Bin Packing Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.bin_packing.evaluator import build_phase2_report
+
+report = build_phase2_report(candidate_count=120, item_count=25)
+print(report["candidate_count"])
+print(round(report["failure_rate"], 4))
+print(report["best_program_id"])
+print(round(report["best_validation_score"], 4))
+print(round(report["test_score"], 4))
+print(report["held_out"]["instance_count"])
+PY
+```
+
+Expected output for the deterministic default suite:
+
+```text
+120
+0.25
+seed-000-tight_fit
+8.5
+9.3333
+12
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -69,3 +104,16 @@ disallowed globals before code reaches restricted execution.
 The current sandbox is a local Python AST and restricted-builtins boundary with
 Unix signal timeouts. Subprocess isolation and memory limits are deferred until
 later hardening work.
+
+## Bin Packing Benchmark
+
+The Phase 2 benchmark includes uniform-small, uniform-mixed, heavy-tail,
+tiny-plus-large, adversarial, and held-out item-size distributions. Baselines
+include First Fit, Best Fit, Worst Fit, First Fit Decreasing, Best Fit
+Decreasing, a handwritten scoring heuristic, and a deterministic random
+baseline.
+
+The seed candidate sweep evaluates constrained `score_bin` programs through the
+same sandbox boundary used for generated code. Invalid seed programs are
+retained in the archive as structured failures instead of being silently
+discarded.

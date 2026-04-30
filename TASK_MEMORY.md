@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: complete O2 program search skeleton`
-Current phase: Phase 2 - Clean Benchmark - Online Bin Packing
-Main blocker: bin packing benchmark instances, baselines, evaluator, and tests are not created yet
-Next recommended action: create `src/benchmarks/bin_packing/instances.py`, `src/benchmarks/bin_packing/baselines.py`, `src/benchmarks/bin_packing/evaluator.py`, and `tests/test_bin_packing_evaluator.py`
+Latest commit: `feat: add bin packing benchmark`
+Current phase: Phase 3 - Evolution Loop
+Main blocker: mutation/evolution loop, tournament selection, elite archive reporting, and evolution-loop tests are not created yet
+Next recommended action: create `src/program_search/tournament_selection.py`, `src/program_search/evolution_loop.py`, update archive reporting as needed, and add `tests/test_evolution_loop.py`
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, and sandbox tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, and bin packing evaluator tests.
 
 ## Completed Phases
 
@@ -76,7 +76,41 @@ Known limitations:
 - Live LLM integration remains deferred; mutation uses a provider protocol and deterministic test provider.
 - The sandbox uses AST checks, restricted builtins, and Unix signal timeouts; subprocess isolation and memory limits are not implemented yet.
 - The archive is in-memory only.
-- No bin packing benchmark, evolution loop, routing evaluator, or Amazon evaluator exists yet.
+- No evolution loop, routing evaluator, or Amazon evaluator exists yet.
+
+### Phase 2: Clean Benchmark - Online Bin Packing
+
+Commit: `feat: add bin packing benchmark`
+
+What changed:
+
+- Created deterministic bin packing instance generation in `src/benchmarks/bin_packing/instances.py`.
+- Implemented uniform-small, uniform-mixed, heavy-tail, tiny-plus-large, adversarial, and held-out distributions.
+- Implemented First Fit, Best Fit, Worst Fit, First Fit Decreasing, Best Fit Decreasing, handwritten score heuristic, and deterministic random baseline in `src/benchmarks/bin_packing/baselines.py`.
+- Implemented `score_bin` sandbox evaluation, candidate-suite evaluation, held-out report generation, and seed candidate archive support in `src/benchmarks/bin_packing/evaluator.py`.
+- Added `tests/test_bin_packing_evaluator.py`.
+- Added Phase 2 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-04-30: `python3 -m pytest tests/test_bin_packing_evaluator.py -q` failed as expected before implementation because `benchmarks` did not exist.
+- 2026-04-30: `python3 -m pytest tests/test_bin_packing_evaluator.py -q` passed, 12 tests.
+- 2026-04-30: `python3 -m pytest tests/test_bin_packing_evaluator.py -v` passed, 12 tests.
+- 2026-04-30: `python3 -m pytest -q` passed, 31 tests.
+- 2026-04-30: `python3 -m pytest` passed, 31 tests.
+- 2026-04-30: `python3 -m ruff check .` passed.
+- 2026-04-30: `python3 -m ruff format --check .` passed.
+- 2026-04-30: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 2 smoke check printed deterministic report values for 120 candidates.
+- 2026-04-30: `git diff --check -- .` passed.
+- 2026-04-30: required workflow docs plus `README.md` are present and non-empty.
+
+Known limitations:
+
+- Candidate generation is deterministic and template-based until live LLM mutation is connected.
+- The best seed candidate improves over random and worst-fit baselines on the default validation suite, but does not beat decreasing offline baselines.
+- Runtime metrics are captured, but the evaluator is optimized for correctness and reproducibility rather than high-throughput search.
+- Reports are returned as serializable dictionaries; no file-based report artifact is generated yet.
 
 ## Latest Strategic Decision
 
@@ -195,11 +229,11 @@ reporting tables and plots
 - [x] Create `src/sandbox/static_checks.py` with AST validation.
 - [x] Create `src/sandbox/restricted_exec.py` for restricted scoring-function execution.
 - [x] Add `tests/test_program_sandbox.py` before connecting any LLM.
-- [ ] Create `src/benchmarks/bin_packing/instances.py`.
-- [ ] Create `src/benchmarks/bin_packing/baselines.py`.
-- [ ] Create `src/benchmarks/bin_packing/evaluator.py`.
-- [ ] Add `tests/test_bin_packing_evaluator.py`.
-- [ ] Implement a non-LLM seed heuristic archive.
+- [x] Create `src/benchmarks/bin_packing/instances.py`.
+- [x] Create `src/benchmarks/bin_packing/baselines.py`.
+- [x] Create `src/benchmarks/bin_packing/evaluator.py`.
+- [x] Add `tests/test_bin_packing_evaluator.py`.
+- [x] Implement a non-LLM seed heuristic archive.
 - [ ] Add the mutation loop only after sandbox and evaluator tests pass.
 
 ## First Milestone Definition
