@@ -174,6 +174,58 @@ True
 route-seed-003-slack_aware
 ```
 
+## Amazon Routing Validation
+
+Run these after Amazon routing evaluator modules exist:
+
+```bash
+python3 -m pytest tests/test_amazon_routing_evaluator.py -v
+```
+
+Expected result:
+
+```text
+local route records load from dictionaries and JSON
+route, stop, package, travel-time, history, and quality fields are preserved
+nearest neighbor, insertion, 2-opt, and driver-aware baselines are reproducible
+route similarity metrics are deterministic
+score_next_stop programs run through the sandbox without special casing
+unsafe generated programs are rejected with structured failure reasons
+```
+
+## Phase 5 Smoke Validation
+
+Run this after Amazon routing modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.amazon_routing.evaluator import build_phase5_report
+
+report = build_phase5_report(candidate_count=8)
+print(report["candidate_count"])
+print(round(report["failure_rate"], 4))
+print(report["best_program_id"])
+print(round(report["best_validation_score"], 6))
+print(round(report["test_score"], 6))
+print(report["held_out"]["route_count"])
+print(sorted(report["failure_taxonomy"]))
+print(report["top_programs"][0]["program_id"])
+PY
+```
+
+Expected result:
+
+```text
+8
+0.125
+amazon-seed-000-nearest
+12.666667
+12.666667
+2
+['dangerous_call']
+amazon-seed-000-nearest
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:

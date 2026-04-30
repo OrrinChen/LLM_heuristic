@@ -15,23 +15,25 @@ Completed:
 - Phase 4: Simple single-vehicle routing instances, baselines, `score_next_stop`
   evaluator, time-window penalties, 2-opt local search, held-out sizes, and
   rerunnable route scoring programs.
+- Phase 5: Amazon last-mile routing evaluator scaffold with route loading,
+  route/stop/package features, reproducible baselines, driver-likeness metrics,
+  and sandboxed `score_next_stop` evaluation.
 
 Current phase:
 
-- Phase 5: Amazon Last-Mile Routing Evaluator.
+- Phase 6: LLM Heuristic Discovery on Amazon Routing.
 
 Deferred:
 
 - Live LLM integration.
 - Crossover beyond simple mutation.
-- Amazon last-mile routing evaluator.
 - Cloud execution.
 - Paid API usage.
 
 Next autonomous action:
 
 ```text
-Create the Amazon routing evaluator scaffold: loader contract, feature extraction, baseline hooks, and route-similarity metrics.
+Connect the Amazon evaluator to heuristic search: seed programs, mutation/evolution run, held-out report, and trade-off analysis.
 ```
 
 ## Project Positioning
@@ -394,23 +396,23 @@ Goal: connect the old Driver-Aware Last-Mile Routing idea as a realistic evaluat
 
 Data concepts:
 
-- [ ] Route-level features.
-- [ ] Stop-level features.
-- [ ] Package-level features.
-- [ ] Travel-time matrix.
-- [ ] Historical driver sequence.
-- [ ] Route quality label if available in the chosen data split.
+- [x] Route-level features.
+- [x] Stop-level features.
+- [x] Package-level features.
+- [x] Travel-time matrix.
+- [x] Historical driver sequence.
+- [x] Route quality label if available in the chosen data split.
 
 Evaluator dimensions:
 
-- [ ] Travel time.
-- [ ] Driver-likeness.
-- [ ] Pairwise precedence accuracy.
-- [ ] Kendall tau distance.
-- [ ] Zone transition similarity.
-- [ ] Time-window violations.
-- [ ] Route compactness.
-- [ ] Runtime.
+- [x] Travel time.
+- [x] Driver-likeness.
+- [x] Pairwise precedence accuracy.
+- [x] Kendall tau distance.
+- [x] Zone transition similarity.
+- [x] Time-window violations.
+- [x] Route compactness.
+- [x] Runtime.
 
 Objective sketch:
 
@@ -425,10 +427,10 @@ score(route) =
 
 Acceptance criteria:
 
-- Amazon routes can be loaded.
-- Nearest neighbor, 2-opt, insertion, and a driver-aware hand heuristic are reproducible.
-- Route similarity metrics are computed consistently.
-- LLM-discovered route heuristics can be evaluated without special casing.
+- [x] Amazon routes can be loaded.
+- [x] Nearest neighbor, 2-opt, insertion, and a driver-aware hand heuristic are reproducible.
+- [x] Route similarity metrics are computed consistently.
+- [x] LLM-discovered route heuristics can be evaluated without special casing.
 
 ## Phase 6: LLM Heuristic Discovery on Amazon Routing
 
