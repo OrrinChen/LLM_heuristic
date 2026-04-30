@@ -97,6 +97,35 @@ number of bins used is computed correctly
 held-out seeds are separated from training seeds
 ```
 
+## Phase 2 Smoke Validation
+
+Run this after bin packing modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.bin_packing.evaluator import build_phase2_report
+
+report = build_phase2_report(candidate_count=120, item_count=25)
+print(report["candidate_count"])
+print(round(report["failure_rate"], 4))
+print(report["best_program_id"])
+print(round(report["best_validation_score"], 4))
+print(round(report["test_score"], 4))
+print(report["held_out"]["instance_count"])
+PY
+```
+
+Expected result:
+
+```text
+120
+0.25
+seed-000-tight_fit
+8.5
+9.3333
+12
+```
+
 ## Routing Validation
 
 Run these once simple routing exists:

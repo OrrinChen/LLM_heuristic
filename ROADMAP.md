@@ -7,10 +7,12 @@ Completed:
 - Phase 0: Project direction, roadmap, task memory, and Codex workflow skeleton.
 - Phase 1: Program-search skeleton, static validation, restricted execution,
   evaluator records, archive, and lineage.
+- Phase 2: Online bin packing instances, baselines, score-function evaluator,
+  seed candidate sweep, held-out reporting, and seed archive.
 
 Current phase:
 
-- Phase 2: Clean Benchmark - Online Bin Packing.
+- Phase 3: Evolution Loop.
 
 Deferred:
 
@@ -24,7 +26,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Create bin packing instances, baselines, evaluator, and evaluator tests.
+Create mutation/evolution loop, tournament selection, elite archive reporting, and evolution-loop tests.
 ```
 
 ## Project Positioning
@@ -238,13 +240,13 @@ Goal: validate the system on a fast, explainable benchmark.
 
 Baselines:
 
-- [ ] First Fit.
-- [ ] Best Fit.
-- [ ] Worst Fit.
-- [ ] First Fit Decreasing.
-- [ ] Best Fit Decreasing.
-- [ ] Handwritten score heuristic.
-- [ ] Random heuristic.
+- [x] First Fit.
+- [x] Best Fit.
+- [x] Worst Fit.
+- [x] First Fit Decreasing.
+- [x] Best Fit Decreasing.
+- [x] Handwritten score heuristic.
+- [x] Random heuristic.
 
 LLM-written function:
 
@@ -259,27 +261,27 @@ def score_bin(item_size, bin_remaining_capacity, bin_features):
 
 Evaluator metrics:
 
-- [ ] Number of bins used.
-- [ ] Average waste.
-- [ ] Runtime.
-- [ ] Failure rate.
-- [ ] Generalization to unseen item-size distributions.
+- [x] Number of bins used.
+- [x] Average waste.
+- [x] Runtime.
+- [x] Failure rate.
+- [x] Generalization to unseen item-size distributions.
 
 Instance distributions:
 
-- [ ] Uniform small items.
-- [ ] Uniform mixed items.
-- [ ] Heavy-tail items.
-- [ ] Many tiny items plus a few large items.
-- [ ] Adversarial sequences.
-- [ ] Held-out random seeds.
+- [x] Uniform small items.
+- [x] Uniform mixed items.
+- [x] Heavy-tail items.
+- [x] Many tiny items plus a few large items.
+- [x] Adversarial sequences.
+- [x] Held-out random seeds.
 
 Acceptance criteria:
 
-- The system can evaluate 100-1000 candidate programs.
-- At least some discovered heuristics outperform naive baselines on selected distributions.
-- Top programs can be reproduced and explained.
-- Held-out distribution results are reported.
+- [x] The system can evaluate 100-1000 candidate programs.
+- [x] At least some seed-discovered heuristics outperform naive baselines on selected distributions.
+- [x] Top programs can be reproduced and explained.
+- [x] Held-out distribution results are reported.
 
 ## Phase 3: Evolution Loop
 
