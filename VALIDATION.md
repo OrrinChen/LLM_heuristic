@@ -160,6 +160,45 @@ tournament selection is deterministic under a fixed seed
 top archived candidates can be re-evaluated
 ```
 
+## Phase 3 Smoke Validation
+
+Run this after evolution modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from program_search.evolution_loop import EvolutionConfig, build_phase3_report
+
+report = build_phase3_report(
+    config=EvolutionConfig(
+        generations=3,
+        population_size=16,
+        offspring_per_generation=12,
+        elite_size=4,
+        tournament_size=3,
+        random_seed=23,
+    ),
+    item_count=20,
+)
+print(report["generation_count"])
+print(report["generation_curve"][-1]["best_score"])
+print(report["generation_curve"][-1]["median_score"])
+print(report["rerun_top"]["ok"])
+print(round(report["rerun_top"]["score"], 4))
+print(sorted(report["failure_taxonomy"]))
+PY
+```
+
+Expected result:
+
+```text
+4
+7.547333
+7.555333
+True
+7.75
+['dangerous_call']
+```
+
 ## Report Validation
 
 Before claiming a phase report is complete:
