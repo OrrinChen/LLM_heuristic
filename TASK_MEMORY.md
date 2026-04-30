@@ -1,0 +1,273 @@
+# O2 Task Memory
+
+## Latest Status
+
+Current branch: `codex/ashare-radar-phase1a`
+Latest commit: `feat: complete O2 program search skeleton`
+Current phase: Phase 2 - Clean Benchmark - Online Bin Packing
+Main blocker: bin packing benchmark instances, baselines, evaluator, and tests are not created yet
+Next recommended action: create `src/benchmarks/bin_packing/instances.py`, `src/benchmarks/bin_packing/baselines.py`, `src/benchmarks/bin_packing/evaluator.py`, and `tests/test_bin_packing_evaluator.py`
+
+## Current Project State
+
+Date initialized: 2026-04-30
+Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-discovery`
+Project identity: O2 Heuristic Discovery
+Project name: LLM-Driven Program Search for OR Heuristics
+
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, and sandbox tests.
+
+## Completed Phases
+
+### Phase 0: Planning and Workflow Skeleton
+
+Commit: not committed yet
+What changed:
+
+- Created `ROADMAP.md`.
+- Created `TASK_MEMORY.md`.
+- Created `AGENTS.md`.
+- Created `VALIDATION.md`.
+- Created `RUNBOOK.md`.
+
+Validation:
+
+- 2026-04-30: docs-only workflow validation passed.
+- Ran `git diff --check`.
+- Confirmed `AGENTS.md`, `ROADMAP.md`, `TASK_MEMORY.md`, `VALIDATION.md`, and `RUNBOOK.md` are present and non-empty.
+- Confirmed no trailing whitespace in project Markdown files.
+
+Known limitations:
+
+- Phase 0 docs were created before the first O2 implementation commit and are included with the Phase 1 commit.
+- No bin packing benchmark exists yet.
+
+### Phase 1: Program-Search Skeleton
+
+Commit: `feat: complete O2 program search skeleton`
+
+What changed:
+
+- Created `pyproject.toml` with package metadata, pytest configuration, and ruff settings.
+- Created immutable candidate program records in `src/program_search/candidate_program.py`.
+- Created static AST validation in `src/sandbox/static_checks.py`.
+- Created restricted scoring-function execution with timeout and structured failures in `src/sandbox/restricted_exec.py`.
+- Created prompt and deterministic mutation interfaces in `src/llm/`.
+- Created evaluator result records, in-memory archive, and lineage records in `src/program_search/`.
+- Added `tests/test_program_sandbox.py`.
+- Added `README.md`.
+- Updated `ROADMAP.md` and `VALIDATION.md` for the scaffolded state.
+
+Validation:
+
+- 2026-04-30: `PYTHONPATH=src python3 -m pytest tests/test_program_sandbox.py -q` failed as expected before implementation because `llm` did not exist.
+- 2026-04-30: `python3 -m pytest tests/test_program_sandbox.py -q` passed, 19 tests.
+- 2026-04-30: `python3 -m pytest -q` passed, 19 tests.
+- 2026-04-30: `python3 -m pytest` passed, 19 tests.
+- 2026-04-30: `python3 -m pytest tests/test_program_sandbox.py -v` passed, 19 tests.
+- 2026-04-30: `python3 -m ruff check .` passed.
+- 2026-04-30: `python3 -m ruff format --check .` passed.
+- 2026-04-30: `PYTHONPATH=src python3 - <<'PY' ... PY` smoke check printed `True 6.0`.
+- 2026-04-30: `git diff --check -- .` passed.
+- 2026-04-30: required workflow docs plus `README.md` are present and non-empty.
+
+Known limitations:
+
+- Live LLM integration remains deferred; mutation uses a provider protocol and deterministic test provider.
+- The sandbox uses AST checks, restricted builtins, and Unix signal timeouts; subprocess isolation and memory limits are not implemented yet.
+- The archive is in-memory only.
+- No bin packing benchmark, evolution loop, routing evaluator, or Amazon evaluator exists yet.
+
+## Latest Strategic Decision
+
+The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
+
+New O2:
+
+```text
+LLM writes compact heuristic functions
+-> sandbox validates and executes them
+-> OR evaluator scores them
+-> evolutionary loop selects, mutates, and archives better programs
+-> discovered heuristics are tested on held-out instances
+```
+
+## Core Thesis
+
+```text
+heuristic design can be automated as constrained program search
+```
+
+The project should not claim that LLMs solve OR problems directly. The stronger and more credible claim is that LLM-generated programs, when constrained by strict evaluators, can discover compact heuristics that improve selected trade-offs.
+
+## Scope Rules
+
+Start with clean benchmarks before realistic routing:
+
+```text
+Layer 1:
+  online bin packing
+  optional knapsack
+  simple routing
+
+Layer 2:
+  Amazon last-mile routing evaluator
+```
+
+MVP cut line:
+
+```text
+sandboxed program search
++ bin packing benchmark
++ evolution curve
++ held-out generalization
++ failure taxonomy
+```
+
+Amazon routing is an S-level extension, not a blocker for a complete MVP.
+
+## Do Not Drift Into
+
+- Do not build only a routing heuristic and call it O2.
+- Do not let the LLM write a full solver.
+- Do not evaluate only on training instances.
+- Do not skip sandboxing.
+- Do not allow file access, network access, unrestricted imports, or hidden labels.
+- Do not claim universal dominance over classical OR baselines.
+- Do not make Amazon data the first dependency.
+
+## Allowed LLM Output Shape
+
+The LLM should only modify small scoring functions.
+
+General form:
+
+```python
+def score_candidate(state, candidate):
+    """
+    Lower score is better.
+    """
+    return score
+```
+
+Bin packing form:
+
+```python
+def score_bin(item_size, bin_remaining_capacity, bin_features):
+    """
+    Lower score means the bin is preferred.
+    """
+    return score
+```
+
+Routing form:
+
+```python
+def score_next_stop(state, candidate_stop):
+    """
+    Lower score means the stop is preferred.
+    """
+    return score
+```
+
+## Main Components To Build
+
+```text
+candidate program object
+prompt builder
+mutation engine
+crossover engine
+static checks
+restricted execution sandbox
+timeout and memory limits
+benchmark evaluator interface
+program archive
+tournament selection
+lineage tracking
+baseline implementations
+reporting tables and plots
+```
+
+## Highest-Priority Next Tasks
+
+- [x] Create `pyproject.toml` with package metadata, pytest configuration, and ruff configuration. Scientific and LLM-client dependencies remain deferred until the benchmark and live LLM phases need them.
+- [x] Create `src/program_search/candidate_program.py`.
+- [x] Create `src/sandbox/static_checks.py` with AST validation.
+- [x] Create `src/sandbox/restricted_exec.py` for restricted scoring-function execution.
+- [x] Add `tests/test_program_sandbox.py` before connecting any LLM.
+- [ ] Create `src/benchmarks/bin_packing/instances.py`.
+- [ ] Create `src/benchmarks/bin_packing/baselines.py`.
+- [ ] Create `src/benchmarks/bin_packing/evaluator.py`.
+- [ ] Add `tests/test_bin_packing_evaluator.py`.
+- [ ] Implement a non-LLM seed heuristic archive.
+- [ ] Add the mutation loop only after sandbox and evaluator tests pass.
+
+## First Milestone Definition
+
+Milestone 1 is complete when:
+
+```text
+1. Candidate programs are represented with code, parent, generation, score, and failure reason.
+2. Static checks reject imports, file access, network access, and disallowed globals.
+3. A scoring function can be executed in a restricted sandbox with timeout.
+4. Bin packing instances and baselines run deterministically.
+5. At least one seed scoring heuristic is evaluated against First Fit and Best Fit.
+```
+
+## Second Milestone Definition
+
+Milestone 2 is complete when:
+
+```text
+1. The system evaluates 100+ candidate programs.
+2. Each generation reports best score, median score, and invalid-code rate.
+3. Top programs are archived and reproducible.
+4. Held-out item distributions are evaluated.
+5. The report includes a generation-vs-score plot and failure taxonomy.
+```
+
+## Amazon Routing Integration Rule
+
+Do not start Amazon routing until:
+
+- The bin packing evaluator is stable.
+- The sandbox rejects unsafe code.
+- The evolution loop has archived reproducible candidates.
+- Simple routing baselines work.
+
+When Amazon routing begins, it should be introduced as an evaluator with operational metrics:
+
+```text
+travel time
+driver-likeness
+pairwise precedence accuracy
+Kendall tau distance
+zone transition similarity
+time-window violations
+route compactness
+runtime
+```
+
+## Report Claims To Protect
+
+Strong claim:
+
+> LLM-discovered programs improve the objective-quality, runtime, and operational-realism frontier under strict evaluator constraints.
+
+Conservative claim:
+
+> A sandboxed LLM program-search loop can discover compact heuristics that outperform simple hand-written baselines on selected OR benchmark distributions and can be stress-tested for generalization.
+
+Use the conservative claim until held-out routing and Amazon evaluator results support the strong claim.
+
+## Open Questions
+
+- Which LLM provider and model should be used for mutation and repair?
+- Should the sandbox use pure Python AST checks first, or add subprocess isolation immediately?
+- Should bin packing optimize raw bin count, waste, or a weighted score with runtime and complexity penalties?
+- Should simple routing use Euclidean synthetic instances first or a TSPLIB-style benchmark?
+- Which Amazon routing data split and quality labels are available locally?
+
+## Resume Bullet Draft
+
+> Built a FunSearch-inspired OR heuristic discovery system that evolves compact bin-packing and routing algorithms through LLM code mutation, sandboxed execution, automated evaluation, and held-out generalization tests, then benchmarked discovered heuristics against nearest-neighbor, insertion, 2-opt, and Amazon last-mile routing baselines.
