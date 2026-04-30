@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add simple routing benchmark`
-Current phase: Phase 5 - Amazon Last-Mile Routing Evaluator
-Main blocker: Amazon route data contract, feature extraction, baseline hooks, and route-similarity metrics are not scaffolded yet
-Next recommended action: create the Amazon routing evaluator scaffold with deterministic loader tests that do not require proprietary data
+Latest commit: `feat: add amazon routing evaluator`
+Current phase: Phase 6 - LLM Heuristic Discovery on Amazon Routing
+Main blocker: Amazon evaluator is not yet connected to a search/evolution run with held-out route trade-off reporting
+Next recommended action: connect the Amazon evaluator to seed programs, mutation/evolution, held-out reports, and trade-off analysis
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, and routing validity tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, and Amazon evaluator tests.
 
 ## Completed Phases
 
@@ -176,6 +176,38 @@ Known limitations:
 - The current routing evaluator supports the `score_next_stop` contract only; insertion-scoring programs remain deferred.
 - 2-opt is accepted in evaluator reports only when the weighted distance plus time-window score does not worsen.
 
+### Phase 5: Amazon Last-Mile Routing Evaluator
+
+Commit: `feat: add amazon routing evaluator`
+
+What changed:
+
+- Created local Amazon-style route loading in `src/benchmarks/amazon_routing/loader.py`.
+- Added immutable route, stop, package, depot, travel-time, historical sequence, and quality-label records without requiring proprietary data.
+- Added route and stop feature extraction in `src/benchmarks/amazon_routing/features.py`.
+- Added pairwise precedence accuracy, Kendall tau distance, zone transition similarity, and route compactness metrics in `src/benchmarks/amazon_routing/route_similarity.py`.
+- Implemented nearest neighbor, cheapest insertion, 2-opt, and driver-aware baselines in `src/benchmarks/amazon_routing/baselines.py`.
+- Implemented `score_next_stop` sandbox evaluation, candidate-suite evaluation, failure taxonomy, held-out reporting, and Phase 5 report generation in `src/benchmarks/amazon_routing/evaluator.py`.
+- Added `tests/test_amazon_routing_evaluator.py`.
+- Added Phase 5 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-04-30: `python3 -m pytest tests/test_amazon_routing_evaluator.py -q` failed as expected before implementation because `benchmarks.amazon_routing` did not exist.
+- 2026-04-30: `python3 -m pytest tests/test_amazon_routing_evaluator.py -q` passed, 9 tests.
+- 2026-04-30: `python3 -m pytest -q` passed, 59 tests.
+- 2026-04-30: `python3 -m ruff check .` passed.
+- 2026-04-30: `python3 -m ruff format --check .` passed.
+- 2026-04-30: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 5 smoke check printed deterministic report values: 8 candidates, failure rate 0.125, best program `amazon-seed-000-nearest`, validation score 12.666667, held-out test score 12.666667, 2 held-out routes, failure taxonomy `['dangerous_call']`.
+
+Known limitations:
+
+- The evaluator uses local synthetic Amazon-shaped records until public or user-provided route files are configured.
+- The driver-aware baseline can replay the historical sequence, but generated programs do not receive quality labels or historical positions in their candidate features.
+- Package features currently include counts, weight, service time, and time windows; richer package dimensions remain deferred.
+- Reports are serializable except for the in-memory `splits["test_routes"]` convenience field used for rerun tests.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -304,7 +336,8 @@ reporting tables and plots
 - [x] Create `src/benchmarks/routing/local_search.py`.
 - [x] Create `src/benchmarks/routing/evaluator.py`.
 - [x] Add `tests/test_routing_validity.py`.
-- [ ] Create the Amazon routing evaluator scaffold without requiring proprietary data.
+- [x] Create the Amazon routing evaluator scaffold without requiring proprietary data.
+- [ ] Connect Amazon routing to the heuristic search/evolution loop and report trade-offs.
 
 ## First Milestone Definition
 

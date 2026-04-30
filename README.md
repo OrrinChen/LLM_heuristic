@@ -18,7 +18,10 @@ Current status:
 - Phase 4 complete: simple routing instances, deterministic baselines,
   `score_next_stop` evaluation, time-window penalties, 2-opt local search,
   held-out instance sizes, and rerunnable top route programs.
-- Current phase: Phase 5, Amazon last-mile routing evaluator.
+- Phase 5 complete: Amazon last-mile routing evaluator scaffold with local
+  route loading, route/stop/package features, similarity metrics, deterministic
+  baselines, and sandboxed `score_next_stop` evaluation.
+- Current phase: Phase 6, LLM heuristic discovery on Amazon routing.
 
 ## Setup
 
@@ -58,6 +61,12 @@ Routing validation:
 
 ```bash
 python3 -m pytest tests/test_routing_validity.py -v
+```
+
+Amazon routing validation:
+
+```bash
+python3 -m pytest tests/test_amazon_routing_evaluator.py -v
 ```
 
 ## Smoke Check
@@ -178,6 +187,37 @@ True
 route-seed-003-slack_aware
 ```
 
+## Amazon Routing Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.amazon_routing.evaluator import build_phase5_report
+
+report = build_phase5_report(candidate_count=8)
+print(report["candidate_count"])
+print(round(report["failure_rate"], 4))
+print(report["best_program_id"])
+print(round(report["best_validation_score"], 6))
+print(round(report["test_score"], 6))
+print(report["held_out"]["route_count"])
+print(sorted(report["failure_taxonomy"]))
+print(report["top_programs"][0]["program_id"])
+PY
+```
+
+Expected output for the deterministic scaffold routes:
+
+```text
+8
+0.125
+amazon-seed-000-nearest
+12.666667
+12.666667
+2
+['dangerous_call']
+amazon-seed-000-nearest
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -225,3 +265,17 @@ evaluator greedily builds a route from candidate stop scores, rejects unsafe or
 non-numeric programs with structured failure reasons, optionally applies 2-opt,
 and reports route length, time-window violation penalty, route validity,
 runtime, failure rate, and held-out test score.
+
+## Amazon Routing Evaluator
+
+The Phase 5 scaffold loads local dictionary or JSON route records shaped like
+Amazon last-mile route data. It models depot, stops, packages, travel-time
+matrix, historical driver sequence, quality label, service times, and time
+windows without requiring proprietary datasets.
+
+Baselines include nearest neighbor, cheapest insertion, 2-opt, and a
+driver-aware hand heuristic. The evaluator reports travel time, time-window
+violation, pairwise precedence driver-likeness, Kendall tau distance, zone
+transition similarity, route compactness, runtime, failure rate, and held-out
+test score. Generated programs still define only `score_next_stop`; route
+quality labels and historical positions are kept out of candidate features.
