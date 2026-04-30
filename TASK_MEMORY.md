@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add evolution loop`
-Current phase: Phase 4 - Simple Routing Benchmark
-Main blocker: simple routing instances, baselines, evaluator, local-search bridge, and routing validity tests are not created yet
-Next recommended action: create `src/benchmarks/routing/instances.py`, `src/benchmarks/routing/baselines.py`, `src/benchmarks/routing/evaluator.py`, `src/benchmarks/routing/local_search.py`, and `tests/test_routing_validity.py`
+Latest commit: `feat: add simple routing benchmark`
+Current phase: Phase 5 - Amazon Last-Mile Routing Evaluator
+Main blocker: Amazon route data contract, feature extraction, baseline hooks, and route-similarity metrics are not scaffolded yet
+Next recommended action: create the Amazon routing evaluator scaffold with deterministic loader tests that do not require proprietary data
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, and evolution-loop tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, and routing validity tests.
 
 ## Completed Phases
 
@@ -146,6 +146,36 @@ Known limitations:
 - Novelty filtering rejects exact normalized code duplicates only.
 - Evolution reports are returned as serializable dictionaries; no plotted generation-vs-score artifact is generated yet.
 
+### Phase 4: Simple Routing Benchmark
+
+Commit: `feat: add simple routing benchmark`
+
+What changed:
+
+- Created deterministic routing instance generation in `src/benchmarks/routing/instances.py`.
+- Implemented uniform, clustered, line, and held-out synthetic route distributions with depot, stops, distance matrix, optional time windows, and held-out stop counts.
+- Implemented random route, nearest neighbor, cheapest insertion, 2-opt, and nearest neighbor plus 2-opt baselines in `src/benchmarks/routing/baselines.py` and `src/benchmarks/routing/local_search.py`.
+- Implemented `score_next_stop` sandbox evaluation, route construction, local-search evaluation, candidate-suite comparison, and Phase 4 report generation in `src/benchmarks/routing/evaluator.py`.
+- Added `tests/test_routing_validity.py`.
+- Added Phase 4 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-04-30: `python3 -m pytest tests/test_routing_validity.py -q` failed as expected before implementation because `benchmarks.routing` did not exist.
+- 2026-04-30: `python3 -m pytest tests/test_routing_validity.py -q` passed, 12 tests.
+- 2026-04-30: `python3 -m pytest -q` passed, 50 tests.
+- 2026-04-30: `python3 -m ruff check .` passed.
+- 2026-04-30: `python3 -m ruff format --check .` passed.
+- 2026-04-30: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 4 smoke check printed deterministic report values: 8 candidates, validation score 8.626646, local-search validation score 7.227464, held-out test score 18.407699, 8 held-out instances, top program `route-seed-003-slack_aware`.
+
+Known limitations:
+
+- Routing instances are synthetic Euclidean benchmarks, not TSPLIB or Amazon-derived routes.
+- Candidate generation remains deterministic and template-based until live LLM mutation is connected.
+- The current routing evaluator supports the `score_next_stop` contract only; insertion-scoring programs remain deferred.
+- 2-opt is accepted in evaluator reports only when the weighted distance plus time-window score does not worsen.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -269,6 +299,12 @@ reporting tables and plots
 - [x] Add `tests/test_bin_packing_evaluator.py`.
 - [x] Implement a non-LLM seed heuristic archive.
 - [x] Add the mutation loop only after sandbox and evaluator tests pass.
+- [x] Create `src/benchmarks/routing/instances.py`.
+- [x] Create `src/benchmarks/routing/baselines.py`.
+- [x] Create `src/benchmarks/routing/local_search.py`.
+- [x] Create `src/benchmarks/routing/evaluator.py`.
+- [x] Add `tests/test_routing_validity.py`.
+- [ ] Create the Amazon routing evaluator scaffold without requiring proprietary data.
 
 ## First Milestone Definition
 
