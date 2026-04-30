@@ -128,7 +128,7 @@ seed-000-tight_fit
 
 ## Routing Validation
 
-Run these once simple routing exists:
+Run these after simple routing modules exist:
 
 ```bash
 python3 -m pytest tests/test_routing_validity.py -v
@@ -141,6 +141,37 @@ routes visit each stop exactly once
 depot handling is consistent
 distance and penalty calculations are deterministic
 invalid generated routes are rejected or repaired explicitly
+```
+
+## Phase 4 Smoke Validation
+
+Run this after routing modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.routing.evaluator import build_phase4_report
+
+report = build_phase4_report(candidate_count=8, stop_count=10)
+print(report["candidate_count"])
+print(round(report["best_validation_score"], 6))
+print(round(report["best_with_local_search_score"], 6))
+print(round(report["test_score"], 6))
+print(report["local_search"]["improved_or_equal"])
+print(report["held_out"]["instance_count"])
+print(report["top_programs"][0]["program_id"])
+PY
+```
+
+Expected result:
+
+```text
+8
+8.626646
+7.227464
+18.407699
+True
+8
+route-seed-003-slack_aware
 ```
 
 ## Evolution Loop Validation

@@ -15,7 +15,10 @@ Current status:
 - Phase 3 complete: deterministic mutation/crossover evolution loop,
   tournament selection, novelty filtering, generation metrics, complexity
   tracking, elite archive reporting, and rerunnable top candidates.
-- Current phase: Phase 4, simple routing benchmark.
+- Phase 4 complete: simple routing instances, deterministic baselines,
+  `score_next_stop` evaluation, time-window penalties, 2-opt local search,
+  held-out instance sizes, and rerunnable top route programs.
+- Current phase: Phase 5, Amazon last-mile routing evaluator.
 
 ## Setup
 
@@ -49,6 +52,12 @@ Evolution-loop validation:
 
 ```bash
 python3 -m pytest tests/test_evolution_loop.py -v
+```
+
+Routing validation:
+
+```bash
+python3 -m pytest tests/test_routing_validity.py -v
 ```
 
 ## Smoke Check
@@ -140,6 +149,35 @@ True
 ['dangerous_call']
 ```
 
+## Routing Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.routing.evaluator import build_phase4_report
+
+report = build_phase4_report(candidate_count=8, stop_count=10)
+print(report["candidate_count"])
+print(round(report["best_validation_score"], 6))
+print(round(report["best_with_local_search_score"], 6))
+print(round(report["test_score"], 6))
+print(report["local_search"]["improved_or_equal"])
+print(report["held_out"]["instance_count"])
+print(report["top_programs"][0]["program_id"])
+PY
+```
+
+Expected output for the deterministic default suite:
+
+```text
+8
+8.626646
+7.227464
+18.407699
+True
+8
+route-seed-003-slack_aware
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -174,3 +212,16 @@ archived candidates against held-out instances.
 
 Live LLM calls remain deferred; the current loop is designed to prove the
 search/evaluation/archive contract before paid API usage is introduced.
+
+## Simple Routing Benchmark
+
+The Phase 4 benchmark uses deterministic synthetic single-vehicle routing
+instances with depot, stops, distance matrix, optional time windows, and
+held-out stop counts. Baselines include random route, nearest neighbor,
+cheapest insertion, 2-opt, and nearest neighbor plus 2-opt.
+
+Candidate programs define only `score_next_stop(state, candidate_stop)`. The
+evaluator greedily builds a route from candidate stop scores, rejects unsafe or
+non-numeric programs with structured failure reasons, optionally applies 2-opt,
+and reports route length, time-window violation penalty, route validity,
+runtime, failure rate, and held-out test score.

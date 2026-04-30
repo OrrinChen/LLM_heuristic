@@ -12,16 +12,18 @@ Completed:
 - Phase 3: Deterministic mutation/crossover evolution loop, tournament
   selection, novelty filtering, generation metrics, complexity tracking, elite
   archive reporting, and rerunnable top candidates.
+- Phase 4: Simple single-vehicle routing instances, baselines, `score_next_stop`
+  evaluator, time-window penalties, 2-opt local search, held-out sizes, and
+  rerunnable route scoring programs.
 
 Current phase:
 
-- Phase 4: Simple Routing Benchmark.
+- Phase 5: Amazon Last-Mile Routing Evaluator.
 
 Deferred:
 
 - Live LLM integration.
 - Crossover beyond simple mutation.
-- Simple routing.
 - Amazon last-mile routing evaluator.
 - Cloud execution.
 - Paid API usage.
@@ -29,7 +31,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Create simple routing instances, baselines, evaluator, validity tests, and local-search bridge.
+Create the Amazon routing evaluator scaffold: loader contract, feature extraction, baseline hooks, and route-similarity metrics.
 ```
 
 ## Project Positioning
@@ -344,11 +346,11 @@ optional time windows
 
 Baselines:
 
-- [ ] Random route.
-- [ ] Nearest neighbor.
-- [ ] Cheapest insertion.
-- [ ] 2-opt.
-- [ ] Nearest neighbor plus 2-opt.
+- [x] Random route.
+- [x] Nearest neighbor.
+- [x] Cheapest insertion.
+- [x] 2-opt.
+- [x] Nearest neighbor plus 2-opt.
 
 LLM-written options:
 
@@ -374,17 +376,17 @@ def score_insertion(state, candidate_stop, insertion_position):
 
 Evaluator metrics:
 
-- [ ] Total route length.
-- [ ] Time-window violation penalty.
-- [ ] Runtime.
-- [ ] Route validity.
-- [ ] Generalization to unseen instance sizes.
+- [x] Total route length.
+- [x] Time-window violation penalty.
+- [x] Runtime.
+- [x] Route validity.
+- [x] Generalization to unseen instance sizes.
 
 Acceptance criteria:
 
-- LLM-discovered scoring rules compete with nearest neighbor or insertion heuristics.
-- Adding local search improves route quality.
-- Discovered route scoring functions can be explained.
+- [x] LLM-discovered scoring rules compete with nearest neighbor or insertion heuristics.
+- [x] Adding local search improves route quality.
+- [x] Discovered route scoring functions can be explained.
 
 ## Phase 5: Amazon Last-Mile Routing Evaluator
 
