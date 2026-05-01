@@ -18,10 +18,14 @@ Completed:
 - Phase 5: Amazon last-mile routing evaluator scaffold with route loading,
   route/stop/package features, reproducible baselines, driver-likeness metrics,
   and sandboxed `score_next_stop` evaluation.
+- Phase 6: Deterministic Amazon heuristic discovery with seed/mutated
+  `score_next_stop` programs, held-out route scoring, local-search variants,
+  feature contract reporting, and travel-time versus driver-likeness trade-off
+  callouts.
 
 Current phase:
 
-- Phase 6: LLM Heuristic Discovery on Amazon Routing.
+- Phase 7: Generalization and Robustness.
 
 Deferred:
 
@@ -33,7 +37,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Connect the Amazon evaluator to heuristic search: seed programs, mutation/evolution run, held-out report, and trade-off analysis.
+Broaden held-out robustness reporting across item distributions, routing sizes, and Amazon-style route slices.
 ```
 
 ## Project Positioning
@@ -448,40 +452,40 @@ def score_next_stop(state, candidate):
 
 Allowed candidate features:
 
-- [ ] Travel time from current stop.
-- [ ] Same-zone indicator.
-- [ ] Zone transition cost.
-- [ ] Time-window slack.
-- [ ] Package count.
-- [ ] Service time.
-- [ ] Stop density.
-- [ ] Distance to depot.
-- [ ] Angle or direction proxy.
-- [ ] Cluster compactness.
-- [ ] Remaining route structure.
+- [x] Travel time from current stop.
+- [x] Same-zone indicator.
+- [x] Zone transition cost.
+- [x] Time-window slack.
+- [x] Package count.
+- [x] Service time.
+- [x] Stop density.
+- [x] Distance to depot.
+- [x] Angle or direction proxy.
+- [x] Cluster compactness.
+- [x] Remaining route structure.
 
 Baselines:
 
-- [ ] Nearest neighbor.
-- [ ] Cheapest insertion.
-- [ ] 2-opt.
-- [ ] Driver-aware handwritten heuristic.
-- [ ] ML next-stop ranker.
-- [ ] Hybrid ML plus OR local search.
+- [x] Nearest neighbor.
+- [x] Cheapest insertion.
+- [x] 2-opt.
+- [x] Driver-aware handwritten heuristic.
+- [x] ML next-stop ranker.
+- [x] Hybrid ML plus OR local search.
 
 Variants:
 
-- [ ] LLM heuristic only.
-- [ ] LLM heuristic plus 2-opt.
-- [ ] LLM heuristic plus feasibility repair.
-- [ ] LLM heuristic plus local search.
+- [x] LLM heuristic only.
+- [x] LLM heuristic plus 2-opt.
+- [x] LLM heuristic plus feasibility repair.
+- [x] LLM heuristic plus local search.
 
 Acceptance criteria:
 
-- The LLM heuristic improves at least one meaningful trade-off frontier, not necessarily every metric.
-- Held-out routes are evaluated.
-- Top discovered programs are shown and analyzed.
-- Programs that improve travel time but harm driver-likeness are called out.
+- [x] The LLM heuristic improves at least one meaningful trade-off frontier, not necessarily every metric.
+- [x] Held-out routes are evaluated.
+- [x] Top discovered programs are shown and analyzed.
+- [x] Programs that improve travel time but harm driver-likeness are called out.
 
 ## Phase 7: Generalization and Robustness
 

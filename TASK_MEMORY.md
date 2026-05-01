@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add amazon routing evaluator`
-Current phase: Phase 6 - LLM Heuristic Discovery on Amazon Routing
-Main blocker: Amazon evaluator is not yet connected to a search/evolution run with held-out route trade-off reporting
-Next recommended action: connect the Amazon evaluator to seed programs, mutation/evolution, held-out reports, and trade-off analysis
+Latest commit: `feat: add amazon heuristic discovery`
+Current phase: Phase 7 - Generalization and Robustness
+Main blocker: Robustness reporting is not yet broadened across held-out item distributions, routing sizes, and Amazon-style route slices
+Next recommended action: add cross-benchmark robustness reporting with train/validation/test score, runtime, failure rate, complexity, and generalization gaps
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, and Amazon evaluator tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, and Amazon discovery tests.
 
 ## Completed Phases
 
@@ -208,6 +208,38 @@ Known limitations:
 - Package features currently include counts, weight, service time, and time windows; richer package dimensions remain deferred.
 - Reports are serializable except for the in-memory `splits["test_routes"]` convenience field used for rerun tests.
 
+### Phase 6: LLM Heuristic Discovery on Amazon Routing
+
+Commit: `feat: add amazon heuristic discovery`
+
+What changed:
+
+- Added the Phase 6 candidate feature contract in `src/benchmarks/amazon_routing/features.py`.
+- Added travel-time, same-zone, zone transition, time-window slack, package count, service time, stop density, depot distance, angle proxy, cluster compactness, and remaining-route features.
+- Added deterministic `ml_next_stop_ranker` and `hybrid_ml_plus_local_search` baselines in `src/benchmarks/amazon_routing/baselines.py`.
+- Created deterministic Amazon heuristic discovery in `src/benchmarks/amazon_routing/discovery.py`.
+- Reused archive, novelty filtering, tournament selection, complexity scoring, sandbox execution, and held-out reruns for Amazon `score_next_stop` programs.
+- Added `tests/test_amazon_heuristic_discovery.py`.
+- Added Phase 6 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_amazon_heuristic_discovery.py -q` failed as expected before implementation because `benchmarks.amazon_routing.discovery` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_amazon_heuristic_discovery.py -q` passed, 5 tests.
+- 2026-05-01: `python3 -m pytest tests/test_amazon_routing_evaluator.py tests/test_amazon_heuristic_discovery.py -q` passed, 14 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 64 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 6 smoke check printed deterministic report values: 3 generations, final best score 10.855333, top program `phase6-seed-000-travel_fast`, held-out top score 10.833333, 4 trade-off callouts, 4 frontier improvements, failure taxonomy `['dangerous_call']`, rerun ok `True`.
+
+Known limitations:
+
+- Live LLM mutation remains deferred; Phase 6 uses deterministic seed, mutation, and crossover templates.
+- Amazon routes remain synthetic Amazon-shaped fixtures until public or user-provided route files are configured.
+- The ML next-stop baseline is a deterministic linear proxy, not a trained model.
+- Trade-off reports are dictionary artifacts only; plotted Pareto/frontier charts remain deferred.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -337,7 +369,8 @@ reporting tables and plots
 - [x] Create `src/benchmarks/routing/evaluator.py`.
 - [x] Add `tests/test_routing_validity.py`.
 - [x] Create the Amazon routing evaluator scaffold without requiring proprietary data.
-- [ ] Connect Amazon routing to the heuristic search/evolution loop and report trade-offs.
+- [x] Connect Amazon routing to the heuristic search/evolution loop and report trade-offs.
+- [ ] Add cross-benchmark generalization and robustness reporting.
 
 ## First Milestone Definition
 

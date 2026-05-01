@@ -194,7 +194,14 @@ def test_route_similarity_metrics_are_deterministic() -> None:
 
 def test_amazon_baselines_are_reproducible_and_metric_complete() -> None:
     route = load_route_record(_route_payload())
-    expected = {"nearest_neighbor", "cheapest_insertion", "two_opt", "driver_aware"}
+    expected = {
+        "nearest_neighbor",
+        "cheapest_insertion",
+        "two_opt",
+        "driver_aware",
+        "ml_next_stop_ranker",
+        "hybrid_ml_plus_local_search",
+    }
 
     assert set(AMAZON_BASELINE_ROUTE_BUILDERS) == expected
     for name, builder in AMAZON_BASELINE_ROUTE_BUILDERS.items():

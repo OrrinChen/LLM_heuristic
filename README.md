@@ -21,7 +21,11 @@ Current status:
 - Phase 5 complete: Amazon last-mile routing evaluator scaffold with local
   route loading, route/stop/package features, similarity metrics, deterministic
   baselines, and sandboxed `score_next_stop` evaluation.
-- Current phase: Phase 6, LLM heuristic discovery on Amazon routing.
+- Phase 6 complete: deterministic Amazon heuristic discovery with seed/mutated
+  `score_next_stop` programs, held-out route scoring, local-search variants,
+  feature contract reporting, and travel-time versus driver-likeness trade-off
+  callouts.
+- Current phase: Phase 7, generalization and robustness.
 
 ## Setup
 
@@ -67,6 +71,12 @@ Amazon routing validation:
 
 ```bash
 python3 -m pytest tests/test_amazon_routing_evaluator.py -v
+```
+
+Amazon heuristic discovery validation:
+
+```bash
+python3 -m pytest tests/test_amazon_heuristic_discovery.py -v
 ```
 
 ## Smoke Check
@@ -218,6 +228,46 @@ amazon-seed-000-nearest
 amazon-seed-000-nearest
 ```
 
+## Amazon Heuristic Discovery Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.amazon_routing.discovery import AmazonDiscoveryConfig, build_phase6_report
+
+report = build_phase6_report(
+    config=AmazonDiscoveryConfig(
+        generations=2,
+        population_size=12,
+        offspring_per_generation=8,
+        elite_size=4,
+        tournament_size=3,
+        random_seed=23,
+    )
+)
+print(report["generation_count"])
+print(report["generation_curve"][-1]["best_score"])
+print(report["top_candidates"][0]["program_id"])
+print(round(report["top_candidates"][0]["test_score"], 6))
+print(len(report["tradeoff_programs"]))
+print(len(report["frontier_improvements"]))
+print(sorted(report["failure_taxonomy"]))
+print(report["rerun_top"]["ok"])
+PY
+```
+
+Expected output for the deterministic scaffold routes:
+
+```text
+3
+10.855333
+phase6-seed-000-travel_fast
+10.833333
+4
+4
+['dangerous_call']
+True
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -279,3 +329,17 @@ violation, pairwise precedence driver-likeness, Kendall tau distance, zone
 transition similarity, route compactness, runtime, failure rate, and held-out
 test score. Generated programs still define only `score_next_stop`; route
 quality labels and historical positions are kept out of candidate features.
+
+## Amazon Heuristic Discovery
+
+The Phase 6 discovery layer runs deterministic seed, mutation, and crossover
+search over Amazon `score_next_stop` programs. It reuses the program archive,
+novelty filter, tournament selection, complexity accounting, and sandboxed
+Amazon evaluator while preserving Amazon-specific metrics in the report.
+
+Reports include generation curves, baseline comparisons, the allowed candidate
+feature contract, local-search and feasibility variants, top program code,
+held-out reruns, failure taxonomy, and explicit trade-off callouts for programs
+that reduce travel time while lowering driver-likeness. Live LLM calls remain
+deferred; this phase proves the evaluator/search/report contract without paid
+API dependencies.
