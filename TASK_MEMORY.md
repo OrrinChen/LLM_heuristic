@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add robustness reporting`
-Current phase: Phase 8 - Failure Analysis
-Main blocker: Failure analysis is not yet broadened across invalid code, timeout, overfit, feasibility, complexity, and metric trade-off patterns
-Next recommended action: add a cross-benchmark failure-analysis report with failure rates by generation, rejected programs, surviving programs, and worked/failed pattern summaries
+Latest commit: `feat: add failure analysis reporting`
+Current phase: Final report packaging / optional live LLM integration
+Main blocker: No numbered roadmap phase remains incomplete; final report packaging and live LLM integration are deferred follow-ups
+Next recommended action: assemble the killer-experiment report from Phase 2-8 outputs, or connect live LLM mutation behind explicit environment-variable configuration
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, and robustness reporting tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, and failure-analysis tests.
 
 ## Completed Phases
 
@@ -271,6 +271,37 @@ Known limitations:
 - Runtime values are local smoke metrics and should not be compared across machines.
 - The report is a dictionary artifact; plotted robustness dashboards remain deferred.
 
+### Phase 8: Failure Analysis
+
+Commit: `feat: add failure analysis reporting`
+
+What changed:
+
+- Created `src/reports/failure_analysis.py`.
+- Added a Phase 8 failure taxonomy covering generated invalid code, timeout, hardcoded heuristic, overfit to small instances, poor generalization, routing feasibility violation, excessive complexity, travel-time versus driver-likeness harm, and driver-likeness versus runtime harm.
+- Aggregated failure-rate and invalid-code-rate rows from Phase 3 bin-packing evolution and Phase 6 Amazon routing discovery generation curves.
+- Extracted top rejected programs from evolution/discovery archives and added deterministic diagnostic probes for timeout and excessive complexity.
+- Reported top surviving programs, worked patterns, failed patterns, taxonomy evidence, and known limitations.
+- Added `tests/test_failure_analysis.py`.
+- Added Phase 8 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_failure_analysis.py -q` failed as expected before implementation because `reports.failure_analysis` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_failure_analysis.py -q` passed, 5 tests.
+- 2026-05-01: `python3 -m pytest tests/test_failure_analysis.py -v` passed, 5 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 73 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 8 smoke check printed deterministic report values: 9 failure categories, 7 generation rows, 8 rejected programs, 8 surviving programs, 7 generated-invalid-code observations, 1 timeout observation, 2 poor-generalization observations, 4 travel-time/driver-likeness trade-off observations, and failed patterns `('unsafe_data_access', 'routing_large_slice_generalization_gap', 'travel_time_driver_likeness_tradeoff', 'driver_like_timeout')`.
+
+Known limitations:
+
+- Timeout, excessive-complexity, and driver-likeness-too-slow rows use deterministic diagnostic probes so the taxonomy remains visible without adding unsafe live LLM execution.
+- Routing feasibility violations are structurally prevented by the current next-stop evaluator because generated programs rank remaining stops rather than emitting full routes.
+- The report is a dictionary artifact; polished final-report tables and plots remain deferred.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -401,7 +432,8 @@ reporting tables and plots
 - [x] Add `tests/test_routing_validity.py`.
 - [x] Create the Amazon routing evaluator scaffold without requiring proprietary data.
 - [x] Connect Amazon routing to the heuristic search/evolution loop and report trade-offs.
-- [ ] Add cross-benchmark generalization and robustness reporting.
+- [x] Add cross-benchmark generalization and robustness reporting.
+- [x] Add cross-benchmark failure-analysis reporting.
 
 ## First Milestone Definition
 

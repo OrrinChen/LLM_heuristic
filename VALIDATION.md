@@ -346,6 +346,67 @@ routing-large-routes
 ['dangerous_call']
 ```
 
+## Failure Analysis Validation
+
+Run these after Phase 8 failure-analysis modules exist:
+
+```bash
+python3 -m pytest tests/test_failure_analysis.py -v
+```
+
+Expected result:
+
+```text
+full Phase 8 failure taxonomy is represented
+failure rate by generation and invalid-code rate rows are reported
+top rejected and top surviving programs are listed
+patterns that worked and patterns that failed are summarized
+diagnostic timeout and excessive-complexity probes are recorded explicitly
+```
+
+## Phase 8 Smoke Validation
+
+Run this after failure-analysis reporting modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.failure_analysis import build_phase8_report
+
+report = build_phase8_report()
+print(len(report["failure_categories"]))
+print(len(report["failure_rate_by_generation"]))
+print(len(report["top_rejected_programs"]))
+print(len(report["top_surviving_programs"]))
+print(report["top_rejected_programs"][0]["category"])
+print(report["top_surviving_programs"][0]["program_id"])
+print(report["failure_taxonomy"]["generated_invalid_code"]["count"])
+print(report["failure_taxonomy"]["timeout"]["count"])
+print(report["failure_taxonomy"]["poor_generalization"]["count"])
+print(
+    report["failure_taxonomy"][
+        "improves_travel_time_but_hurts_driver_likeness"
+    ]["count"]
+)
+print(tuple(row["pattern"] for row in report["patterns_that_failed"]))
+PY
+```
+
+Expected result:
+
+```text
+9
+7
+8
+8
+generated_invalid_code
+seed-001-load_balancer
+7
+1
+2
+4
+('unsafe_data_access', 'routing_large_slice_generalization_gap', 'travel_time_driver_likeness_tradeoff', 'driver_like_timeout')
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:
