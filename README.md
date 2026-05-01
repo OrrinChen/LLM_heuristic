@@ -25,7 +25,10 @@ Current status:
   `score_next_stop` programs, held-out route scoring, local-search variants,
   feature contract reporting, and travel-time versus driver-likeness trade-off
   callouts.
-- Current phase: Phase 7, generalization and robustness.
+- Phase 7 complete: cross-benchmark robustness reporting across held-out random
+  seeds, item distributions, routing sizes, and Amazon-style city, route-size,
+  density, and quality slices.
+- Current phase: Phase 8, failure analysis.
 
 ## Setup
 
@@ -77,6 +80,12 @@ Amazon heuristic discovery validation:
 
 ```bash
 python3 -m pytest tests/test_amazon_heuristic_discovery.py -v
+```
+
+Robustness reporting validation:
+
+```bash
+python3 -m pytest tests/test_robustness_reporting.py -v
 ```
 
 ## Smoke Check
@@ -268,6 +277,45 @@ phase6-seed-000-travel_fast
 True
 ```
 
+## Robustness Reporting Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.robustness import build_phase7_report
+
+report = build_phase7_report()
+print(report["benchmark_count"])
+print(len(report["slice_summary"]))
+print(tuple(report["benchmarks"]))
+print(report["benchmarks"]["bin_packing"]["program_id"])
+print(report["benchmarks"]["simple_routing"]["program_id"])
+print(report["benchmarks"]["amazon_routing"]["program_id"])
+print(round(report["benchmarks"]["bin_packing"]["generalization_gap"], 6))
+print(round(report["benchmarks"]["simple_routing"]["generalization_gap"], 6))
+print(round(report["benchmarks"]["amazon_routing"]["generalization_gap"], 6))
+print(report["worst_generalization_gaps"][0]["slice_name"])
+print(round(report["worst_generalization_gaps"][0]["generalization_gap"], 6))
+print(sorted(report["failure_taxonomy"]))
+PY
+```
+
+Expected output for the deterministic robustness suite:
+
+```text
+3
+15
+('bin_packing', 'simple_routing', 'amazon_routing')
+seed-000-tight_fit
+route-seed-011-return_aware
+phase6-seed-000-travel_fast
+0.833333
+9.907981
+0.0
+routing-large-routes
+68.753356
+['dangerous_call']
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -343,3 +391,18 @@ held-out reruns, failure taxonomy, and explicit trade-off callouts for programs
 that reduce travel time while lowering driver-likeness. Live LLM calls remain
 deferred; this phase proves the evaluator/search/report contract without paid
 API dependencies.
+
+## Robustness Reporting
+
+The Phase 7 report composes the existing benchmark evaluators without changing
+generated-program interfaces. It evaluates one deterministic top program per
+benchmark on train, validation, test, and additional held-out slices, then
+reports runtime, failure rate, complexity, and validation-to-slice
+generalization gaps.
+
+The robustness slices cover held-out random seeds, held-out bin-packing item
+distributions, held-out simple-routing sizes, synthetic Amazon station-code
+proxies for city slices, small versus large routes, dense urban versus sparse
+suburban routes, and high versus medium quality historical routes. Amazon city,
+density, and quality slices remain deterministic local fixtures until external
+public or user-provided data is configured.

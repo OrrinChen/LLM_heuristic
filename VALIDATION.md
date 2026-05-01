@@ -286,6 +286,66 @@ phase6-seed-000-travel_fast
 True
 ```
 
+## Robustness Reporting Validation
+
+Run these after Phase 7 robustness modules exist:
+
+```bash
+python3 -m pytest tests/test_robustness_reporting.py -v
+```
+
+Expected result:
+
+```text
+cross-benchmark report covers bin packing, simple routing, and Amazon routing
+held-out random seeds, item distributions, routing sizes, Amazon city slices,
+route size, density, and quality dimensions are represented
+train, validation, test, runtime, failure rate, complexity, and generalization
+gap fields are present in benchmark and slice rows
+worst generalization gaps and failure taxonomy are reported
+```
+
+## Phase 7 Smoke Validation
+
+Run this after robustness reporting modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.robustness import build_phase7_report
+
+report = build_phase7_report()
+print(report["benchmark_count"])
+print(len(report["slice_summary"]))
+print(tuple(report["benchmarks"]))
+print(report["benchmarks"]["bin_packing"]["program_id"])
+print(report["benchmarks"]["simple_routing"]["program_id"])
+print(report["benchmarks"]["amazon_routing"]["program_id"])
+print(round(report["benchmarks"]["bin_packing"]["generalization_gap"], 6))
+print(round(report["benchmarks"]["simple_routing"]["generalization_gap"], 6))
+print(round(report["benchmarks"]["amazon_routing"]["generalization_gap"], 6))
+print(report["worst_generalization_gaps"][0]["slice_name"])
+print(round(report["worst_generalization_gaps"][0]["generalization_gap"], 6))
+print(sorted(report["failure_taxonomy"]))
+PY
+```
+
+Expected result:
+
+```text
+3
+15
+('bin_packing', 'simple_routing', 'amazon_routing')
+seed-000-tight_fit
+route-seed-011-return_aware
+phase6-seed-000-travel_fast
+0.833333
+9.907981
+0.0
+routing-large-routes
+68.753356
+['dangerous_call']
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:

@@ -22,10 +22,13 @@ Completed:
   `score_next_stop` programs, held-out route scoring, local-search variants,
   feature contract reporting, and travel-time versus driver-likeness trade-off
   callouts.
+- Phase 7: Cross-benchmark generalization and robustness reporting across
+  held-out item distributions, routing sizes, synthetic Amazon city/density/
+  quality slices, runtime, failure rate, complexity, and generalization gaps.
 
 Current phase:
 
-- Phase 7: Generalization and Robustness.
+- Phase 8: Failure Analysis.
 
 Deferred:
 
@@ -37,7 +40,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Broaden held-out robustness reporting across item distributions, routing sizes, and Amazon-style route slices.
+Broaden failure analysis across invalid code, timeout, overfitting, feasibility, complexity, and metric trade-off patterns.
 ```
 
 ## Project Positioning
@@ -491,23 +494,23 @@ Acceptance criteria:
 
 Testing dimensions:
 
-- [ ] Held-out random seeds.
-- [ ] Held-out item-size distributions.
-- [ ] Held-out routing instance sizes.
-- [ ] Held-out Amazon cities if available.
-- [ ] Small routes vs large routes.
-- [ ] Dense urban routes vs sparse suburban routes.
-- [ ] High-quality vs medium-quality historical routes.
+- [x] Held-out random seeds.
+- [x] Held-out item-size distributions.
+- [x] Held-out routing instance sizes.
+- [x] Held-out Amazon cities if available.
+- [x] Small routes vs large routes.
+- [x] Dense urban routes vs sparse suburban routes.
+- [x] High-quality vs medium-quality historical routes.
 
 Required reporting:
 
-- [ ] Train score.
-- [ ] Validation score.
-- [ ] Test score.
-- [ ] Runtime.
-- [ ] Failure rate.
-- [ ] Program complexity.
-- [ ] Generalization gap.
+- [x] Train score.
+- [x] Validation score.
+- [x] Test score.
+- [x] Runtime.
+- [x] Failure rate.
+- [x] Program complexity.
+- [x] Generalization gap.
 
 ## Phase 8: Failure Analysis
 
