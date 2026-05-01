@@ -25,10 +25,13 @@ Completed:
 - Phase 7: Cross-benchmark generalization and robustness reporting across
   held-out item distributions, routing sizes, synthetic Amazon city/density/
   quality slices, runtime, failure rate, complexity, and generalization gaps.
+- Phase 8: Failure analysis across invalid code, timeout, overfitting,
+  generalization gaps, complexity, feasibility boundaries, and
+  travel-time/driver-likeness trade-offs.
 
 Current phase:
 
-- Phase 8: Failure Analysis.
+- Final report packaging / optional live LLM integration.
 
 Deferred:
 
@@ -40,7 +43,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Broaden failure analysis across invalid code, timeout, overfitting, feasibility, complexity, and metric trade-off patterns.
+Assemble the final report around the killer experiment, or connect live LLM mutation behind explicit environment-variable configuration.
 ```
 
 ## Project Positioning
@@ -516,25 +519,25 @@ Required reporting:
 
 Failure taxonomy:
 
-- [ ] Generated invalid code.
-- [ ] Timeout.
-- [ ] Hardcoded heuristic.
-- [ ] Overfit to small instances.
-- [ ] Poor generalization.
-- [ ] Routing feasibility violation.
-- [ ] Excessive complexity.
-- [ ] Improves travel time but hurts driver-likeness.
-- [ ] Improves driver-likeness but is too slow.
+- [x] Generated invalid code.
+- [x] Timeout.
+- [x] Hardcoded heuristic.
+- [x] Overfit to small instances.
+- [x] Poor generalization.
+- [x] Routing feasibility violation.
+- [x] Excessive complexity.
+- [x] Improves travel time but hurts driver-likeness.
+- [x] Improves driver-likeness but is too slow.
 
 Final report must include:
 
-- [ ] Failure taxonomy.
-- [ ] Failure rate by generation.
-- [ ] Invalid-code rate.
-- [ ] Top rejected programs.
-- [ ] Top surviving programs.
-- [ ] Patterns that worked.
-- [ ] Patterns that failed.
+- [x] Failure taxonomy.
+- [x] Failure rate by generation.
+- [x] Invalid-code rate.
+- [x] Top rejected programs.
+- [x] Top surviving programs.
+- [x] Patterns that worked.
+- [x] Patterns that failed.
 
 ## Killer Experiment
 

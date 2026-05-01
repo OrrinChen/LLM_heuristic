@@ -28,7 +28,10 @@ Current status:
 - Phase 7 complete: cross-benchmark robustness reporting across held-out random
   seeds, item distributions, routing sizes, and Amazon-style city, route-size,
   density, and quality slices.
-- Current phase: Phase 8, failure analysis.
+- Phase 8 complete: failure-analysis reporting across invalid code, timeout,
+  hardcoded heuristic, overfitting, poor generalization, complexity, feasibility
+  boundaries, and metric trade-off patterns.
+- Current phase: final report packaging / optional live LLM integration.
 
 ## Setup
 
@@ -86,6 +89,12 @@ Robustness reporting validation:
 
 ```bash
 python3 -m pytest tests/test_robustness_reporting.py -v
+```
+
+Failure-analysis validation:
+
+```bash
+python3 -m pytest tests/test_failure_analysis.py -v
 ```
 
 ## Smoke Check
@@ -316,6 +325,47 @@ routing-large-routes
 ['dangerous_call']
 ```
 
+## Failure Analysis Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.failure_analysis import build_phase8_report
+
+report = build_phase8_report()
+print(len(report["failure_categories"]))
+print(len(report["failure_rate_by_generation"]))
+print(len(report["top_rejected_programs"]))
+print(len(report["top_surviving_programs"]))
+print(report["top_rejected_programs"][0]["category"])
+print(report["top_surviving_programs"][0]["program_id"])
+print(report["failure_taxonomy"]["generated_invalid_code"]["count"])
+print(report["failure_taxonomy"]["timeout"]["count"])
+print(report["failure_taxonomy"]["poor_generalization"]["count"])
+print(
+    report["failure_taxonomy"][
+        "improves_travel_time_but_hurts_driver_likeness"
+    ]["count"]
+)
+print(tuple(row["pattern"] for row in report["patterns_that_failed"]))
+PY
+```
+
+Expected output for the deterministic failure-analysis suite:
+
+```text
+9
+7
+8
+8
+generated_invalid_code
+seed-001-load_balancer
+7
+1
+2
+4
+('unsafe_data_access', 'routing_large_slice_generalization_gap', 'travel_time_driver_likeness_tradeoff', 'driver_like_timeout')
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -406,3 +456,17 @@ proxies for city slices, small versus large routes, dense urban versus sparse
 suburban routes, and high versus medium quality historical routes. Amazon city,
 density, and quality slices remain deterministic local fixtures until external
 public or user-provided data is configured.
+
+## Failure Analysis
+
+The Phase 8 report aggregates Phase 3 evolution, Phase 6 Amazon discovery, and
+Phase 7 robustness results into a failure-analysis artifact. It includes the
+full failure taxonomy, generation-level failure and invalid-code rates, top
+rejected programs, top surviving programs, patterns that worked, and patterns
+that failed.
+
+Timeout, excessive-complexity, and driver-likeness-too-slow rows use
+deterministic diagnostic probes to keep those failure modes visible without
+loosening sandbox constraints. Routing feasibility violations are currently
+zero-observation because generated programs only rank remaining stops; full
+route-generation programs remain outside the project boundary.
