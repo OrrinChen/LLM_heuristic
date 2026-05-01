@@ -31,22 +31,25 @@ Completed:
 - Final report packaging: structured and Markdown final report around the
   killer experiment, conservative claims, robustness evidence, failure
   analysis, limitations, and next steps.
+- Report tables and plots / optional live LLM integration: deterministic
+  Markdown tables, plot-ready series, ASCII plot previews, and a stdlib-only
+  Gemini mutation provider behind `GEMINI_API_KEY`.
 
 Current phase:
 
-- Report tables and plots / optional live LLM integration.
+- No numbered roadmap phase remains incomplete.
 
 Deferred:
 
-- Live LLM integration.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
+- Production live-LLM experiment runs beyond optional local smoke checks.
 
 Next autonomous action:
 
 ```text
-Turn structured report dictionaries into polished tables/plots, or connect live LLM mutation only after explicit provider and environment-variable configuration.
+Choose a new hardening or extension milestone: broader crossover, subprocess sandbox isolation, external benchmark data, or cloud-scale experiment execution.
 ```
 
 ## Project Positioning

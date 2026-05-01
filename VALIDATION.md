@@ -462,6 +462,94 @@ True
 True
 ```
 
+## Report Tables, Plots, and Live-LLM Client Validation
+
+Run these after report artifact and optional live-LLM modules exist:
+
+```bash
+python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -v
+```
+
+Expected result:
+
+```text
+benchmark, robustness, failure-taxonomy, and next-step tables are rendered
+plot-ready generation, robustness-gap, and failure-rate series are rendered
+Gemini mutation uses the existing provider protocol behind GEMINI_API_KEY
+Gemini model selection can be overridden through GEMINI_MODEL
+Gemini test coverage uses fake transport and does not require live API calls
+```
+
+## Report Artifact Smoke Validation
+
+Run this after report artifact modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.tables import build_report_tables, render_report_tables_markdown
+from reports.plots import build_report_plots, render_report_plots_markdown
+from llm.model_client import GeminiClientError, GeminiMutationProvider
+
+tables = build_report_tables()
+plots = build_report_plots()
+print(tuple(tables["tables"]))
+print(len(tables["benchmark_comparison"]["rows"]))
+print(len(tables["failure_taxonomy"]["rows"]))
+print(tuple(plots["plots"]))
+print(len(plots["robustness_generalization_gaps"]["points"]))
+print("routing-large-routes" in render_report_plots_markdown(plots))
+print("optional_live_llm_integration" in render_report_tables_markdown(tables))
+try:
+    GeminiMutationProvider.from_env()
+except GeminiClientError as exc:
+    print(str(exc).split()[0])
+PY
+```
+
+Expected result without a live key exported:
+
+```text
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'failure_taxonomy', 'recommended_next_steps')
+16
+9
+('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'failure_rate_by_generation')
+15
+True
+True
+GEMINI_API_KEY
+```
+
+## Optional Gemini Live Smoke Validation
+
+Only run this when the user explicitly supplies a key or has exported
+`GEMINI_API_KEY`. Do not write the key to repository files.
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from llm.model_client import GeminiMutationProvider
+from sandbox.static_checks import validate_candidate_code
+
+provider = GeminiMutationProvider.from_env()
+code = provider.generate(
+    "Return only this Python function:\n"
+    "def score_candidate(state, candidate):\n"
+    "    return 0\n"
+)
+validation = validate_candidate_code(code)
+print(code.splitlines()[0])
+print(validation.ok)
+print(validation.failure_reason)
+PY
+```
+
+Expected result:
+
+```text
+def score_candidate(state, candidate):
+True
+None
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:

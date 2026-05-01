@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add final report packaging`
-Current phase: Report tables and plots / optional live LLM integration
-Main blocker: No numbered roadmap phase remains incomplete; live LLM integration requires explicit provider approval and environment-variable configuration
-Next recommended action: turn structured report dictionaries into polished tables/plots, or connect live LLM mutation behind explicit environment-variable configuration
+Latest commit: `feat: add report tables plots and live llm`
+Current phase: No numbered roadmap phase remains incomplete
+Main blocker: None for the original roadmap; paid/cloud execution and broader crossover remain optional extensions
+Next recommended action: choose a new hardening or extension milestone, such as broader crossover, subprocess sandbox isolation, external benchmark data, or cloud-scale experiment execution
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, and final report tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, and an optional Gemini live-mutation provider.
 
 ## Completed Phases
 
@@ -333,6 +333,39 @@ Known limitations:
 - Live LLM mutation remains deferred until explicit provider approval and environment-variable configuration are supplied.
 - Amazon route evidence still uses deterministic local Amazon-shaped fixtures.
 
+### Report Tables and Plots / Optional Live LLM Integration
+
+Commit: `feat: add report tables plots and live llm`
+
+What changed:
+
+- Created `src/reports/tables.py` for deterministic benchmark comparison, robustness, worst-gap, failure-taxonomy, and next-step tables.
+- Created `src/reports/plots.py` for plot-ready generation-curve, robustness-gap, and failure-rate series plus ASCII plot previews.
+- Created `src/llm/model_client.py` with a stdlib-only Gemini `generateContent` mutation provider behind `GEMINI_API_KEY`.
+- Added `tests/test_report_tables_plots_and_live_llm.py`.
+- Added report table/plot and Gemini-client validation commands to `VALIDATION.md`.
+- Updated `README.md`, `ROADMAP.md`, and `TASK_MEMORY.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -q` failed as expected before implementation because `llm.model_client` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -q` passed, 9 tests.
+- 2026-05-01: `python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -v` passed, 9 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 87 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed after formatting the new test file.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` report artifact smoke check printed deterministic table/plot signatures: 5 tables, 16 benchmark rows, 9 failure rows, 4 plots, 15 robustness-gap points, Markdown checks `True`, and missing-env Gemini check `GEMINI_API_KEY`.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` final-report smoke check printed the stable final-report signature.
+- 2026-05-01: optional Gemini live smoke with a user-supplied `GEMINI_API_KEY` and `GEMINI_MODEL=gemini-2.5-flash` returned `def score_candidate(state, candidate):`, static validation `True`, and failure reason `None`.
+- 2026-05-01: required docs are present and non-empty.
+- 2026-05-01: `git diff --check -- .` passed.
+
+Known limitations:
+
+- Gemini integration is optional and only configured through environment variables; API keys are not stored in repository files.
+- The default provider uses the Gemini REST API over the Python standard library, not a vendor SDK.
+- Report plots are deterministic text/series artifacts rather than rendered PNG/SVG figures.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -466,7 +499,9 @@ reporting tables and plots
 - [x] Add cross-benchmark generalization and robustness reporting.
 - [x] Add cross-benchmark failure-analysis reporting.
 - [x] Package the final report around the killer experiment.
-- [ ] Add report tables and plots.
+- [x] Add report tables and plots.
+- [x] Add optional Gemini live-LLM mutation behind environment-variable
+  configuration.
 
 ## First Milestone Definition
 
