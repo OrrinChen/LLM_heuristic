@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add failure analysis reporting`
-Current phase: Final report packaging / optional live LLM integration
-Main blocker: No numbered roadmap phase remains incomplete; final report packaging and live LLM integration are deferred follow-ups
-Next recommended action: assemble the killer-experiment report from Phase 2-8 outputs, or connect live LLM mutation behind explicit environment-variable configuration
+Latest commit: `feat: add final report packaging`
+Current phase: Report tables and plots / optional live LLM integration
+Main blocker: No numbered roadmap phase remains incomplete; live LLM integration requires explicit provider approval and environment-variable configuration
+Next recommended action: turn structured report dictionaries into polished tables/plots, or connect live LLM mutation behind explicit environment-variable configuration
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, and failure-analysis tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, and final report tests.
 
 ## Completed Phases
 
@@ -302,6 +302,37 @@ Known limitations:
 - Routing feasibility violations are structurally prevented by the current next-stop evaluator because generated programs rank remaining stops rather than emitting full routes.
 - The report is a dictionary artifact; polished final-report tables and plots remain deferred.
 
+### Final Report Packaging
+
+Commit: `feat: add final report packaging`
+
+What changed:
+
+- Created `src/reports/final_report.py`.
+- Added structured final report composition across Phase 2 bin packing, Phase 4 simple routing, Phase 6 Amazon discovery, Phase 7 robustness, and Phase 8 failure analysis.
+- Added killer-experiment benchmark summaries for online bin packing, simple routing, and Amazon-style routing.
+- Added conservative claim boundaries that explicitly avoid universal-dominance claims.
+- Added Markdown rendering for the final report.
+- Added `tests/test_final_report.py`.
+- Added final report implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_final_report.py -q` failed as expected before implementation because `reports.final_report` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_final_report.py -q` passed, 5 tests.
+- 2026-05-01: `python3 -m pytest tests/test_final_report.py -v` passed, 5 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 78 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` final report smoke check printed deterministic values: 3 killer-experiment benchmarks, 15 robustness slices, 9 failure-analysis categories, top programs `seed-000-tight_fit`, `route-seed-003-slack_aware`, and `phase6-seed-000-travel_fast`, first recommended next step `optional_live_llm_integration`, and Markdown checks for `do not universally dominate` and `selected trade-offs` returned `True`.
+
+Known limitations:
+
+- The final report is structured data plus Markdown; rendered plots and publication-ready tables remain deferred.
+- Live LLM mutation remains deferred until explicit provider approval and environment-variable configuration are supplied.
+- Amazon route evidence still uses deterministic local Amazon-shaped fixtures.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -434,6 +465,8 @@ reporting tables and plots
 - [x] Connect Amazon routing to the heuristic search/evolution loop and report trade-offs.
 - [x] Add cross-benchmark generalization and robustness reporting.
 - [x] Add cross-benchmark failure-analysis reporting.
+- [x] Package the final report around the killer experiment.
+- [ ] Add report tables and plots.
 
 ## First Milestone Definition
 
