@@ -28,10 +28,13 @@ Completed:
 - Phase 8: Failure analysis across invalid code, timeout, overfitting,
   generalization gaps, complexity, feasibility boundaries, and
   travel-time/driver-likeness trade-offs.
+- Final report packaging: structured and Markdown final report around the
+  killer experiment, conservative claims, robustness evidence, failure
+  analysis, limitations, and next steps.
 
 Current phase:
 
-- Final report packaging / optional live LLM integration.
+- Report tables and plots / optional live LLM integration.
 
 Deferred:
 
@@ -43,7 +46,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Assemble the final report around the killer experiment, or connect live LLM mutation behind explicit environment-variable configuration.
+Turn structured report dictionaries into polished tables/plots, or connect live LLM mutation only after explicit provider and environment-variable configuration.
 ```
 
 ## Project Positioning

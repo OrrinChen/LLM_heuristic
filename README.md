@@ -31,7 +31,10 @@ Current status:
 - Phase 8 complete: failure-analysis reporting across invalid code, timeout,
   hardcoded heuristic, overfitting, poor generalization, complexity, feasibility
   boundaries, and metric trade-off patterns.
-- Current phase: final report packaging / optional live LLM integration.
+- Final report packaging complete: structured and Markdown report around the
+  killer experiment, conservative claims, robustness evidence, failure
+  analysis, limitations, and next steps.
+- Current phase: report tables and plots / optional live LLM integration.
 
 ## Setup
 
@@ -95,6 +98,12 @@ Failure-analysis validation:
 
 ```bash
 python3 -m pytest tests/test_failure_analysis.py -v
+```
+
+Final-report validation:
+
+```bash
+python3 -m pytest tests/test_final_report.py -v
 ```
 
 ## Smoke Check
@@ -366,6 +375,41 @@ seed-001-load_balancer
 ('unsafe_data_access', 'routing_large_slice_generalization_gap', 'travel_time_driver_likeness_tradeoff', 'driver_like_timeout')
 ```
 
+## Final Report Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.final_report import build_final_report, render_final_report_markdown
+
+report = build_final_report()
+markdown = render_final_report_markdown(report)
+benchmarks = report["killer_experiment"]["benchmarks"]
+print(len(benchmarks))
+print(report["evidence"]["robustness"]["slice_count"])
+print(report["evidence"]["failure_analysis"]["failure_category_count"])
+print(benchmarks["bin_packing"]["top_program_id"])
+print(benchmarks["simple_routing"]["top_program_id"])
+print(benchmarks["amazon_routing"]["top_program_id"])
+print(report["recommended_next_steps"][0]["step"])
+print("do not universally dominate" in markdown)
+print("selected trade-offs" in markdown)
+PY
+```
+
+Expected output for the deterministic final report:
+
+```text
+3
+15
+9
+seed-000-tight_fit
+route-seed-003-slack_aware
+phase6-seed-000-travel_fast
+optional_live_llm_integration
+True
+True
+```
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -470,3 +514,17 @@ deterministic diagnostic probes to keep those failure modes visible without
 loosening sandbox constraints. Routing feasibility violations are currently
 zero-observation because generated programs only rank remaining stops; full
 route-generation programs remain outside the project boundary.
+
+## Final Report Packaging
+
+The final report module composes the Phase 2 bin-packing report, Phase 4
+simple-routing report, Phase 6 Amazon discovery report, Phase 7 robustness
+report, and Phase 8 failure-analysis report. It returns a structured dictionary
+and a Markdown rendering suitable for final write-up work.
+
+The report centers the killer experiment across online bin packing, simple
+routing, and Amazon-style routing. It states the conservative claim that compact
+sandboxed scoring programs improve selected trade-offs, and explicitly avoids
+claiming universal dominance over classical OR baselines. Live LLM mutation
+remains deferred until an approved provider and environment-variable
+configuration are supplied.

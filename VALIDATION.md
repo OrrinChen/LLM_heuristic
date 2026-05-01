@@ -407,6 +407,61 @@ seed-001-load_balancer
 ('unsafe_data_access', 'routing_large_slice_generalization_gap', 'travel_time_driver_likeness_tradeoff', 'driver_like_timeout')
 ```
 
+## Final Report Validation
+
+Run these after final report packaging modules exist:
+
+```bash
+python3 -m pytest tests/test_final_report.py -v
+```
+
+Expected result:
+
+```text
+final report includes required sections and claim boundaries
+killer experiment covers bin packing, simple routing, and Amazon routing
+robustness and failure-analysis evidence are linked
+Markdown rendering states selected trade-offs without universal dominance claims
+recommended next steps preserve live LLM integration as optional/configured work
+```
+
+## Final Report Smoke Validation
+
+Run this after final report packaging modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.final_report import build_final_report, render_final_report_markdown
+
+report = build_final_report()
+markdown = render_final_report_markdown(report)
+benchmarks = report["killer_experiment"]["benchmarks"]
+print(len(benchmarks))
+print(report["evidence"]["robustness"]["slice_count"])
+print(report["evidence"]["failure_analysis"]["failure_category_count"])
+print(benchmarks["bin_packing"]["top_program_id"])
+print(benchmarks["simple_routing"]["top_program_id"])
+print(benchmarks["amazon_routing"]["top_program_id"])
+print(report["recommended_next_steps"][0]["step"])
+print("do not universally dominate" in markdown)
+print("selected trade-offs" in markdown)
+PY
+```
+
+Expected result:
+
+```text
+3
+15
+9
+seed-000-tight_fit
+route-seed-003-slack_aware
+phase6-seed-000-travel_fast
+optional_live_llm_integration
+True
+True
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:
