@@ -1,0 +1,244 @@
+{
+  "amazon_discovery_best_score": {
+    "ascii": "generation=0 phase6-seed-000-travel_fast: ################################ 10.855333\ngeneration=1 phase6-seed-000-travel_fast: ################################ 10.855333\ngeneration=2 phase6-seed-000-travel_fast: ################################ 10.855333",
+    "points": [
+      {
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "best_score": 10.855333,
+        "generation": 0,
+        "label": "generation=0 phase6-seed-000-travel_fast",
+        "median_score": 10.895333
+      },
+      {
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "best_score": 10.855333,
+        "generation": 1,
+        "label": "generation=1 phase6-seed-000-travel_fast",
+        "median_score": 10.885333
+      },
+      {
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "best_score": 10.855333,
+        "generation": 2,
+        "label": "generation=2 phase6-seed-000-travel_fast",
+        "median_score": 10.875333
+      }
+    ],
+    "title": "Amazon Discovery Best Score",
+    "x": "generation",
+    "y": "best_score"
+  },
+  "bin_packing_evolution_best_score": {
+    "ascii": "generation=0 seed-001-load_balancer: ################################ 7.547333\ngeneration=1 seed-001-load_balancer: ################################ 7.547333\ngeneration=2 seed-001-load_balancer: ################################ 7.547333\ngeneration=3 seed-001-load_balancer: ################################ 7.547333",
+    "points": [
+      {
+        "best_program_id": "seed-001-load_balancer",
+        "best_score": 7.547333,
+        "generation": 0,
+        "label": "generation=0 seed-001-load_balancer",
+        "median_score": 7.555333
+      },
+      {
+        "best_program_id": "seed-001-load_balancer",
+        "best_score": 7.547333,
+        "generation": 1,
+        "label": "generation=1 seed-001-load_balancer",
+        "median_score": 7.555333
+      },
+      {
+        "best_program_id": "seed-001-load_balancer",
+        "best_score": 7.547333,
+        "generation": 2,
+        "label": "generation=2 seed-001-load_balancer",
+        "median_score": 7.555333
+      },
+      {
+        "best_program_id": "seed-001-load_balancer",
+        "best_score": 7.547333,
+        "generation": 3,
+        "label": "generation=3 seed-001-load_balancer",
+        "median_score": 7.555333
+      }
+    ],
+    "title": "Bin Packing Evolution Best Score",
+    "x": "generation",
+    "y": "best_score"
+  },
+  "failure_rate_by_generation": {
+    "ascii": "bin_packing_evolution generation=0: ################################ 0.25\nbin_packing_evolution generation=1:  0\nbin_packing_evolution generation=2:  0\nbin_packing_evolution generation=3:  0\namazon_routing_discovery generation=0: ##################### 0.166667\namazon_routing_discovery generation=1:  0\namazon_routing_discovery generation=2:  0",
+    "points": [
+      {
+        "benchmark": "bin_packing_evolution",
+        "best_program_id": "seed-001-load_balancer",
+        "failure_rate": 0.25,
+        "generation": 0,
+        "label": "bin_packing_evolution generation=0"
+      },
+      {
+        "benchmark": "bin_packing_evolution",
+        "best_program_id": "seed-001-load_balancer",
+        "failure_rate": 0.0,
+        "generation": 1,
+        "label": "bin_packing_evolution generation=1"
+      },
+      {
+        "benchmark": "bin_packing_evolution",
+        "best_program_id": "seed-001-load_balancer",
+        "failure_rate": 0.0,
+        "generation": 2,
+        "label": "bin_packing_evolution generation=2"
+      },
+      {
+        "benchmark": "bin_packing_evolution",
+        "best_program_id": "seed-001-load_balancer",
+        "failure_rate": 0.0,
+        "generation": 3,
+        "label": "bin_packing_evolution generation=3"
+      },
+      {
+        "benchmark": "amazon_routing_discovery",
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "failure_rate": 0.16666666666666666,
+        "generation": 0,
+        "label": "amazon_routing_discovery generation=0"
+      },
+      {
+        "benchmark": "amazon_routing_discovery",
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "failure_rate": 0.0,
+        "generation": 1,
+        "label": "amazon_routing_discovery generation=1"
+      },
+      {
+        "benchmark": "amazon_routing_discovery",
+        "best_program_id": "phase6-seed-000-travel_fast",
+        "failure_rate": 0.0,
+        "generation": 2,
+        "label": "amazon_routing_discovery generation=2"
+      }
+    ],
+    "title": "Failure Rate By Generation",
+    "x": "generation",
+    "y": "failure_rate"
+  },
+  "phase": "report_plots",
+  "plots": [
+    "bin_packing_evolution_best_score",
+    "amazon_discovery_best_score",
+    "robustness_generalization_gaps",
+    "failure_rate_by_generation"
+  ],
+  "robustness_generalization_gaps": {
+    "ascii": "routing-large-routes: ################################ 68.753356\nrouting-dense-urban: ########### 22.906636\nrouting-held-out-size-14: ####### 14.298226\namazon-large-routes: ###### 12.714609\nrouting-sparse-suburban: ### 7.142733\namazon-sparse-suburban: ### 7.060169\namazon-medium-quality: ### 7.060169\nbin-held-out-random-seeds: ### 6.166667",
+    "points": [
+      {
+        "benchmark": "bin_packing",
+        "generalization_gap": 6.166666666666666,
+        "label": "bin-held-out-random-seeds",
+        "program_id": "seed-000-tight_fit",
+        "slice_name": "bin-held-out-random-seeds"
+      },
+      {
+        "benchmark": "bin_packing",
+        "generalization_gap": 4.0,
+        "label": "bin-held-out-item-distribution",
+        "program_id": "seed-000-tight_fit",
+        "slice_name": "bin-held-out-item-distribution"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 6.08762416666666,
+        "label": "routing-held-out-random-seeds",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-held-out-random-seeds"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 14.29822566666667,
+        "label": "routing-held-out-size-14",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-held-out-size-14"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 3.457719333333332,
+        "label": "routing-small-routes",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-small-routes"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 68.75335616666669,
+        "label": "routing-large-routes",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-large-routes"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 22.906635666666652,
+        "label": "routing-dense-urban",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-dense-urban"
+      },
+      {
+        "benchmark": "simple_routing",
+        "generalization_gap": 7.1427331666666545,
+        "label": "routing-sparse-suburban",
+        "program_id": "route-seed-011-return_aware",
+        "slice_name": "routing-sparse-suburban"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 4.921763333333333,
+        "label": "amazon-held-out-city-dch1",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-held-out-city-dch1"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 5.409197333333332,
+        "label": "amazon-small-routes",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-small-routes"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 12.714608666666667,
+        "label": "amazon-large-routes",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-large-routes"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 4.921763333333333,
+        "label": "amazon-dense-urban",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-dense-urban"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 7.060168666666666,
+        "label": "amazon-sparse-suburban",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-sparse-suburban"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 4.921763333333333,
+        "label": "amazon-high-quality",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-high-quality"
+      },
+      {
+        "benchmark": "amazon_routing",
+        "generalization_gap": 7.060168666666666,
+        "label": "amazon-medium-quality",
+        "program_id": "phase6-seed-000-travel_fast",
+        "slice_name": "amazon-medium-quality"
+      }
+    ],
+    "title": "Robustness Generalization Gaps",
+    "x": "slice_name",
+    "y": "generalization_gap"
+  }
+}

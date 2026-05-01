@@ -47,7 +47,7 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## Benchmark Comparison" in markdown
     assert "| benchmark | method | split | score | top_program_id |" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
-    assert "optional_live_llm_integration" in markdown
+    assert "external_benchmark_adapter" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:

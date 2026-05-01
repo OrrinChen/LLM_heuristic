@@ -37,7 +37,12 @@ Current status:
 - Report tables and plots / optional live LLM integration complete:
   deterministic Markdown tables, plot-ready series, ASCII plot previews, and a
   stdlib-only Gemini mutation provider behind `GEMINI_API_KEY`.
-- Current phase: no numbered roadmap phase remains incomplete.
+- Hardening milestone complete: subprocess scoring-function isolation, wall
+  clock timeout handling, optional platform memory limits, rerun manifests,
+  exported report artifacts, top-program evidence files, and a deterministic
+  CLI.
+- Current phase: original roadmap and hardening milestone are complete; the
+  recommended next extension is an external benchmark adapter.
 
 ## Setup
 
@@ -113,6 +118,29 @@ Report tables, plots, and optional live-LLM validation:
 
 ```bash
 python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -v
+```
+
+Hardening validation:
+
+```bash
+python3 -m pytest tests/test_hardening_milestone.py -v
+```
+
+## CLI
+
+The deterministic local CLI is available through the package module:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
+PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
+```
+
+After installation, the console script is also available:
+
+```bash
+heuristic-discovery report --output-dir .
 ```
 
 ## Smoke Check
@@ -414,7 +442,7 @@ Expected output for the deterministic final report:
 seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
-optional_live_llm_integration
+external_benchmark_adapter
 True
 True
 ```
@@ -435,7 +463,7 @@ print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("optional_live_llm_integration" in render_report_tables_markdown(tables))
+print("external_benchmark_adapter" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -477,9 +505,30 @@ checks reject extra top-level statements, helper functions, imports, file
 access, network/process names, dangerous builtins, dunder attribute access, and
 disallowed globals before code reaches restricted execution.
 
-The current sandbox is a local Python AST and restricted-builtins boundary with
-Unix signal timeouts. Subprocess isolation and memory limits are deferred until
-later hardening work.
+The hardened single-call sandbox runs generated scoring functions in a separate
+subprocess with wall-clock timeout handling and optional platform memory limits.
+If the host does not expose compatible memory-limit primitives, requested memory
+limits fail closed with a structured `memory_limit_unsupported` reason. The
+benchmark evaluators preserve their deterministic static-validation contract and
+can be rerun from exported manifests.
+
+## Evidence Package Artifacts
+
+The checked-in evidence package contains:
+
+```text
+reports/final_report.md
+reports/tables/*.csv
+reports/plots/plot_series.json
+artifacts/top_programs/*.py
+artifacts/rerun_manifest.json
+```
+
+Regenerate it with:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5
+```
 
 ## Bin Packing Benchmark
 

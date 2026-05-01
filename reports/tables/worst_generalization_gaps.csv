@@ -1,0 +1,6 @@
+rank,slice_name,benchmark,dimension,score,generalization_gap
+1,routing-large-routes,simple_routing,small_routes_vs_large_routes,75.948930,68.753356
+2,routing-dense-urban,simple_routing,dense_urban_vs_sparse_suburban_routes,30.102209,22.906636
+3,routing-held-out-size-14,simple_routing,held_out_routing_instance_sizes,21.493800,14.298226
+4,amazon-large-routes,amazon_routing,small_routes_vs_large_routes,23.547942,12.714609
+5,routing-sparse-suburban,simple_routing,dense_urban_vs_sparse_suburban_routes,14.338307,7.142733

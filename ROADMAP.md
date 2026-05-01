@@ -34,13 +34,18 @@ Completed:
 - Report tables and plots / optional live LLM integration: deterministic
   Markdown tables, plot-ready series, ASCII plot previews, and a stdlib-only
   Gemini mutation provider behind `GEMINI_API_KEY`.
+- Hardening milestone: subprocess scoring-function isolation, wall-clock
+  timeout handling, optional platform memory limits, rerun manifests, exported
+  report artifacts, top-program evidence files, and deterministic CLI commands.
 
 Current phase:
 
-- No numbered roadmap phase remains incomplete.
+- Original roadmap and hardening milestone are complete.
 
 Deferred:
 
+- External benchmark adapters for BPPLIB, OR-Library, TSPLIB, or CVRPLIB-style
+  data.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
@@ -49,7 +54,7 @@ Deferred:
 Next autonomous action:
 
 ```text
-Choose a new hardening or extension milestone: broader crossover, subprocess sandbox isolation, external benchmark data, or cloud-scale experiment execution.
+Add an external benchmark adapter before broader crossover or cloud-scale experiments.
 ```
 
 ## Project Positioning

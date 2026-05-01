@@ -1,0 +1,4 @@
+step,reason
+external_benchmark_adapter,"Add BPPLIB, OR-Library, TSPLIB, or CVRPLIB-style adapters to test whether discovered heuristics transfer beyond synthetic suites."
+broader_crossover,"Add AST-level, feature-weight, and fragment crossover only after the hardened evidence package remains stable."
+cloud_scale_experiments,Scale deterministic runs after sandbox isolation and external-data adapters are in place.

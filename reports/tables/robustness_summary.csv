@@ -1,0 +1,4 @@
+benchmark,program_id,validation_score,test_score,generalization_gap,failure_rate,program_complexity
+bin_packing,seed-000-tight_fit,8.500000,9.333333,0.833333,0.000000,36
+simple_routing,route-seed-011-return_aware,7.195574,17.103555,9.907981,0.000000,21
+amazon_routing,phase6-seed-000-travel_fast,10.833333,10.833333,0.000000,0.000000,11

@@ -25,7 +25,8 @@ def test_final_report_has_required_sections_and_claim_boundaries(
     )
     assert "selected trade-offs" in final_report["claims"]["conservative"]
     assert "universal dominance" in final_report["claims"]["does_not_claim"]
-    assert final_report["claims"]["live_llm_status"] == "deferred"
+    assert final_report["claims"]["live_llm_status"] == "optional_env_configured"
+    assert "subprocess_sandbox" in final_report["claims"]["hardening_status"]
 
 
 def test_final_report_covers_killer_experiment_benchmarks(
@@ -76,7 +77,7 @@ def test_final_report_links_robustness_and_failure_evidence(
     assert evidence["amazon_tradeoffs"]["tradeoff_count"] >= 1
     assert final_report["limitations"]
     assert final_report["recommended_next_steps"][0]["step"] == (
-        "optional_live_llm_integration"
+        "external_benchmark_adapter"
     )
 
 
@@ -105,7 +106,7 @@ def test_final_report_smoke_signature_is_stable(
         "seed-000-tight_fit",
         "route-seed-003-slack_aware",
         "phase6-seed-000-travel_fast",
-        "optional_live_llm_integration",
+        "external_benchmark_adapter",
     )
 
 

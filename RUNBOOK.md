@@ -60,6 +60,36 @@ Before executing generated code, verify:
 - No hidden test labels or instance IDs are accessible.
 - Runtime timeout is configured.
 - Failure reasons are recorded.
+- For single-call hardening checks, use `execute_scoring_function_subprocess`
+  so generated scoring code runs in a child process with a wall-clock timeout.
+- If a memory limit is requested on a platform without compatible support, the
+  subprocess sandbox must fail closed with a structured reason.
+
+## Evidence Package Commands
+
+Generate the local evidence package:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5
+```
+
+Expected generated files:
+
+```text
+reports/final_report.md
+reports/tables/*.csv
+reports/plots/plot_series.json
+artifacts/top_programs/*.py
+artifacts/rerun_manifest.json
+```
+
+Run deterministic CLI checks:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
+PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
+```
 
 ## Benchmark Progression
 
@@ -134,4 +164,3 @@ After any meaningful work, update `TASK_MEMORY.md` with:
 - Validation commands and results.
 - Known limitations.
 - Next recommended action.
-
