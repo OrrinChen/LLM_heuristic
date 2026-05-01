@@ -5,6 +5,26 @@ from typing import Mapping, Sequence
 
 from benchmarks.amazon_routing.loader import AmazonRoute
 
+AMAZON_CANDIDATE_FEATURES = (
+    "travel_time",
+    "same_zone",
+    "zone_transition_cost",
+    "time_window_slack",
+    "package_count",
+    "package_weight",
+    "service_time",
+    "wait_time",
+    "lateness",
+    "zone_density",
+    "distance_to_depot",
+    "distance_from_depot_xy",
+    "depot_angle",
+    "cluster_compactness",
+    "remaining_count",
+    "remaining_same_zone_count",
+    "remaining_zone_count",
+)
+
 
 def extract_route_features(route: AmazonRoute) -> Mapping[str, object]:
     packages = [package for stop in route.stops for package in stop.packages]
@@ -37,7 +57,14 @@ def extract_stop_features(
     same_zone = (
         current_stop_id != route.depot.stop_id and current.zone_id == candidate.zone_id
     )
+    visited_set = set(visited)
+    remaining_stops = [stop for stop in route.stops if stop.stop_id not in visited_set]
+    remaining_same_zone = [
+        stop for stop in remaining_stops if stop.zone_id == candidate.zone_id
+    ]
+    remaining_zones = {stop.zone_id for stop in remaining_stops}
     zone_size = sum(stop.zone_id == candidate.zone_id for stop in route.stops)
+    depot_angle = math.atan2(candidate.y - route.depot.y, candidate.x - route.depot.x)
     return {
         "stop_id": candidate.stop_id,
         "zone_id": candidate.zone_id,
@@ -57,10 +84,14 @@ def extract_stop_features(
         "distance_to_depot": route.travel_time(candidate_stop_id, route.depot.stop_id),
         "historical_position": route.actual_sequence.index(candidate_stop_id),
         "remaining_count": len(route.stops) - len(tuple(visited)),
+        "remaining_same_zone_count": len(remaining_same_zone),
+        "remaining_zone_count": len(remaining_zones),
         "zone_density": zone_size / len(route.stops),
         "distance_from_depot_xy": math.dist(
             (route.depot.x, route.depot.y), (candidate.x, candidate.y)
         ),
+        "depot_angle": depot_angle,
+        "cluster_compactness": len(remaining_same_zone) / max(1, len(remaining_stops)),
     }
 
 

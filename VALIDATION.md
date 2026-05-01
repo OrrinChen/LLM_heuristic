@@ -226,6 +226,66 @@ amazon-seed-000-nearest
 amazon-seed-000-nearest
 ```
 
+## Amazon Heuristic Discovery Validation
+
+Run these after Amazon discovery modules exist:
+
+```bash
+python3 -m pytest tests/test_amazon_heuristic_discovery.py -v
+```
+
+Expected result:
+
+```text
+candidate feature contract covers Phase 6 roadmap features
+Amazon baselines include ML-ranker and hybrid local-search variants
+discovery generation curves are reproducible
+top discovered programs can be rerun on held-out routes
+trade-off reports call out travel-time improvement with driver-likeness harm
+```
+
+## Phase 6 Smoke Validation
+
+Run this after Amazon discovery modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.amazon_routing.discovery import AmazonDiscoveryConfig, build_phase6_report
+
+report = build_phase6_report(
+    config=AmazonDiscoveryConfig(
+        generations=2,
+        population_size=12,
+        offspring_per_generation=8,
+        elite_size=4,
+        tournament_size=3,
+        random_seed=23,
+    )
+)
+print(report["generation_count"])
+print(report["generation_curve"][-1]["best_score"])
+print(report["top_candidates"][0]["program_id"])
+print(round(report["top_candidates"][0]["test_score"], 6))
+print(len(report["tradeoff_programs"]))
+print(len(report["frontier_improvements"]))
+print(sorted(report["failure_taxonomy"]))
+print(report["rerun_top"]["ok"])
+PY
+```
+
+Expected result:
+
+```text
+3
+10.855333
+phase6-seed-000-travel_fast
+10.833333
+4
+4
+['dangerous_call']
+True
+```
+
 ## Evolution Loop Validation
 
 Run these once the evolution loop exists:

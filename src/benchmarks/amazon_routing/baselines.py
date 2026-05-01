@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from time import perf_counter
 from typing import Callable, Dict, Mapping, Optional, Sequence, Tuple
 
+from benchmarks.amazon_routing.features import extract_stop_features
 from benchmarks.amazon_routing.loader import AmazonRoute
 from benchmarks.amazon_routing.route_similarity import (
     kendall_tau_distance,
@@ -168,6 +169,54 @@ def driver_aware_heuristic(route: AmazonRoute) -> AmazonRoutingResult:
     return _result(route, "driver_aware", route.actual_sequence, started)
 
 
+def ml_next_stop_ranker(route: AmazonRoute) -> AmazonRoutingResult:
+    started = perf_counter()
+    sequence = _linear_rank_route(route)
+    return _result(route, "ml_next_stop_ranker", sequence, started)
+
+
+def hybrid_ml_plus_local_search(route: AmazonRoute) -> AmazonRoutingResult:
+    started = perf_counter()
+    sequence = _two_opt(route, _linear_rank_route(route))
+    return _result(route, "hybrid_ml_plus_local_search", sequence, started)
+
+
+def _linear_rank_route(route: AmazonRoute) -> Tuple[str, ...]:
+    sequence = []
+    remaining = set(route.stop_ids)
+    current = route.depot.stop_id
+    elapsed = 0.0
+    while remaining:
+        scored = []
+        for stop_id in remaining:
+            features = extract_stop_features(
+                route,
+                candidate_stop_id=stop_id,
+                current_stop_id=current,
+                elapsed_time=elapsed,
+                visited=sequence,
+            )
+            score = (
+                features["travel_time"]
+                + 0.4 * features["zone_transition_cost"]
+                - 0.6 * features["same_zone"]
+                - 0.15 * features["package_count"]
+                + 0.1 * features["distance_to_depot"]
+                + 0.05 * max(0.0, -features["time_window_slack"])
+            )
+            scored.append((score, stop_id))
+        _, chosen = min(scored, key=lambda entry: (entry[0], entry[1]))
+        stop = route.stop_by_id(chosen)
+        elapsed += route.travel_time(current, chosen)
+        if elapsed < stop.ready_time:
+            elapsed = stop.ready_time
+        elapsed += stop.service_time
+        sequence.append(chosen)
+        remaining.remove(chosen)
+        current = chosen
+    return tuple(sequence)
+
+
 def _two_opt(
     route: AmazonRoute,
     sequence: Sequence[str],
@@ -235,4 +284,6 @@ AMAZON_BASELINE_ROUTE_BUILDERS: Dict[str, AmazonRouteBuilder] = {
     "cheapest_insertion": cheapest_insertion,
     "two_opt": two_opt_baseline,
     "driver_aware": driver_aware_heuristic,
+    "ml_next_stop_ranker": ml_next_stop_ranker,
+    "hybrid_ml_plus_local_search": hybrid_ml_plus_local_search,
 }
