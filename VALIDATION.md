@@ -422,7 +422,7 @@ final report includes required sections and claim boundaries
 killer experiment covers bin packing, simple routing, and Amazon routing
 robustness and failure-analysis evidence are linked
 Markdown rendering states selected trade-offs without universal dominance claims
-recommended next steps preserve live LLM integration as optional/configured work
+recommended next steps prioritize external benchmark adapters after hardening
 ```
 
 ## Final Report Smoke Validation
@@ -457,7 +457,7 @@ Expected result:
 seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
-optional_live_llm_integration
+external_benchmark_adapter
 True
 True
 ```
@@ -498,7 +498,7 @@ print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("optional_live_llm_integration" in render_report_tables_markdown(tables))
+print("external_benchmark_adapter" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -517,6 +517,82 @@ Expected result without a live key exported:
 True
 True
 GEMINI_API_KEY
+```
+
+## Hardening Milestone Validation
+
+Run these after subprocess sandbox, manifest, artifact export, and CLI modules
+exist:
+
+```bash
+python3 -m pytest tests/test_hardening_milestone.py -v
+```
+
+Expected result:
+
+```text
+subprocess scoring execution runs in a child process
+infinite loops fail by wall-clock timeout
+file access, imports, eval, and network/process names fail static validation
+memory-heavy programs fail safely when a memory limit is requested
+rerun manifests record code hashes, runtime, seeds, parent ids, and stable scores
+report artifacts export final markdown, CSV tables, JSON plot series, top programs, and manifest files
+CLI run, report, inspect, and rerun-manifest commands work with deterministic defaults
+```
+
+## Hardening Smoke Validation
+
+Run this from the repository root:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from sandbox.subprocess_exec import execute_scoring_function_subprocess
+
+code = """
+def score_candidate(state, candidate):
+    return state["capacity"] - candidate["size"]
+"""
+
+result = execute_scoring_function_subprocess(
+    code,
+    {"capacity": 10},
+    {"size": 4},
+    timeout_seconds=1.0,
+)
+print(result.ok)
+print(result.value)
+print(result.metadata["is_subprocess"])
+print(result.failure_reason)
+PY
+```
+
+Expected result:
+
+```text
+True
+6.0
+True
+None
+```
+
+## CLI Smoke Validation
+
+Run these from the repository root:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1 --output-dir /tmp/o2-cli-run
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
+PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir /tmp/o2-cli-rerun --top-k 2
+```
+
+Expected result:
+
+```text
+run prints generation_count and writes run_summary.json
+report writes reports/final_report.md, reports/tables/*.csv, reports/plots/plot_series.json, artifacts/top_programs/*.py, and artifacts/rerun_manifest.json
+inspect prints candidate_id rows
+rerun-manifest prints code_hash_matches true rows
 ```
 
 ## Optional Gemini Live Smoke Validation

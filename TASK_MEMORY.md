@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add report tables plots and live llm`
-Current phase: No numbered roadmap phase remains incomplete
-Main blocker: None for the original roadmap; paid/cloud execution and broader crossover remain optional extensions
-Next recommended action: choose a new hardening or extension milestone, such as broader crossover, subprocess sandbox isolation, external benchmark data, or cloud-scale experiment execution
+Latest commit: `feat: harden evidence package`
+Current phase: Hardening milestone complete
+Main blocker: None for the original roadmap or hardening milestone; external benchmark data remains the next credibility extension
+Next recommended action: add an external benchmark adapter before broader crossover or cloud-scale experiments
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, and an optional Gemini live-mutation provider.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, and a deterministic CLI.
 
 ## Completed Phases
 
@@ -366,6 +366,44 @@ Known limitations:
 - The default provider uses the Gemini REST API over the Python standard library, not a vendor SDK.
 - Report plots are deterministic text/series artifacts rather than rendered PNG/SVG figures.
 
+### Hardening Milestone
+
+Commit: `feat: harden evidence package`
+
+What changed:
+
+- Created `src/sandbox/subprocess_exec.py` for child-process scoring-function execution with wall-clock timeout handling and optional platform memory limits.
+- Updated `src/sandbox/restricted_exec.py` so the public single-call sandbox API routes through subprocess isolation by default while preserving an in-process helper for trusted internal use.
+- Created `src/program_search/rerun_manifest.py` to record candidate id, code hash, generation, parent ids, score, failure reason, runtime, Python version, package version, and deterministic random seeds.
+- Created `src/reports/artifacts.py` to export `reports/final_report.md`, CSV tables, JSON plot series, top program `.py` files, and `artifacts/rerun_manifest.json`.
+- Created the `heuristic_discovery` CLI with `run`, `report`, `inspect`, and `rerun-manifest` commands.
+- Added `tests/test_hardening_milestone.py`.
+- Generated the checked-in evidence package under `reports/` and `artifacts/`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and `TASK_MEMORY.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_hardening_milestone.py -q` failed as expected before implementation because `program_search.rerun_manifest` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_hardening_milestone.py -q` passed, 11 tests.
+- 2026-05-01: `python3 -m pytest tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_hardening_milestone.py -q` passed, 25 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 98 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed.
+- 2026-05-01: subprocess hardening smoke printed `True`, `6.0`, `True`, `None`.
+- 2026-05-01: CLI smoke checks for `run`, `report`, `inspect`, and `rerun-manifest` passed against `/tmp/o2-cli-*` output folders.
+- 2026-05-01: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5` generated the evidence package in the repository.
+- 2026-05-01: final-report smoke printed the stable signature with first recommended next step `external_benchmark_adapter`.
+- 2026-05-01: report artifact smoke printed deterministic table/plot signatures and missing-env Gemini check `GEMINI_API_KEY`.
+- 2026-05-01: required docs are present and non-empty.
+- 2026-05-01: `git diff --check -- .` passed.
+- 2026-05-01: secret scan for the user-supplied Gemini key in repository content returned no matches.
+
+Known limitations:
+
+- Subprocess memory limits depend on host `resource` support. If unsupported, requested memory limits fail closed with `memory_limit_unsupported`.
+- The committed report plots are JSON series, not mandatory PNGs; PNG rendering remains optional when matplotlib is available.
+- The hardening milestone does not add external BPPLIB, OR-Library, TSPLIB, or CVRPLIB data adapters.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -502,6 +540,10 @@ reporting tables and plots
 - [x] Add report tables and plots.
 - [x] Add optional Gemini live-LLM mutation behind environment-variable
   configuration.
+- [x] Add subprocess sandbox isolation, rerun manifests, artifact export, and
+  deterministic CLI hardening.
+- [ ] Add an external benchmark adapter for public BPPLIB, OR-Library, TSPLIB,
+  or CVRPLIB-style data.
 
 ## First Milestone Definition
 

@@ -1,0 +1,10 @@
+category,count,evidence_count
+generated_invalid_code,7,5
+timeout,1,1
+hardcoded_heuristic,7,5
+overfit_to_small_instances,1,1
+poor_generalization,2,2
+routing_feasibility_violation,0,0
+excessive_complexity,1,1
+improves_travel_time_but_hurts_driver_likeness,4,4
+improves_driver_likeness_but_too_slow,1,1

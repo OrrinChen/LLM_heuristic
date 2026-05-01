@@ -1,0 +1,17 @@
+benchmark,method,split,score,top_program_id
+Online Bin Packing,first_fit,validation,8.500000,seed-000-tight_fit
+Online Bin Packing,best_fit,validation,8.500000,seed-000-tight_fit
+Online Bin Packing,first_fit_decreasing,validation,8.400000,seed-000-tight_fit
+Online Bin Packing,handwritten_score_heuristic,validation,8.500000,seed-000-tight_fit
+Online Bin Packing,llm_discovered,held_out_test,9.333333,seed-000-tight_fit
+Simple Routing,nearest_neighbor,validation,8.626646,route-seed-003-slack_aware
+Simple Routing,cheapest_insertion,validation,15.500568,route-seed-003-slack_aware
+Simple Routing,two_opt,validation,11.691277,route-seed-003-slack_aware
+Simple Routing,llm_discovered,validation,8.626646,route-seed-003-slack_aware
+Simple Routing,llm_discovered_plus_2opt,held_out_test,18.407699,route-seed-003-slack_aware
+Amazon-Style Routing,nearest_neighbor,validation,10.833333,phase6-seed-000-travel_fast
+Amazon-Style Routing,two_opt,validation,10.833333,phase6-seed-000-travel_fast
+Amazon-Style Routing,driver_aware,validation,13.666667,phase6-seed-000-travel_fast
+Amazon-Style Routing,ml_next_stop_ranker,validation,10.833333,phase6-seed-000-travel_fast
+Amazon-Style Routing,llm_discovered,validation,10.833333,phase6-seed-000-travel_fast
+Amazon-Style Routing,llm_discovered_plus_local_search,held_out_test,10.833333,phase6-seed-000-travel_fast

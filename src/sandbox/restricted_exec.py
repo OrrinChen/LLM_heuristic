@@ -1,10 +1,10 @@
 from __future__ import annotations
 
 import signal
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from time import perf_counter
 from types import FrameType
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Mapping, Optional
 
 from sandbox.static_checks import (
     FailureReason,
@@ -46,9 +46,39 @@ class ExecutionResult:
     value: Optional[float]
     runtime: float
     failure_reason: Optional[FailureReason] = None
+    metadata: Mapping[str, object] = field(default_factory=dict)
 
 
 def execute_scoring_function(
+    code: str,
+    *args: Any,
+    config: Optional[ValidationConfig] = None,
+    timeout_seconds: float = 1.0,
+    isolated: bool = True,
+    memory_limit_mb: Optional[int] = None,
+    **kwargs: Any,
+) -> ExecutionResult:
+    if isolated:
+        from sandbox.subprocess_exec import execute_scoring_function_subprocess
+
+        return execute_scoring_function_subprocess(
+            code,
+            *args,
+            config=config,
+            timeout_seconds=timeout_seconds,
+            memory_limit_mb=memory_limit_mb,
+            **kwargs,
+        )
+    return execute_scoring_function_in_process(
+        code,
+        *args,
+        config=config,
+        timeout_seconds=timeout_seconds,
+        **kwargs,
+    )
+
+
+def execute_scoring_function_in_process(
     code: str,
     *args: Any,
     config: Optional[ValidationConfig] = None,
@@ -64,6 +94,7 @@ def execute_scoring_function(
             value=None,
             runtime=perf_counter() - started,
             failure_reason=validation.failure_reason,
+            metadata={"is_subprocess": False},
         )
 
     namespace: Dict[str, Any] = {"__builtins__": SAFE_BUILTINS}
@@ -82,6 +113,7 @@ def execute_scoring_function(
                 code="timeout",
                 message=f"candidate exceeded {timeout_seconds} seconds",
             ),
+            metadata={"is_subprocess": False},
         )
     except Exception as exc:  # noqa: BLE001 - structured sandbox failure boundary.
         return ExecutionResult(
@@ -92,6 +124,7 @@ def execute_scoring_function(
                 code="runtime_error",
                 message=f"{type(exc).__name__}: {exc}",
             ),
+            metadata={"is_subprocess": False},
         )
 
     if isinstance(value, bool) or not isinstance(value, (int, float)):
@@ -103,6 +136,7 @@ def execute_scoring_function(
                 code="non_numeric_score",
                 message="scoring function must return an int or float",
             ),
+            metadata={"is_subprocess": False},
         )
 
     return ExecutionResult(
@@ -110,6 +144,7 @@ def execute_scoring_function(
         value=float(value),
         runtime=perf_counter() - started,
         failure_reason=None,
+        metadata={"is_subprocess": False},
     )
 
 

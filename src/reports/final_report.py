@@ -71,7 +71,8 @@ def build_final_report() -> Dict[str, object]:
                 "The report does not claim universal dominance over classical "
                 "OR baselines or that LLMs solve OR problems directly."
             ),
-            "live_llm_status": "deferred",
+            "live_llm_status": "optional_env_configured",
+            "hardening_status": "subprocess_sandbox_manifest_artifacts_cli",
         },
         "killer_experiment": {
             "benchmarks": {
@@ -82,36 +83,39 @@ def build_final_report() -> Dict[str, object]:
         },
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
-            "Live LLM mutation remains deferred behind explicit provider and "
+            "Live LLM mutation is optional and remains gated behind "
             "environment-variable configuration.",
             "Amazon routing data is represented by deterministic local "
             "Amazon-shaped fixtures until public or user-provided data is "
             "configured.",
-            "Reports are structured dictionaries and markdown text; polished "
-            "plots and notebook dashboards remain future packaging work.",
+            "Rendered report artifacts are deterministic local files; PNG plot "
+            "rendering remains optional when matplotlib is available.",
             "The current routing generated-program interface ranks next stops "
             "rather than emitting full routes.",
+            "Subprocess memory limits are applied only on platforms that expose "
+            "compatible resource limits.",
         ),
         "recommended_next_steps": (
             {
-                "step": "optional_live_llm_integration",
+                "step": "external_benchmark_adapter",
                 "reason": (
-                    "Connect the existing mutation protocol to a provider only "
-                    "after explicit approval and env-var configuration."
+                    "Add BPPLIB, OR-Library, TSPLIB, or CVRPLIB-style adapters "
+                    "to test whether discovered heuristics transfer beyond "
+                    "synthetic suites."
                 ),
             },
             {
-                "step": "report_tables_and_plots",
+                "step": "broader_crossover",
                 "reason": (
-                    "Turn structured report dictionaries into publication-ready "
-                    "tables, curves, and frontier charts."
+                    "Add AST-level, feature-weight, and fragment crossover only "
+                    "after the hardened evidence package remains stable."
                 ),
             },
             {
-                "step": "external_benchmark_data",
+                "step": "cloud_scale_experiments",
                 "reason": (
-                    "Add public or user-provided Amazon-style routes without "
-                    "committing raw proprietary data."
+                    "Scale deterministic runs after sandbox isolation and "
+                    "external-data adapters are in place."
                 ),
             },
         ),
@@ -144,8 +148,10 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
         "",
         (
             "Seed heuristics and generated scoring functions pass static "
-            "validation, run in a restricted sandbox, enter OR evaluators, and "
-            "feed archive, selection, robustness, and failure-analysis reports."
+            "validation, run in a restricted sandbox with subprocess isolation "
+            "available for generated scoring calls, enter OR evaluators, and "
+            "feed archive, manifest, artifact, robustness, and failure-analysis "
+            "reports."
         ),
         "",
         "## Killer Experiment",

@@ -9,6 +9,9 @@ description = "Sandboxed LLM-driven program search for operations research heuri
 requires-python = ">=3.9"
 dependencies = []
 
+[project.scripts]
+heuristic-discovery = "heuristic_discovery.__main__:main"
+
 [project.optional-dependencies]
 dev = [
   "pytest>=7",
