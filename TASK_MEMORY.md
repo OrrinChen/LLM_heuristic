@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add amazon heuristic discovery`
-Current phase: Phase 7 - Generalization and Robustness
-Main blocker: Robustness reporting is not yet broadened across held-out item distributions, routing sizes, and Amazon-style route slices
-Next recommended action: add cross-benchmark robustness reporting with train/validation/test score, runtime, failure rate, complexity, and generalization gaps
+Latest commit: `feat: add robustness reporting`
+Current phase: Phase 8 - Failure Analysis
+Main blocker: Failure analysis is not yet broadened across invalid code, timeout, overfit, feasibility, complexity, and metric trade-off patterns
+Next recommended action: add a cross-benchmark failure-analysis report with failure rates by generation, rejected programs, surviving programs, and worked/failed pattern summaries
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, and Amazon discovery tests.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, and robustness reporting tests.
 
 ## Completed Phases
 
@@ -239,6 +239,37 @@ Known limitations:
 - Amazon routes remain synthetic Amazon-shaped fixtures until public or user-provided route files are configured.
 - The ML next-stop baseline is a deterministic linear proxy, not a trained model.
 - Trade-off reports are dictionary artifacts only; plotted Pareto/frontier charts remain deferred.
+
+### Phase 7: Generalization and Robustness
+
+Commit: `feat: add robustness reporting`
+
+What changed:
+
+- Created `src/reports/robustness.py`.
+- Added cross-benchmark robustness summaries for bin packing, simple routing, and Amazon routing.
+- Reported train score, validation score, test score, runtime, failure rate, program complexity, and validation-to-test generalization gap for one deterministic top program per benchmark.
+- Added robustness slice rows for held-out random seeds, held-out item-size distributions, held-out routing instance sizes, synthetic Amazon station-code/city slices, small versus large routes, dense urban versus sparse suburban routes, and high versus medium quality historical routes.
+- Added worst generalization gap reporting and combined failure taxonomy reporting.
+- Added `tests/test_robustness_reporting.py`.
+- Added Phase 7 implementation plan under `docs/superpowers/plans/`.
+- Updated `README.md`, `ROADMAP.md`, and `VALIDATION.md`.
+
+Validation:
+
+- 2026-05-01: `python3 -m pytest tests/test_robustness_reporting.py -q` failed as expected before implementation because `reports.robustness` did not exist.
+- 2026-05-01: `python3 -m pytest tests/test_robustness_reporting.py -q` passed, 4 tests.
+- 2026-05-01: `python3 -m pytest tests/test_robustness_reporting.py -v` passed, 4 tests.
+- 2026-05-01: `python3 -m pytest -q` passed, 68 tests.
+- 2026-05-01: `python3 -m ruff check .` passed.
+- 2026-05-01: `python3 -m ruff format --check .` passed.
+- 2026-05-01: `PYTHONPATH=src python3 - <<'PY' ... PY` Phase 7 smoke check printed deterministic report values: 3 benchmarks, 15 slice rows, benchmark keys `('bin_packing', 'simple_routing', 'amazon_routing')`, top programs `seed-000-tight_fit`, `route-seed-011-return_aware`, and `phase6-seed-000-travel_fast`, generalization gaps `0.833333`, `9.907981`, and `0.0`, worst gap slice `routing-large-routes`, worst gap `68.753356`, failure taxonomy `['dangerous_call']`.
+
+Known limitations:
+
+- Amazon city, density, and quality robustness slices are deterministic Amazon-shaped fixtures until public or user-provided data is configured.
+- Runtime values are local smoke metrics and should not be compared across machines.
+- The report is a dictionary artifact; plotted robustness dashboards remain deferred.
 
 ## Latest Strategic Decision
 
