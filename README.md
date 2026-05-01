@@ -34,7 +34,10 @@ Current status:
 - Final report packaging complete: structured and Markdown report around the
   killer experiment, conservative claims, robustness evidence, failure
   analysis, limitations, and next steps.
-- Current phase: report tables and plots / optional live LLM integration.
+- Report tables and plots / optional live LLM integration complete:
+  deterministic Markdown tables, plot-ready series, ASCII plot previews, and a
+  stdlib-only Gemini mutation provider behind `GEMINI_API_KEY`.
+- Current phase: no numbered roadmap phase remains incomplete.
 
 ## Setup
 
@@ -104,6 +107,12 @@ Final-report validation:
 
 ```bash
 python3 -m pytest tests/test_final_report.py -v
+```
+
+Report tables, plots, and optional live-LLM validation:
+
+```bash
+python3 -m pytest tests/test_report_tables_plots_and_live_llm.py -v
 ```
 
 ## Smoke Check
@@ -410,6 +419,57 @@ True
 True
 ```
 
+## Report Artifact Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.tables import build_report_tables, render_report_tables_markdown
+from reports.plots import build_report_plots, render_report_plots_markdown
+from llm.model_client import GeminiClientError, GeminiMutationProvider
+
+tables = build_report_tables()
+plots = build_report_plots()
+print(tuple(tables["tables"]))
+print(len(tables["benchmark_comparison"]["rows"]))
+print(len(tables["failure_taxonomy"]["rows"]))
+print(tuple(plots["plots"]))
+print(len(plots["robustness_generalization_gaps"]["points"]))
+print("routing-large-routes" in render_report_plots_markdown(plots))
+print("optional_live_llm_integration" in render_report_tables_markdown(tables))
+try:
+    GeminiMutationProvider.from_env()
+except GeminiClientError as exc:
+    print(str(exc).split()[0])
+PY
+```
+
+Expected output without a live key exported:
+
+```text
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'failure_taxonomy', 'recommended_next_steps')
+16
+9
+('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'failure_rate_by_generation')
+15
+True
+True
+GEMINI_API_KEY
+```
+
+## Optional Gemini Mutation
+
+Live mutation is configured only through environment variables. Do not commit
+API keys or generated proprietary data.
+
+```bash
+export GEMINI_API_KEY="..."
+export GEMINI_MODEL="gemini-2.5-flash"  # optional; client default is gemini-2.5-flash
+```
+
+`GeminiMutationProvider.from_env()` implements the existing mutation-provider
+protocol. The `MutationEngine` still statically validates the returned code
+before any evaluator can execute it.
+
 ## Safety Boundary
 
 Generated programs must define only the configured scoring function. Static
@@ -442,8 +502,8 @@ exact-code novelty filtering, an elite archive, generation-level best/median
 score and failure-rate metrics, program complexity tracking, and reruns of top
 archived candidates against held-out instances.
 
-Live LLM calls remain deferred; the current loop is designed to prove the
-search/evaluation/archive contract before paid API usage is introduced.
+The default loop remains deterministic; optional live LLM mutation can now be
+provided through the `MutationEngine` provider protocol.
 
 ## Simple Routing Benchmark
 
@@ -482,9 +542,8 @@ Amazon evaluator while preserving Amazon-specific metrics in the report.
 Reports include generation curves, baseline comparisons, the allowed candidate
 feature contract, local-search and feasibility variants, top program code,
 held-out reruns, failure taxonomy, and explicit trade-off callouts for programs
-that reduce travel time while lowering driver-likeness. Live LLM calls remain
-deferred; this phase proves the evaluator/search/report contract without paid
-API dependencies.
+that reduce travel time while lowering driver-likeness. The default Phase 6 run
+stays deterministic, while optional live mutation can be configured separately.
 
 ## Robustness Reporting
 
@@ -525,6 +584,13 @@ and a Markdown rendering suitable for final write-up work.
 The report centers the killer experiment across online bin packing, simple
 routing, and Amazon-style routing. It states the conservative claim that compact
 sandboxed scoring programs improve selected trade-offs, and explicitly avoids
-claiming universal dominance over classical OR baselines. Live LLM mutation
-remains deferred until an approved provider and environment-variable
-configuration are supplied.
+claiming universal dominance over classical OR baselines.
+
+## Report Tables, Plots, and Live LLM
+
+The report artifact modules turn the structured final, robustness, and
+failure-analysis dictionaries into deterministic Markdown tables and plot-ready
+series with ASCII previews. The Gemini provider implements the existing
+mutation protocol through the REST `generateContent` API, reads credentials only
+from environment variables, and leaves code validation to the existing sandbox
+pipeline.
