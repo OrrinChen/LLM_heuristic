@@ -5,6 +5,78 @@ heuristics. The project constrains generated Python to compact scoring
 functions, validates the code statically, runs it in a restricted sandbox, and
 records evaluation results with archive and lineage metadata.
 
+## What It Does
+
+O2 treats heuristic design as constrained program search. Seed heuristics and
+generated scoring functions are mutated, statically validated, executed in a
+sandbox, scored by OR benchmark evaluators, selected through an archive, and
+exported as reproducible evidence.
+
+The system discovers compact `score_bin` and `score_next_stop` programs for
+bin packing and routing-style tasks. It does not let generated code write a full
+solver or access hidden labels, files, network, credentials, or unrestricted
+imports.
+
+## Why It Matters
+
+Hand-designed OR heuristics are useful because they are compact, auditable, and
+fast, but they are usually tuned by human iteration. O2 shows how that design
+loop can be automated while preserving a strict safety boundary and reporting
+where candidates fail. The claim is conservative: discovered heuristics improve
+selected quality-runtime-generalization trade-offs under evaluator constraints;
+the project does not claim universal dominance or SOTA solver performance.
+
+## One-Command Demo
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-demo --top-k 3
+```
+
+This writes a local evidence package with `reports/final_report.md`,
+`reports/technical_report.md`, `reports/portfolio_brief.md`, CSV tables,
+plot-ready JSON, top programs, frontier programs, and a rerun manifest.
+
+## Core Architecture
+
+```mermaid
+flowchart LR
+    A["seed heuristic library"] --> B["deterministic or LLM mutation operator"]
+    B --> C["static validation"]
+    C --> D["subprocess sandbox"]
+    D --> E["OR benchmark evaluator"]
+    E --> F["archive and rerun manifest"]
+    F --> G["report artifacts and portfolio evidence"]
+```
+
+## Benchmark Results
+
+| Benchmark | Evidence | Representative result | Claim boundary |
+| --- | --- | --- | --- |
+| Online Bin Packing | Held-out synthetic distributions | `seed-000-tight_fit` top program | compact `score_bin` heuristic under evaluator constraints |
+| External Bin Packing | BPPLIB / OR-Library-style fixtures | `external_generalization.csv` | external transfer evidence, not SOTA |
+| Simple Routing | Held-out route sizes plus 2-opt | `route-seed-003-slack_aware` | `score_next_stop` heuristic comparison |
+| Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
+| Search Ablation | Fixed local candidate budget | seed, mutation, crossover, LLM-proxy, repair operators | mechanism evidence without live LLM superiority claims |
+| Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
+
+## Safety Boundary
+
+Generated code is limited to narrow scoring functions. Static checks reject
+imports, file access, network/process names, dangerous builtins, disallowed
+globals, and dunder access before sandbox execution. Hardened single-call
+execution runs in a subprocess with wall-clock timeout handling and optional
+platform memory limits.
+
+## Limitations
+
+- Live LLM mutation is optional and requires environment variables.
+- External routing evidence is deferred.
+- External bin packing fixtures are intentionally small and parser-backed.
+- Amazon-style routing uses deterministic local fixtures, not proprietary or
+  public Amazon route data.
+- Runtime frontier values use a deterministic proxy.
+- O2 reports selected trade-offs and does not claim universal dominance.
+
 Current status:
 
 - Phase 0 complete: project direction, roadmap, task memory, and workflow docs.
@@ -55,8 +127,11 @@ Current status:
 - Phase 18 complete: research-style technical report packaging the problem,
   system design, sandbox boundary, benchmarks, search loop, external evidence,
   ablation, generalization, failure analysis, limitations, and conclusion.
-- Current phase: Phase 19 resume / portfolio packaging is the recommended next
-  extension.
+- Phase 19 complete: README-first portfolio narrative, one-command demo,
+  architecture diagram, benchmark evidence table, safety boundary,
+  limitations, resume bullets, and portfolio brief artifact.
+- Current phase: the job-search portfolio track is complete; optional Phase 10
+  external routing evidence is the next research extension.
 
 ## Setup
 
@@ -162,6 +237,12 @@ Research-style technical report validation:
 
 ```bash
 python3 -m pytest tests/test_technical_report_phase18.py -v
+```
+
+Portfolio packaging validation:
+
+```bash
+python3 -m pytest tests/test_portfolio_packaging_phase19.py -v
 ```
 
 ## CLI
@@ -573,7 +654,7 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-resume_portfolio_packaging
+external_routing_evidence
 True
 True
 True
@@ -604,7 +685,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("resume_portfolio_packaging" in render_report_tables_markdown(tables))
+print("external_routing_evidence" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -667,6 +748,7 @@ The checked-in evidence package contains:
 ```text
 reports/final_report.md
 reports/technical_report.md
+reports/portfolio_brief.md
 reports/tables/*.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json

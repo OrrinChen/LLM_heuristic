@@ -512,7 +512,7 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-resume_portfolio_packaging
+external_routing_evidence
 True
 True
 True
@@ -556,6 +556,63 @@ analysis, limitations, and conclusion
 claim boundaries remain conservative and reject universal dominance
 the technical report maps every major section to existing evidence artifacts
 report artifact export writes reports/technical_report.md
+```
+
+## Portfolio Packaging Validation
+
+Run these once Phase 19 portfolio packaging exists:
+
+```bash
+python3 -m pytest tests/test_portfolio_packaging_phase19.py -v
+```
+
+Expected result:
+
+```text
+portfolio package includes resume bullets, one-command demo, architecture,
+benchmark results, safety boundary, limitations, and conservative claim
+boundaries
+README first screen includes what it does, why it matters, one-command demo,
+core architecture, benchmark results, safety boundary, and limitations
+report artifact export writes reports/portfolio_brief.md
+```
+
+## Portfolio Packaging Smoke Validation
+
+Run this after Phase 19 modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from pathlib import Path
+
+from reports.portfolio import (
+    build_phase19_package,
+    render_portfolio_brief_markdown,
+)
+
+package = build_phase19_package()
+markdown = render_portfolio_brief_markdown(package)
+readme = Path("README.md").read_text(encoding="utf-8")[:4200]
+print(package["phase"])
+print(len(package["benchmark_results"]))
+print(package["recommended_next_phase"])
+print("sandboxed LLM-driven OR heuristic discovery system" in markdown)
+print("PYTHONPATH=src python3 -m heuristic_discovery report" in readme)
+print("## Core Architecture" in readme)
+print("does not claim universal dominance" in readme)
+PY
+```
+
+Expected result:
+
+```text
+19
+6
+Optional Phase 10: External Routing Evidence
+True
+True
+True
+True
 ```
 
 ## Research-Style Technical Report Smoke Validation
@@ -716,7 +773,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("resume_portfolio_packaging" in render_report_tables_markdown(tables))
+print("external_routing_evidence" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:

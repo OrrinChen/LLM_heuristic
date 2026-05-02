@@ -50,6 +50,9 @@ Completed:
 - Phase 18: Research-style technical report with problem framing, system
   design, sandbox boundary, benchmarks, search loop, external evidence,
   ablation, generalization, failure analysis, limitations, and conclusion.
+- Phase 19: Resume / portfolio packaging with README-first narrative,
+  one-command demo, architecture diagram, benchmark evidence table, safety
+  boundary, limitations, resume bullets, and portfolio brief artifact.
 
 Current phase:
 
@@ -58,12 +61,13 @@ Current phase:
 - Phase 11 search mechanism ablation is complete.
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 18 research-style technical report is complete.
-- Next implementation phase is Phase 19: Resume / Portfolio Packaging.
+- Phase 19 resume / portfolio packaging is complete.
+- The job-search evidence track is complete; the next optional implementation
+  phase is Phase 10: External Routing Evidence.
 
 Deferred:
 
 - External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
-- Resume / portfolio packaging.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
@@ -72,8 +76,8 @@ Deferred:
 Next autonomous action:
 
 ```text
-Execute Phase 19 only: turn the evidence package and technical report into a
-README-first portfolio narrative and interview-ready demo.
+The required job-search packaging track is complete. If continuing, execute
+optional Phase 10 only: add external routing benchmark evidence.
 ```
 
 ## Project Positioning
@@ -603,9 +607,9 @@ Engineering-platform route:
 Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
 ```
 
-Phase 9, Phase 11, Phase 15, and Phase 18 are complete. The current priority
-is Phase 19. Do not implement optional research or cloud phases while Phase 19
-is in progress.
+Phase 9, Phase 11, Phase 15, Phase 18, and Phase 19 are complete. The
+job-search portfolio track is complete. Optional research phases should be
+selected deliberately rather than started by default.
 
 ## Phase 9: External Benchmark Evidence
 
@@ -928,6 +932,8 @@ Conservative abstract:
 
 ## Phase 19: Resume / Portfolio Packaging
 
+Status: complete.
+
 Goal: make the project directly usable in resumes, GitHub, demos, and
 interviews.
 
@@ -940,13 +946,13 @@ Resume bullet target:
 
 README first-screen requirements:
 
-- [ ] What the system does.
-- [ ] Why it matters.
-- [ ] One-command demo.
-- [ ] Core architecture diagram.
-- [ ] Benchmark results table.
-- [ ] Safety boundary.
-- [ ] Limitations.
+- [x] What the system does.
+- [x] Why it matters.
+- [x] One-command demo.
+- [x] Core architecture diagram.
+- [x] Benchmark results table.
+- [x] Safety boundary.
+- [x] Limitations.
 
 ## Killer Experiment
 
