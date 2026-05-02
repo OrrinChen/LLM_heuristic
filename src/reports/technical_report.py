@@ -41,6 +41,7 @@ def build_phase18_report(
     benchmarks = source["killer_experiment"]["benchmarks"]
     evidence = source["evidence"]
     external = source["external_benchmark"]
+    routing_external = source["routing_external"]
     ablation = source["search_ablation"]
     frontier = source["pareto_frontier"]
 
@@ -96,14 +97,16 @@ def build_phase18_report(
             (
                 "Evidence covers online bin packing, simple routing, "
                 "Amazon-style routing fixtures, and parser-backed external "
-                "bin-packing benchmark-style instances. Each benchmark is "
-                "compared against deterministic classical baselines."
+                "bin-packing and TSPLIB-style routing benchmark-style "
+                "instances. Each benchmark is compared against deterministic "
+                "classical baselines."
             ),
             (
                 "bin_packing",
                 "simple_routing",
                 "amazon_routing",
                 "external_bin_packing",
+                "external_routing",
             ),
         ),
         _section(
@@ -120,12 +123,18 @@ def build_phase18_report(
             "external_benchmark_evidence",
             "External Benchmark Evidence",
             (
-                "External bin packing evidence uses BPPLIB / OR-Library-style "
-                "fixtures with train, validation, and test splits. The report "
-                "compares synthetic-selected and external-selected programs "
-                "without claiming SOTA or universal transfer."
+                "External evidence uses BPPLIB / OR-Library-style bin packing "
+                "fixtures and TSPLIB-style routing fixtures with train, "
+                "validation, and test splits. The report compares "
+                "synthetic-selected and external-selected programs without "
+                "claiming SOTA, LKH, CVRP, or universal transfer."
             ),
-            ("external_generalization.csv", external["benchmark"]),
+            (
+                "external_generalization.csv",
+                "routing_external_generalization.csv",
+                external["benchmark"],
+                routing_external["benchmark"],
+            ),
         ),
         _section(
             "ablation",
@@ -169,9 +178,10 @@ def build_phase18_report(
             "Limitations",
             (
                 "The evidence package is deterministic and local by default. "
-                "Live LLM mutation remains optional, routing external evidence "
-                "is deferred, external fixtures are intentionally small, and "
-                "runtime frontier values use a deterministic proxy."
+                "Live LLM mutation remains optional, external fixtures are "
+                "intentionally small, CVRPLIB and time-window routing are "
+                "deferred, and runtime frontier values use a deterministic "
+                "proxy."
             ),
             ("README.md", "TASK_MEMORY.md", "ROADMAP.md"),
         ),

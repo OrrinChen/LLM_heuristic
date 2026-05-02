@@ -70,6 +70,20 @@ def build_report_tables(
             ),
             "rows": _external_generalization_rows(final),
         },
+        "routing_external_generalization": {
+            "title": "Routing External Generalization",
+            "columns": (
+                "benchmark",
+                "selection_source",
+                "program_id",
+                "validation_score",
+                "external_test_score",
+                "synthetic_to_external_gap",
+                "baseline_reference",
+                "claim",
+            ),
+            "rows": _routing_external_generalization_rows(final),
+        },
         "ablation_summary": {
             "title": "Ablation Summary",
             "columns": (
@@ -259,6 +273,58 @@ def _external_generalization_rows(final_report: Mapping[str, object]) -> TableRo
         },
     ]
     for name in ("first_fit", "best_fit", "best_fit_decreasing"):
+        rows.append(
+            {
+                "benchmark": external["benchmark"],
+                "selection_source": "external_test_baseline",
+                "program_id": "",
+                "validation_score": "",
+                "external_test_score": _format_number(baselines[name]),
+                "synthetic_to_external_gap": "",
+                "baseline_reference": name,
+                "claim": claim,
+            }
+        )
+    return rows
+
+
+def _routing_external_generalization_rows(
+    final_report: Mapping[str, object],
+) -> TableRows:
+    external = final_report["routing_external"]
+    baselines = external["external_test_baseline_scores"]
+    claim = external["claim_boundary"]
+    rows: TableRows = [
+        {
+            "benchmark": external["benchmark"],
+            "selection_source": "external_validation",
+            "program_id": external["best_external_program_id"],
+            "validation_score": _format_number(
+                external["best_external_validation_score"]
+            ),
+            "external_test_score": _format_number(external["best_external_test_score"]),
+            "synthetic_to_external_gap": _format_number(
+                external["external_generalization_gap"]
+            ),
+            "baseline_reference": "",
+            "claim": claim,
+        },
+        {
+            "benchmark": external["benchmark"],
+            "selection_source": "synthetic_validation",
+            "program_id": external["synthetic_top_program_id"],
+            "validation_score": "",
+            "external_test_score": _format_number(
+                external["synthetic_top_external_test_score"]
+            ),
+            "synthetic_to_external_gap": _format_number(
+                external["synthetic_to_external_gap"]
+            ),
+            "baseline_reference": "",
+            "claim": claim,
+        },
+    ]
+    for name in ("nearest_neighbor", "cheapest_insertion", "two_opt"):
         rows.append(
             {
                 "benchmark": external["benchmark"],

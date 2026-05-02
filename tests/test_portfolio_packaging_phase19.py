@@ -27,8 +27,8 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
     assert package["claim_boundaries"]["does_not_claim"] == (
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
-    assert package["recommended_next_phase"] == (
-        "Optional Phase 10: External Routing Evidence"
+    assert (
+        package["recommended_next_phase"] == "Optional Phase 12: Live LLM Mutation v1"
     )
 
 
@@ -36,16 +36,18 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     package = build_phase19_package()
 
     assert "seed heuristic library" in package["architecture_diagram"]
-    assert len(package["benchmark_results"]) >= 4
+    assert len(package["benchmark_results"]) >= 5
     assert {
         "Online Bin Packing",
         "External Bin Packing",
+        "External Routing",
         "Simple Routing",
         "Amazon-Style Routing",
     }.issubset({row["benchmark"] for row in package["benchmark_results"]})
     assert "subprocess" in package["safety_boundary"]
     assert "file access" in package["safety_boundary"]
     assert any("Live LLM" in limitation for limitation in package["limitations"])
+    assert any("TSPLIB-style" in limitation for limitation in package["limitations"])
 
 
 def test_portfolio_brief_markdown_is_interview_ready() -> None:

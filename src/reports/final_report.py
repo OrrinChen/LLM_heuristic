@@ -9,6 +9,7 @@ from benchmarks.amazon_routing.discovery import (
 from benchmarks.bin_packing.evaluator import build_phase2_report
 from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
+from benchmarks.routing.external import build_phase10_report
 from program_search.ablation import build_phase11_report
 from reports.failure_analysis import build_phase8_report
 from reports.pareto import build_phase15_report
@@ -20,6 +21,7 @@ FINAL_REPORT_SECTIONS = (
     "killer_experiment",
     "benchmark_results",
     "external_benchmark_evidence",
+    "routing_external_benchmark_evidence",
     "search_mechanism_ablation",
     "pareto_frontier_report",
     "generalization_and_robustness",
@@ -51,6 +53,7 @@ def build_final_report() -> Dict[str, object]:
     phase7 = build_phase7_report()
     phase8 = build_phase8_report()
     phase9 = build_phase9_report(candidate_count=48, synthetic_item_count=25)
+    phase10 = build_phase10_report(candidate_count=16, synthetic_stop_count=10)
     phase11 = build_phase11_report(
         candidate_budget=32,
         generations=3,
@@ -96,6 +99,7 @@ def build_final_report() -> Dict[str, object]:
             },
         },
         "external_benchmark": _external_bin_packing_summary(phase9),
+        "routing_external": _external_routing_summary(phase10),
         "search_ablation": _search_ablation_summary(phase11),
         "pareto_frontier": _pareto_frontier_summary(phase15),
         "evidence": _evidence_summary(phase6, phase7, phase8),
@@ -105,6 +109,9 @@ def build_final_report() -> Dict[str, object]:
             "External bin packing evidence uses parser-backed, small "
             "benchmark-style local fixtures by default; large public benchmark "
             "files are intentionally not committed.",
+            "External routing evidence uses parser-backed, small TSPLIB-style "
+            "local fixtures by default; large public benchmark files are "
+            "intentionally not committed.",
             "Amazon routing data is represented by deterministic local "
             "Amazon-shaped fixtures until public or user-provided data is "
             "configured.",
@@ -119,18 +126,18 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "external_routing_evidence",
-                "reason": (
-                    "Optionally add TSPLIB-style routing evidence after the "
-                    "job-search evidence and portfolio package are complete."
-                ),
-            },
-            {
                 "step": "live_llm_mutation_v1",
                 "reason": (
                     "Optionally convert Gemini mutation from smoke-tested "
                     "provider support into a controlled live-operator "
                     "experiment."
+                ),
+            },
+            {
+                "step": "semantic_novelty",
+                "reason": (
+                    "Optionally add behavioral fingerprints to distinguish "
+                    "code novelty from behavior novelty."
                 ),
             },
         ),
@@ -143,6 +150,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     claims = report["claims"]
     killer = report["killer_experiment"]["benchmarks"]
     external = report["external_benchmark"]
+    routing_external = report["routing_external"]
     ablation = report["search_ablation"]
     frontier = report["pareto_frontier"]
     evidence = report["evidence"]
@@ -207,6 +215,32 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
             (
                 "Claim boundary: this section does not claim SOTA or universal "
                 "dominance."
+            ),
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## External Routing Evidence",
+            "",
+            routing_external["summary"],
+            "",
+            f"Benchmark: `{routing_external['benchmark']}`.",
+            (
+                "External routing top program: "
+                f"`{routing_external['best_external_program_id']}`."
+            ),
+            (
+                "External routing held-out test score: "
+                f"`{routing_external['best_external_test_score']}`."
+            ),
+            (
+                "Synthetic-selected routing program external test score: "
+                f"`{routing_external['synthetic_top_external_test_score']}`."
+            ),
+            (
+                "Claim boundary: this section does not claim LKH, CVRP, "
+                "state-of-the-art solver, Amazon, or universal superiority."
             ),
             "",
         ]
@@ -387,6 +421,32 @@ def _external_bin_packing_summary(
             "OR-Library-style external fixtures with separate train, "
             "validation, and test splits, then compares synthetic-selected and "
             "external-selected programs against classical baselines."
+        ),
+    }
+
+
+def _external_routing_summary(phase10: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmark": phase10["benchmark"],
+        "source": phase10["source"],
+        "best_external_program_id": phase10["best_external_program_id"],
+        "best_external_validation_score": phase10["best_external_validation_score"],
+        "best_external_test_score": phase10["best_external_test_score"],
+        "synthetic_top_program_id": phase10["synthetic_top_program_id"],
+        "synthetic_top_external_test_score": (
+            phase10["synthetic_top_external_test_score"]
+        ),
+        "synthetic_to_external_gap": phase10["synthetic_to_external_gap"],
+        "external_generalization_gap": phase10["external_generalization_gap"],
+        "external_test_baseline_scores": phase10["external_test_baseline_scores"],
+        "claim_boundary": phase10["claim_boundary"],
+        "summary": (
+            "Phase 10 evaluates `score_next_stop` routing candidates on "
+            "TSPLIB-style EUC_2D external fixtures with separate train, "
+            "validation, and test splits. It reuses nearest-neighbor, "
+            "cheapest-insertion, 2-opt, and candidate rerun machinery while "
+            "keeping the claim boundary below LKH, CVRP, SOTA, or Amazon "
+            "routing superiority."
         ),
     }
 

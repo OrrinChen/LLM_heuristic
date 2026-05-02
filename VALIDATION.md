@@ -115,6 +115,24 @@ external baseline comparison and synthetic-to-external gap are reported
 final report, artifact export, and CLI expose bin_packing_external evidence
 ```
 
+## External Routing Validation
+
+Run these once Phase 10 external routing evidence exists:
+
+```bash
+python3 -m pytest tests/test_external_routing_phase10.py -v
+```
+
+Expected result:
+
+```text
+TSPLIB-style EUC_2D fixtures parse into routing instances
+external routing train / validation / test splits are disjoint
+nearest-neighbor, insertion, and 2-opt baselines are reused
+score_next_stop candidates rerun on external validation and test splits
+final report, artifact export, and CLI expose routing_external evidence
+```
+
 ## Phase 9 Smoke Validation
 
 Run this after external bin packing modules exist:
@@ -142,6 +160,37 @@ seed-000-tight_fit
 5.0
 True
 external benchmark-style evidence only; no SOTA or universal dominance claim
+```
+
+## Phase 10 Smoke Validation
+
+Run this after external routing modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.routing.external import build_phase10_report
+
+report = build_phase10_report(candidate_count=8, synthetic_stop_count=8)
+print(report["phase"])
+print(report["benchmark"])
+print(report["external_split"]["test_count"])
+print(report["best_external_program_id"])
+print(report["best_external_test_score"] is not None)
+print("nearest_neighbor" in report["external_test_baseline_scores"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected result:
+
+```text
+10
+routing_external
+2
+route-seed-000-nearest
+True
+True
+external routing-style evidence only; no LKH, CVRP, Amazon, SOTA, or universal dominance claim
 ```
 
 ## Phase 2 Smoke Validation
@@ -472,7 +521,7 @@ Markdown rendering states selected trade-offs without universal dominance claims
 external benchmark evidence is included without SOTA claims
 search mechanism ablation evidence is included under a fixed local budget
 Pareto frontier evidence is included without universal dominance claims
-recommended next steps prioritize resume / portfolio packaging after Phase 18
+recommended next steps prioritize live LLM mutation after Phase 10
 ```
 
 ## Final Report Smoke Validation
@@ -512,7 +561,7 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-external_routing_evidence
+live_llm_mutation_v1
 True
 True
 True
@@ -607,8 +656,8 @@ Expected result:
 
 ```text
 19
-6
-Optional Phase 10: External Routing Evidence
+7
+Optional Phase 12: Live LLM Mutation v1
 True
 True
 True
@@ -763,6 +812,7 @@ plots = build_report_plots()
 print(tuple(tables["tables"]))
 print(len(tables["benchmark_comparison"]["rows"]))
 print(len(tables["external_generalization"]["rows"]))
+print(len(tables["routing_external_generalization"]["rows"]))
 print(len(tables["ablation_summary"]["rows"]))
 print(len(tables["invalid_code_rate_by_method"]["rows"]))
 print(len(tables["best_score_by_budget"]["rows"]))
@@ -773,7 +823,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("external_routing_evidence" in render_report_tables_markdown(tables))
+print("live_llm_mutation_v1" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -784,8 +834,9 @@ PY
 Expected result without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
 16
+5
 5
 8
 8
@@ -864,6 +915,7 @@ Run these from the repository root:
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1 --output-dir /tmp/o2-cli-run
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-cli-external
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-cli-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-cli-ablation
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
@@ -875,8 +927,9 @@ Expected result:
 ```text
 run prints generation_count and writes run_summary.json
 bin_packing_external run prints best_external_program_id and writes run_summary.json
+routing_external run prints best_external_program_id and writes run_summary.json
 search_ablation run prints best_method and writes run_summary.json
-report writes reports/final_report.md, reports/tables/*.csv, reports/plots/plot_series.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
+report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/plots/plot_series.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
 inspect prints candidate_id rows
 rerun-manifest prints code_hash_matches true rows
 ```

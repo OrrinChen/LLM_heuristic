@@ -70,6 +70,13 @@ def build_phase19_package(
             "claim": "external transfer evidence without SOTA claim",
         },
         {
+            "benchmark": "External Routing",
+            "evidence": "TSPLIB-style local fixtures",
+            "top_program": final["routing_external"]["best_external_program_id"],
+            "reported_metric": final["routing_external"]["best_external_test_score"],
+            "claim": "routing transfer evidence without LKH or CVRP claim",
+        },
+        {
             "benchmark": "Simple Routing",
             "evidence": "held-out route sizes with local-search comparison",
             "top_program": benchmarks["simple_routing"]["top_program_id"],
@@ -114,9 +121,10 @@ def build_phase19_package(
         ),
         "limitations": (
             "Live LLM mutation is optional and requires environment variables.",
-            "External routing evidence remains deferred.",
             "External bin packing fixtures are small and committed only as "
             "parser-backed benchmark-style examples.",
+            "External routing fixtures are small TSPLIB-style examples, not "
+            "large TSPLIB benchmark corpora.",
             "Amazon-style routing uses deterministic local fixtures, not "
             "proprietary or public Amazon route data.",
             "The project reports selected trade-offs and does not claim "
@@ -136,7 +144,7 @@ def build_phase19_package(
             ],
             "pareto_frontier_rows": frontier["frontier_count"],
         },
-        "recommended_next_phase": "Optional Phase 10: External Routing Evidence",
+        "recommended_next_phase": "Optional Phase 12: Live LLM Mutation v1",
     }
 
 

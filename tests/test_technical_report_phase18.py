@@ -37,6 +37,7 @@ def test_phase18_report_sections_map_to_existing_evidence() -> None:
         "simple_routing",
         "amazon_routing",
         "external_bin_packing",
+        "external_routing",
     )
     assert section_by_id["ablation"]["evidence_refs"] == (
         "ablation_summary.csv",

@@ -36,9 +36,9 @@ Evidence references: `tests/test_program_sandbox.py`, `tests/test_hardening_mile
 
 ## Benchmarks
 
-Evidence covers online bin packing, simple routing, Amazon-style routing fixtures, and parser-backed external bin-packing benchmark-style instances. Each benchmark is compared against deterministic classical baselines.
+Evidence covers online bin packing, simple routing, Amazon-style routing fixtures, and parser-backed external bin-packing and TSPLIB-style routing benchmark-style instances. Each benchmark is compared against deterministic classical baselines.
 
-Evidence references: `bin_packing`, `simple_routing`, `amazon_routing`, `external_bin_packing`.
+Evidence references: `bin_packing`, `simple_routing`, `amazon_routing`, `external_bin_packing`, `external_routing`.
 
 ## Search Loop
 
@@ -48,9 +48,9 @@ Evidence references: `generation_curve_by_method.json`, `artifacts/rerun_manifes
 
 ## External Benchmark Evidence
 
-External bin packing evidence uses BPPLIB / OR-Library-style fixtures with train, validation, and test splits. The report compares synthetic-selected and external-selected programs without claiming SOTA or universal transfer.
+External evidence uses BPPLIB / OR-Library-style bin packing fixtures and TSPLIB-style routing fixtures with train, validation, and test splits. The report compares synthetic-selected and external-selected programs without claiming SOTA, LKH, CVRP, or universal transfer.
 
-Evidence references: `external_generalization.csv`, `bin_packing_external`.
+Evidence references: `external_generalization.csv`, `routing_external_generalization.csv`, `bin_packing_external`, `routing_external`.
 
 ## Ablation
 
@@ -72,7 +72,7 @@ Evidence references: `failure_taxonomy.csv`, `failure_cards`.
 
 ## Limitations
 
-The evidence package is deterministic and local by default. Live LLM mutation remains optional, routing external evidence is deferred, external fixtures are intentionally small, and runtime frontier values use a deterministic proxy.
+The evidence package is deterministic and local by default. Live LLM mutation remains optional, external fixtures are intentionally small, CVRPLIB and time-window routing are deferred, and runtime frontier values use a deterministic proxy.
 
 Evidence references: `README.md`, `TASK_MEMORY.md`, `ROADMAP.md`.
 

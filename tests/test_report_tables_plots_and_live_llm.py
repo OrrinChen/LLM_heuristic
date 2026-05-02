@@ -25,6 +25,7 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "robustness_summary",
         "worst_generalization_gaps",
         "external_generalization",
+        "routing_external_generalization",
         "ablation_summary",
         "invalid_code_rate_by_method",
         "best_score_by_budget",
@@ -36,6 +37,7 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["robustness_summary"]["rows"]) == 3
     assert len(tables["worst_generalization_gaps"]["rows"]) == 5
     assert len(tables["external_generalization"]["rows"]) == 5
+    assert len(tables["routing_external_generalization"]["rows"]) == 5
     assert len(tables["ablation_summary"]["rows"]) == 8
     assert len(tables["invalid_code_rate_by_method"]["rows"]) == 8
     assert len(tables["best_score_by_budget"]["rows"]) == 8
@@ -58,9 +60,10 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "| benchmark | method | split | score | top_program_id |" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
     assert "## External Generalization" in markdown
+    assert "## Routing External Generalization" in markdown
     assert "## Ablation Summary" in markdown
     assert "## Pareto Frontier" in markdown
-    assert "external_routing_evidence" in markdown
+    assert "live_llm_mutation_v1" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
