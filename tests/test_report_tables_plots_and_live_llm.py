@@ -25,6 +25,9 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "robustness_summary",
         "worst_generalization_gaps",
         "external_generalization",
+        "ablation_summary",
+        "invalid_code_rate_by_method",
+        "best_score_by_budget",
         "failure_taxonomy",
         "recommended_next_steps",
     )
@@ -32,6 +35,9 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["robustness_summary"]["rows"]) == 3
     assert len(tables["worst_generalization_gaps"]["rows"]) == 5
     assert len(tables["external_generalization"]["rows"]) == 5
+    assert len(tables["ablation_summary"]["rows"]) == 8
+    assert len(tables["invalid_code_rate_by_method"]["rows"]) == 8
+    assert len(tables["best_score_by_budget"]["rows"]) == 8
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert tables["benchmark_comparison"]["rows"][0] == {
         "benchmark": "Online Bin Packing",
@@ -50,7 +56,8 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "| benchmark | method | split | score | top_program_id |" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
     assert "## External Generalization" in markdown
-    assert "search_mechanism_ablation" in markdown
+    assert "## Ablation Summary" in markdown
+    assert "pareto_frontier_report" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
@@ -60,11 +67,13 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
         "bin_packing_evolution_best_score",
         "amazon_discovery_best_score",
         "robustness_generalization_gaps",
+        "generation_curve_by_method",
         "failure_rate_by_generation",
     )
     assert len(plots["bin_packing_evolution_best_score"]["points"]) == 4
     assert len(plots["amazon_discovery_best_score"]["points"]) == 3
     assert len(plots["robustness_generalization_gaps"]["points"]) == 15
+    assert len(plots["generation_curve_by_method"]["points"]) == 32
     assert len(plots["failure_rate_by_generation"]["points"]) == 7
     assert plots["bin_packing_evolution_best_score"]["ascii"]
     assert "generation=0" in plots["bin_packing_evolution_best_score"]["ascii"]

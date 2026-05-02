@@ -9,6 +9,7 @@ from benchmarks.bin_packing.external import (
     build_phase9_report,
     load_external_bin_packing_instances,
 )
+from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from program_search.rerun_manifest import (
     build_bin_packing_rerun_manifest,
@@ -42,13 +43,14 @@ def _build_parser() -> argparse.ArgumentParser:
     run = subcommands.add_parser("run", help="Run a deterministic local search.")
     run.add_argument(
         "--benchmark",
-        choices=("bin_packing", "bin_packing_external"),
+        choices=("bin_packing", "bin_packing_external", "search_ablation"),
         default="bin_packing",
     )
     run.add_argument("--generations", type=int, default=3)
     run.add_argument("--population-size", type=int, default=16)
     run.add_argument("--offspring-per-generation", type=int, default=12)
     run.add_argument("--candidate-count", type=int, default=48)
+    run.add_argument("--candidate-budget", type=int, default=32)
     run.add_argument("--item-count", type=int, default=20)
     run.add_argument("--random-seed", type=int, default=23)
     run.add_argument("--external-path")
@@ -91,6 +93,13 @@ def _run(args: argparse.Namespace) -> int:
             synthetic_item_count=args.item_count,
             external_instances=external_instances,
         )
+    elif args.benchmark == "search_ablation":
+        report = build_phase11_report(
+            candidate_budget=args.candidate_budget,
+            generations=args.generations,
+            item_count=args.item_count,
+            random_seed=args.random_seed,
+        )
     else:
         report = build_phase3_report(
             config=EvolutionConfig(
@@ -114,6 +123,12 @@ def _run(args: argparse.Namespace) -> int:
         payload = {
             "benchmark": args.benchmark,
             "best_external_program_id": report["best_external_program_id"],
+            "path": str(output_path),
+        }
+    elif args.benchmark == "search_ablation":
+        payload = {
+            "benchmark": args.benchmark,
+            "best_method": report["best_method"],
             "path": str(output_path),
         }
     else:

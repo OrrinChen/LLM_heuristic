@@ -45,7 +45,11 @@ Current status:
   train / validation / test split, external baseline comparison,
   synthetic-to-external transfer gap, final report section,
   `external_generalization.csv`, and `bin_packing_external` CLI support.
-- Current phase: Phase 11 search mechanism ablation is the recommended next
+- Phase 11 complete: controlled search-mechanism ablation across seed-only,
+  mutation, crossover, deterministic LLM-proxy mutation, deterministic
+  LLM-proxy repair, and mutation+repair under the same local budget, split,
+  timeout, and seeds.
+- Current phase: Phase 15 Pareto frontier reporting is the recommended next
   extension.
 
 ## Setup
@@ -136,6 +140,12 @@ External bin packing validation:
 python3 -m pytest tests/test_external_bin_packing_phase9.py -v
 ```
 
+Search ablation validation:
+
+```bash
+python3 -m pytest tests/test_search_ablation_phase11.py -v
+```
+
 ## CLI
 
 The deterministic local CLI is available through the package module:
@@ -143,6 +153,7 @@ The deterministic local CLI is available through the package module:
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 32 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -273,6 +284,31 @@ seed-000-tight_fit
 5.0
 True
 external benchmark-style evidence only; no SOTA or universal dominance claim
+```
+
+## Search Ablation Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from program_search.ablation import build_phase11_report
+
+report = build_phase11_report(candidate_budget=16, generations=3, item_count=16)
+print(report["benchmark"])
+print(len(report["methods"]))
+print(report["controls"]["candidate_budget"])
+print(report["best_method"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected output:
+
+```text
+bin_packing
+8
+16
+llm_mutation
+ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed
 ```
 
 ## Routing Smoke Check
@@ -472,6 +508,7 @@ print(benchmarks["simple_routing"]["top_program_id"])
 print(benchmarks["amazon_routing"]["top_program_id"])
 print(report["recommended_next_steps"][0]["step"])
 print("External Benchmark Evidence" in markdown)
+print("Search Mechanism Ablation" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
 PY
@@ -486,7 +523,8 @@ Expected output for the deterministic final report:
 seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
-search_mechanism_ablation
+pareto_frontier_report
+True
 True
 True
 True
@@ -505,11 +543,15 @@ plots = build_report_plots()
 print(tuple(tables["tables"]))
 print(len(tables["benchmark_comparison"]["rows"]))
 print(len(tables["external_generalization"]["rows"]))
+print(len(tables["ablation_summary"]["rows"]))
+print(len(tables["invalid_code_rate_by_method"]["rows"]))
+print(len(tables["best_score_by_budget"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
+print(len(plots["generation_curve_by_method"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("search_mechanism_ablation" in render_report_tables_markdown(tables))
+print("pareto_frontier_report" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -520,12 +562,16 @@ PY
 Expected output without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'failure_taxonomy', 'recommended_next_steps')
 16
 5
+8
+8
+8
 9
-('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'failure_rate_by_generation')
+('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'failure_rate_by_generation')
 15
+32
 True
 True
 GEMINI_API_KEY
@@ -567,6 +613,7 @@ The checked-in evidence package contains:
 reports/final_report.md
 reports/tables/*.csv
 reports/plots/plot_series.json
+reports/plots/generation_curve_by_method.json
 artifacts/top_programs/*.py
 artifacts/rerun_manifest.json
 ```

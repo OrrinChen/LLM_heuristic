@@ -45,6 +45,15 @@ External held-out test score: `5.0`.
 Synthetic-selected program external test score: `5.0`.
 Claim boundary: this section does not claim SOTA or universal dominance.
 
+## Search Mechanism Ablation
+
+Phase 11 compares seed-only, mutation, crossover, deterministic LLM-proxy, and repair operators under the same candidate budget, split, timeout, and random seed. This is a fixed local budget ablation, not evidence about live LLM behavior.
+
+Best method under fixed local budget: `crossover_only`.
+Best validation score: `7.1`.
+Methods compared: `seed_only`, `random_mutation`, `deterministic_template_mutation`, `crossover_only`, `mutation_plus_crossover`, `llm_mutation`, `llm_repair`, `llm_mutation_plus_repair`.
+Claim boundary: ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed.
+
 ## Generalization And Robustness
 
 The robustness report covers 3 benchmarks and 15 held-out slices.
@@ -66,6 +75,6 @@ Amazon trade-off callouts: 4.
 
 ## Recommended Next Steps
 
-- `search_mechanism_ablation`: Compare seed-only, deterministic mutation, crossover, and LLM-enabled operators under a fixed evaluation budget.
 - `pareto_frontier_report`: Report objective-quality, runtime, complexity, failure, and generalization trade-offs instead of a single winner.
 - `research_style_report`: Package the system design, sandbox boundary, external evidence, ablation, limitations, and conclusions.
+- `resume_portfolio_packaging`: Turn the evidence package into a concise README-first portfolio narrative and interview-ready demo.

@@ -1,0 +1,9 @@
+method,candidate_budget,best_validation_score,best_test_score,best_program_id
+seed_only,32,7.100000,7.750000,seed_only-000
+random_mutation,32,7.100000,7.833333,random_mutation-000
+deterministic_template_mutation,32,7.100000,7.750000,deterministic_template_mutation-000
+crossover_only,32,7.100000,7.750000,crossover_only-000
+mutation_plus_crossover,32,7.100000,7.750000,mutation_plus_crossover-000
+llm_mutation,32,7.100000,7.750000,llm_mutation-000
+llm_repair,32,7.100000,7.750000,llm_repair-000
+llm_mutation_plus_repair,32,7.100000,7.750000,llm_mutation_plus_repair-000

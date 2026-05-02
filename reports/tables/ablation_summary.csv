@@ -1,0 +1,9 @@
+method,evaluated_candidates,best_validation_score,best_test_score,failure_rate,invalid_code_rate,operator_source,live_llm_required
+seed_only,32,7.100000,7.750000,0.125000,0.125000,seed_library,False
+random_mutation,32,7.100000,7.833333,0.156250,0.156250,deterministic_random_mutation,False
+deterministic_template_mutation,32,7.100000,7.750000,0.000000,0.000000,deterministic_template_mutation,False
+crossover_only,32,7.100000,7.750000,0.000000,0.000000,deterministic_crossover,False
+mutation_plus_crossover,32,7.100000,7.750000,0.000000,0.000000,deterministic_mutation_crossover,False
+llm_mutation,32,7.100000,7.750000,0.125000,0.125000,deterministic_llm_proxy,False
+llm_repair,32,7.100000,7.750000,0.000000,0.000000,deterministic_llm_proxy,False
+llm_mutation_plus_repair,32,7.100000,7.750000,0.000000,0.000000,deterministic_llm_proxy,False
