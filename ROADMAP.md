@@ -44,18 +44,21 @@ Completed:
   deterministic template mutation, crossover, mutation+crossover,
   deterministic LLM-proxy mutation, deterministic LLM-proxy repair, and
   mutation+repair under one fixed local budget.
+- Phase 15: Pareto frontier reporting across objective quality, runtime,
+  program complexity, failure rate, generalization gap, and Amazon-style
+  driver-likeness / operational realism.
 
 Current phase:
 
 - Original roadmap and hardening milestone are complete.
 - Phase 9 external bin packing benchmark evidence is complete.
 - Phase 11 search mechanism ablation is complete.
-- Next implementation phase is Phase 15: Pareto Frontier Report.
+- Phase 15 Pareto frontier reporting is complete.
+- Next implementation phase is Phase 18: Research-Style Technical Report.
 
 Deferred:
 
 - External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
-- Pareto frontier reporting.
 - Research-style and resume / portfolio packaging.
 - Crossover beyond simple mutation.
 - Cloud execution.
@@ -65,8 +68,9 @@ Deferred:
 Next autonomous action:
 
 ```text
-Execute Phase 15 only: report quality-runtime-complexity-failure-generalization
-trade-off frontiers before research-style or portfolio packaging work.
+Execute Phase 18 only: package the system design, sandbox boundary, benchmark
+evidence, ablation, Pareto frontier, failure analysis, and limitations into a
+research-style technical report.
 ```
 
 ## Project Positioning
@@ -596,8 +600,8 @@ Engineering-platform route:
 Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
 ```
 
-Phase 9 and Phase 11 are complete. The current priority is Phase 15. Do not
-implement later phases while Phase 15 is in progress.
+Phase 9, Phase 11, and Phase 15 are complete. The current priority is Phase
+18. Do not implement later phases while Phase 18 is in progress.
 
 ## Phase 9: External Benchmark Evidence
 
@@ -805,18 +809,18 @@ Goal: report trade-off frontiers instead of only single-score winners.
 
 Compare:
 
-- [ ] Objective quality.
-- [ ] Runtime.
-- [ ] Program complexity.
-- [ ] Failure rate.
-- [ ] Generalization gap.
-- [ ] Driver-likeness / operational realism where applicable.
+- [x] Objective quality.
+- [x] Runtime.
+- [x] Program complexity.
+- [x] Failure rate.
+- [x] Generalization gap.
+- [x] Driver-likeness / operational realism where applicable.
 
 Required outputs:
 
-- [ ] `reports/tables/pareto_frontier.csv`.
-- [ ] `artifacts/frontier_programs/*.py`.
-- [ ] `reports/plots/frontier_plot_series.json`.
+- [x] `reports/tables/pareto_frontier.csv`.
+- [x] `artifacts/frontier_programs/*.py`.
+- [x] `reports/plots/frontier_plot_series.json`.
 
 Conservative upgraded claim:
 
@@ -985,12 +989,12 @@ Completed foundation:
 8. Amazon heuristic discovery and failure analysis.
 9. External bin packing benchmark evidence.
 11. Search mechanism ablation.
+15. Pareto frontier report.
 ```
 
 Next recommended order:
 
 ```text
-15. Pareto frontier report.
 18. Research-style technical report.
 19. Resume / portfolio packaging.
 ```

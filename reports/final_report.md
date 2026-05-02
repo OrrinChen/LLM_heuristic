@@ -54,6 +54,15 @@ Best validation score: `7.1`.
 Methods compared: `seed_only`, `random_mutation`, `deterministic_template_mutation`, `crossover_only`, `mutation_plus_crossover`, `llm_mutation`, `llm_repair`, `llm_mutation_plus_repair`.
 Claim boundary: ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed.
 
+## Pareto Frontier Report
+
+Phase 15 reports nondominated quality-runtime-complexity-failure-generalization trade-offs per benchmark, with driver-likeness included for Amazon-style routing where that operational metric is available.
+
+Candidate rows: `17`.
+Frontier rows: `8`.
+Benchmarks covered: `amazon_routing`, `bin_packing`, `simple_routing`.
+Claim boundary: The system discovers compact heuristic programs that improve selected quality-runtime-generalization trade-offs, rather than universally dominating classical baselines.
+
 ## Generalization And Robustness
 
 The robustness report covers 3 benchmarks and 15 held-out slices.
@@ -70,11 +79,11 @@ Amazon trade-off callouts: 4.
 - External bin packing evidence uses parser-backed, small benchmark-style local fixtures by default; large public benchmark files are intentionally not committed.
 - Amazon routing data is represented by deterministic local Amazon-shaped fixtures until public or user-provided data is configured.
 - Rendered report artifacts are deterministic local files; PNG plot rendering remains optional when matplotlib is available.
+- Pareto frontier runtime is a deterministic local proxy for frontier comparison, not a hardware-independent benchmark.
 - The current routing generated-program interface ranks next stops rather than emitting full routes.
 - Subprocess memory limits are applied only on platforms that expose compatible resource limits.
 
 ## Recommended Next Steps
 
-- `pareto_frontier_report`: Report objective-quality, runtime, complexity, failure, and generalization trade-offs instead of a single winner.
 - `research_style_report`: Package the system design, sandbox boundary, external evidence, ablation, limitations, and conclusions.
 - `resume_portfolio_packaging`: Turn the evidence package into a concise README-first portfolio narrative and interview-ready demo.

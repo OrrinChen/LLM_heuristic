@@ -9,6 +9,7 @@ from benchmarks.amazon_routing.discovery import (
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from reports.failure_analysis import build_phase8_report
+from reports.pareto import build_phase15_report
 from reports.robustness import build_phase7_report
 
 PlotPoints = List[Mapping[str, object]]
@@ -19,6 +20,7 @@ def build_report_plots(
     phase3_report: Optional[Mapping[str, object]] = None,
     phase6_report: Optional[Mapping[str, object]] = None,
     phase11_report: Optional[Mapping[str, object]] = None,
+    phase15_report: Optional[Mapping[str, object]] = None,
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
@@ -49,6 +51,7 @@ def build_report_plots(
         item_count=20,
         random_seed=23,
     )
+    phase15 = phase15_report or build_phase15_report()
     robustness = robustness_report or build_phase7_report()
     failures = failure_report or build_phase8_report()
 
@@ -67,6 +70,7 @@ def build_report_plots(
         "generation_curve_by_method": _ablation_curve_plot(
             phase11["generation_curve_by_method"]
         ),
+        "frontier_plot_series": _frontier_plot(phase15["candidate_rows"]),
         "failure_rate_by_generation": _failure_rate_plot(
             failures["failure_rate_by_generation"]
         ),
@@ -237,6 +241,43 @@ def _ablation_curve_plot(
             latest_points,
             label_key="label",
             value_key="best_score",
+        ),
+    }
+
+
+def _frontier_plot(rows: Sequence[Mapping[str, object]]) -> Mapping[str, object]:
+    points: PlotPoints = [
+        {
+            "benchmark": row["benchmark"],
+            "program_id": row["program_id"],
+            "runtime": row["runtime"],
+            "objective_quality": row["objective_quality"],
+            "program_complexity": row["program_complexity"],
+            "generalization_gap": row["generalization_gap"],
+            "failure_rate": row["failure_rate"],
+            "operational_penalty": row["operational_penalty"],
+            "is_pareto_frontier": row["is_pareto_frontier"],
+            "label": f"{row['benchmark']} {row['program_id']}",
+        }
+        for row in rows
+    ]
+    frontier_points = [point for point in points if bool(point["is_pareto_frontier"])]
+    return {
+        "title": "Pareto Frontier Quality Runtime",
+        "x": "runtime",
+        "y": "objective_quality",
+        "points": points,
+        "ascii": render_ascii_bar_plot(
+            sorted(
+                frontier_points,
+                key=lambda point: (
+                    str(point["benchmark"]),
+                    float(point["objective_quality"]),
+                    str(point["program_id"]),
+                ),
+            ),
+            label_key="label",
+            value_key="objective_quality",
         ),
     }
 

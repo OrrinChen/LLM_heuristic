@@ -28,6 +28,7 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "ablation_summary",
         "invalid_code_rate_by_method",
         "best_score_by_budget",
+        "pareto_frontier",
         "failure_taxonomy",
         "recommended_next_steps",
     )
@@ -38,6 +39,7 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["ablation_summary"]["rows"]) == 8
     assert len(tables["invalid_code_rate_by_method"]["rows"]) == 8
     assert len(tables["best_score_by_budget"]["rows"]) == 8
+    assert len(tables["pareto_frontier"]["rows"]) >= 3
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert tables["benchmark_comparison"]["rows"][0] == {
         "benchmark": "Online Bin Packing",
@@ -57,7 +59,8 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "phase6-seed-000-travel_fast" in markdown
     assert "## External Generalization" in markdown
     assert "## Ablation Summary" in markdown
-    assert "pareto_frontier_report" in markdown
+    assert "## Pareto Frontier" in markdown
+    assert "research_style_report" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
@@ -68,12 +71,14 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
         "amazon_discovery_best_score",
         "robustness_generalization_gaps",
         "generation_curve_by_method",
+        "frontier_plot_series",
         "failure_rate_by_generation",
     )
     assert len(plots["bin_packing_evolution_best_score"]["points"]) == 4
     assert len(plots["amazon_discovery_best_score"]["points"]) == 3
     assert len(plots["robustness_generalization_gaps"]["points"]) == 15
     assert len(plots["generation_curve_by_method"]["points"]) == 32
+    assert len(plots["frontier_plot_series"]["points"]) >= 3
     assert len(plots["failure_rate_by_generation"]["points"]) == 7
     assert plots["bin_packing_evolution_best_score"]["ascii"]
     assert "generation=0" in plots["bin_packing_evolution_best_score"]["ascii"]

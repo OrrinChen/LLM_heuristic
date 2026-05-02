@@ -105,6 +105,25 @@ def build_report_tables(
             ),
             "rows": _best_score_by_budget_rows(final),
         },
+        "pareto_frontier": {
+            "title": "Pareto Frontier",
+            "columns": (
+                "benchmark",
+                "program_id",
+                "source",
+                "objective_quality",
+                "runtime",
+                "program_complexity",
+                "failure_rate",
+                "generalization_gap",
+                "driver_likeness_or_realism",
+                "operational_penalty",
+                "is_pareto_frontier",
+                "dominance_count",
+                "selected_tradeoff",
+            ),
+            "rows": _pareto_frontier_rows(final),
+        },
         "failure_taxonomy": {
             "title": "Failure Taxonomy",
             "columns": (
@@ -293,6 +312,29 @@ def _best_score_by_budget_rows(final_report: Mapping[str, object]) -> TableRows:
             "best_program_id": row["best_program_id"],
         }
         for row in final_report["search_ablation"]["best_score_by_budget"]
+    ]
+
+
+def _pareto_frontier_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "benchmark": row["benchmark"],
+            "program_id": row["program_id"],
+            "source": row["source"],
+            "objective_quality": _format_number(row["objective_quality"]),
+            "runtime": _format_number(row["runtime"]),
+            "program_complexity": row["program_complexity"],
+            "failure_rate": _format_number(row["failure_rate"]),
+            "generalization_gap": _format_number(row["generalization_gap"]),
+            "driver_likeness_or_realism": _format_number(
+                row["driver_likeness_or_realism"]
+            ),
+            "operational_penalty": _format_number(row["operational_penalty"]),
+            "is_pareto_frontier": row["is_pareto_frontier"],
+            "dominance_count": row["dominance_count"],
+            "selected_tradeoff": row["selected_tradeoff"],
+        }
+        for row in final_report["pareto_frontier"]["candidate_rows"]
     ]
 
 

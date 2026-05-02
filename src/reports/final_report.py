@@ -11,6 +11,7 @@ from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
 from program_search.ablation import build_phase11_report
 from reports.failure_analysis import build_phase8_report
+from reports.pareto import build_phase15_report
 from reports.robustness import build_phase7_report
 
 FINAL_REPORT_SECTIONS = (
@@ -20,6 +21,7 @@ FINAL_REPORT_SECTIONS = (
     "benchmark_results",
     "external_benchmark_evidence",
     "search_mechanism_ablation",
+    "pareto_frontier_report",
     "generalization_and_robustness",
     "failure_analysis",
     "limitations",
@@ -55,6 +57,7 @@ def build_final_report() -> Dict[str, object]:
         item_count=20,
         random_seed=23,
     )
+    phase15 = build_phase15_report()
 
     report: Dict[str, object] = {
         "phase": "final_report",
@@ -94,6 +97,7 @@ def build_final_report() -> Dict[str, object]:
         },
         "external_benchmark": _external_bin_packing_summary(phase9),
         "search_ablation": _search_ablation_summary(phase11),
+        "pareto_frontier": _pareto_frontier_summary(phase15),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
             "Live LLM mutation is optional and remains gated behind "
@@ -106,19 +110,14 @@ def build_final_report() -> Dict[str, object]:
             "configured.",
             "Rendered report artifacts are deterministic local files; PNG plot "
             "rendering remains optional when matplotlib is available.",
+            "Pareto frontier runtime is a deterministic local proxy for "
+            "frontier comparison, not a hardware-independent benchmark.",
             "The current routing generated-program interface ranks next stops "
             "rather than emitting full routes.",
             "Subprocess memory limits are applied only on platforms that expose "
             "compatible resource limits.",
         ),
         "recommended_next_steps": (
-            {
-                "step": "pareto_frontier_report",
-                "reason": (
-                    "Report objective-quality, runtime, complexity, failure, "
-                    "and generalization trade-offs instead of a single winner."
-                ),
-            },
             {
                 "step": "research_style_report",
                 "reason": (
@@ -144,6 +143,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     killer = report["killer_experiment"]["benchmarks"]
     external = report["external_benchmark"]
     ablation = report["search_ablation"]
+    frontier = report["pareto_frontier"]
     evidence = report["evidence"]
 
     lines = [
@@ -224,6 +224,23 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 + "."
             ),
             f"Claim boundary: {ablation['claim_boundary']}.",
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## Pareto Frontier Report",
+            "",
+            frontier["summary"],
+            "",
+            f"Candidate rows: `{frontier['candidate_count']}`.",
+            f"Frontier rows: `{frontier['frontier_count']}`.",
+            (
+                "Benchmarks covered: "
+                + ", ".join(f"`{benchmark}`" for benchmark in frontier["benchmarks"])
+                + "."
+            ),
+            f"Claim boundary: {frontier['claim_boundary']}",
             "",
         ]
     )
@@ -391,6 +408,25 @@ def _search_ablation_summary(phase11: Mapping[str, object]) -> Mapping[str, obje
             "LLM-proxy, and repair operators under the same candidate budget, "
             "split, timeout, and random seed. This is a fixed local budget "
             "ablation, not evidence about live LLM behavior."
+        ),
+    }
+
+
+def _pareto_frontier_summary(phase15: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmarks": phase15["benchmarks"],
+        "frontier_axes": phase15["frontier_axes"],
+        "candidate_rows": phase15["candidate_rows"],
+        "frontier_rows": phase15["frontier_rows"],
+        "candidate_count": len(phase15["candidate_rows"]),
+        "frontier_count": phase15["frontier_count"],
+        "benchmark_summaries": phase15["benchmark_summaries"],
+        "claim_boundary": phase15["claim_boundary"],
+        "summary": (
+            "Phase 15 reports nondominated quality-runtime-complexity-failure-"
+            "generalization trade-offs per benchmark, with driver-likeness "
+            "included for Amazon-style routing where that operational metric "
+            "is available."
         ),
     }
 
