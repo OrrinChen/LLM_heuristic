@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `docs: package portfolio-ready project evidence`
-Current phase: job-search portfolio track complete; Phase 19 resume / portfolio packaging complete
-Main blocker: None for Phase 19; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
-Next recommended action: optional Phase 10 external routing evidence, if continuing beyond the portfolio track
+Latest commit: `feat: add external routing benchmark evidence`
+Current phase: Phase 10 external routing evidence complete for the TSPLIB-style TSP slice
+Main blocker: None for Phase 10A; CVRPLIB, time-window routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
+Next recommended action: optional Phase 12 live LLM mutation v1, if continuing beyond external routing evidence
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -105,6 +105,22 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated final report next-step recommendations so optional Phase 10 external
   routing evidence is now the next extension after the completed job-search
   portfolio track.
+
+2026-05-02 Phase 10 completion:
+
+- Completed the Phase 10A TSPLIB-style external routing evidence slice only; no
+  CVRPLIB, time-window routing, live LLM expansion, semantic novelty,
+  reproduction profile, or cloud execution was added.
+- Added TSPLIB-style EUC_2D parsing, directory/file loading, deterministic
+  external train / validation / test splits, default tiny local fixtures,
+  distance-matrix construction, nearest-neighbor / cheapest-insertion / 2-opt
+  baseline reuse, external `score_next_stop` candidate reruns, and
+  synthetic-to-external routing transfer reporting.
+- Added `routing_external` CLI support and
+  `reports/tables/routing_external_generalization.csv` export.
+- Updated final report, report tables, technical report, portfolio brief,
+  README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 12
+  live LLM mutation v1 is now the next research extension.
 
 ## Completed Phases
 
@@ -861,6 +877,83 @@ Known limitations:
 - The README claim remains deliberately conservative and does not claim
   universal dominance or SOTA solver performance.
 
+### Phase 10: External Routing Evidence
+
+Commit: `feat: add external routing benchmark evidence`
+
+What changed:
+
+- Created `src/benchmarks/routing/external.py` with TSPLIB-style EUC_2D parsing,
+  file/directory loading, deterministic small local fixtures, external
+  train / validation / test splitting, distance-matrix construction, external
+  baseline comparison, and `build_phase10_report`.
+- Extended `RoutingInstance` with `EXTERNAL`, `instance_id`, and `source`
+  metadata while preserving existing synthetic defaults.
+- Reused simple-routing nearest-neighbor, cheapest-insertion, and 2-opt
+  baselines for external test comparison.
+- Reran `score_next_stop` candidate programs selected on synthetic routing and
+  external validation suites to report synthetic-to-external transfer and
+  external generalization gaps.
+- Added `routing_external` deterministic CLI support with optional
+  `--external-path` and `--external-format tsplib` inputs.
+- Integrated Phase 10 evidence into final report, report tables, technical
+  report, portfolio package, and artifact export through
+  `reports/tables/routing_external_generalization.csv`.
+- Added `tests/test_external_routing_phase10.py`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, this task
+  memory, and the Phase 10 implementation plan.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_external_routing_phase10.py -q`
+  failed as expected before implementation because
+  `benchmarks.routing.external` did not exist.
+- 2026-05-02: `python3 -m pytest tests/test_external_routing_phase10.py -q`
+  passed, 8 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_external_routing_phase10.py tests/test_technical_report_phase18.py tests/test_portfolio_packaging_phase19.py tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_pareto_frontier_phase15.py tests/test_search_ablation_phase11.py -q`
+  passed, 42 tests.
+- 2026-05-02: `python3 -m pytest -q` passed, 134 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 80 files already
+  formatted.
+- 2026-05-02: `git diff --check -- .` passed.
+- 2026-05-02: Phase 10 direct smoke printed phase `10`, benchmark
+  `routing_external`, test count `2`, top program `route-seed-000-nearest`,
+  external baseline presence `True`, and the conservative claim boundary.
+- 2026-05-02: CLI smoke for `run --benchmark routing_external` wrote
+  `/tmp/o2-routing-external/run_summary.json` and printed top program
+  `route-seed-000-nearest`.
+- 2026-05-02: CLI smoke for `bin_packing`, `bin_packing_external`,
+  `routing_external`, `search_ablation`, `report`, `inspect`, and
+  `rerun-manifest` passed against `/tmp/o2-cli-*` output folders.
+- 2026-05-02: final-report smoke printed first recommended next step
+  `live_llm_mutation_v1`, frontier count `8`, and confirmed external bin
+  packing evidence, external routing evidence, search ablation, Pareto
+  frontier, conservative dominance boundary, and selected trade-off language.
+- 2026-05-02: report table/plot smoke printed eleven tables including
+  `routing_external_generalization`, six plot series, 17 frontier plot points,
+  next-step Markdown check `True`, and missing-env Gemini check
+  `GEMINI_API_KEY`.
+- 2026-05-02: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package and wrote
+  `reports/tables/routing_external_generalization.csv`.
+- 2026-05-02: required docs are present and non-empty.
+- 2026-05-02: repository content secret scan for API-key-like Gemini material
+  returned no matches.
+- 2026-05-02: large-file scan found no files larger than 1 MB in this project
+  tree.
+
+Known limitations:
+
+- Phase 10 covers the TSPLIB-style TSP slice only. CVRPLIB-style capacitated
+  routing and time-window routing remain deferred.
+- The default external routing fixtures are small parser-backed examples for
+  deterministic local validation, not a committed large TSPLIB corpus.
+- Results compare compact `score_next_stop` programs against reused local
+  baselines and do not claim LKH, CVRP solver, SOTA, real Amazon, or universal
+  superiority.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -1005,7 +1098,9 @@ reporting tables and plots
   mutation, crossover, and LLM-proxy operators.
 - [x] Add Pareto frontier reporting across quality, runtime, complexity,
   failure rate, and generalization gap.
-- [ ] Package a research-style technical report.
+- [x] Package a research-style technical report.
+- [x] Package README-first resume / portfolio evidence.
+- [x] Add TSPLIB-style external routing evidence.
 
 ## First Milestone Definition
 
@@ -1070,7 +1165,7 @@ Use the conservative claim until held-out routing and Amazon evaluator results s
 - Which LLM provider and model should be used for mutation and repair?
 - Should the sandbox use pure Python AST checks first, or add subprocess isolation immediately?
 - Should bin packing optimize raw bin count, waste, or a weighted score with runtime and complexity penalties?
-- Should simple routing use Euclidean synthetic instances first or a TSPLIB-style benchmark?
+- Should CVRPLIB-style capacitated routing or time-window routing be added after the TSPLIB-style TSP slice?
 - Which Amazon routing data split and quality labels are available locally?
 
 ## Resume Bullet Draft

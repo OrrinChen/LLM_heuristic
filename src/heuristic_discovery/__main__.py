@@ -9,6 +9,10 @@ from benchmarks.bin_packing.external import (
     build_phase9_report,
     load_external_bin_packing_instances,
 )
+from benchmarks.routing.external import (
+    build_phase10_report,
+    load_external_routing_instances,
+)
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from program_search.rerun_manifest import (
@@ -43,7 +47,12 @@ def _build_parser() -> argparse.ArgumentParser:
     run = subcommands.add_parser("run", help="Run a deterministic local search.")
     run.add_argument(
         "--benchmark",
-        choices=("bin_packing", "bin_packing_external", "search_ablation"),
+        choices=(
+            "bin_packing",
+            "bin_packing_external",
+            "routing_external",
+            "search_ablation",
+        ),
         default="bin_packing",
     )
     run.add_argument("--generations", type=int, default=3)
@@ -56,7 +65,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--external-path")
     run.add_argument(
         "--external-format",
-        choices=("auto", "or_library", "bpplib"),
+        choices=("auto", "or_library", "bpplib", "tsplib"),
         default="auto",
     )
     run.add_argument("--output-dir", default=".")
@@ -93,6 +102,25 @@ def _run(args: argparse.Namespace) -> int:
             synthetic_item_count=args.item_count,
             external_instances=external_instances,
         )
+    elif args.benchmark == "routing_external":
+        external_instances = None
+        if args.external_path:
+            parser_name = (
+                "tsplib" if args.external_format == "auto" else args.external_format
+            )
+            if parser_name != "tsplib":
+                raise SystemExit(
+                    "routing_external supports --external-format auto or tsplib"
+                )
+            external_instances = load_external_routing_instances(
+                args.external_path,
+                parser=parser_name,
+            )
+        report = build_phase10_report(
+            candidate_count=args.candidate_count,
+            synthetic_stop_count=args.item_count,
+            external_instances=external_instances,
+        )
     elif args.benchmark == "search_ablation":
         report = build_phase11_report(
             candidate_budget=args.candidate_budget,
@@ -119,7 +147,7 @@ def _run(args: argparse.Namespace) -> int:
         json.dumps(report, indent=2, sort_keys=True),
         encoding="utf-8",
     )
-    if args.benchmark == "bin_packing_external":
+    if args.benchmark in {"bin_packing_external", "routing_external"}:
         payload = {
             "benchmark": args.benchmark,
             "best_external_program_id": report["best_external_program_id"],

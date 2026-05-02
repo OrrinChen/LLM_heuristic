@@ -45,6 +45,16 @@ External held-out test score: `5.0`.
 Synthetic-selected program external test score: `5.0`.
 Claim boundary: this section does not claim SOTA or universal dominance.
 
+## External Routing Evidence
+
+Phase 10 evaluates `score_next_stop` routing candidates on TSPLIB-style EUC_2D external fixtures with separate train, validation, and test splits. It reuses nearest-neighbor, cheapest-insertion, 2-opt, and candidate rerun machinery while keeping the claim boundary below LKH, CVRP, SOTA, or Amazon routing superiority.
+
+Benchmark: `routing_external`.
+External routing top program: `route-seed-000-nearest`.
+External routing held-out test score: `27.040973499999996`.
+Synthetic-selected routing program external test score: `27.040973499999996`.
+Claim boundary: this section does not claim LKH, CVRP, state-of-the-art solver, Amazon, or universal superiority.
+
 ## Search Mechanism Ablation
 
 Phase 11 compares seed-only, mutation, crossover, deterministic LLM-proxy, and repair operators under the same candidate budget, split, timeout, and random seed. This is a fixed local budget ablation, not evidence about live LLM behavior.
@@ -77,6 +87,7 @@ Amazon trade-off callouts: 4.
 
 - Live LLM mutation is optional and remains gated behind environment-variable configuration.
 - External bin packing evidence uses parser-backed, small benchmark-style local fixtures by default; large public benchmark files are intentionally not committed.
+- External routing evidence uses parser-backed, small TSPLIB-style local fixtures by default; large public benchmark files are intentionally not committed.
 - Amazon routing data is represented by deterministic local Amazon-shaped fixtures until public or user-provided data is configured.
 - Rendered report artifacts are deterministic local files; PNG plot rendering remains optional when matplotlib is available.
 - Pareto frontier runtime is a deterministic local proxy for frontier comparison, not a hardware-independent benchmark.
@@ -85,5 +96,5 @@ Amazon trade-off callouts: 4.
 
 ## Recommended Next Steps
 
-- `external_routing_evidence`: Optionally add TSPLIB-style routing evidence after the job-search evidence and portfolio package are complete.
 - `live_llm_mutation_v1`: Optionally convert Gemini mutation from smoke-tested provider support into a controlled live-operator experiment.
+- `semantic_novelty`: Optionally add behavioral fingerprints to distinguish code novelty from behavior novelty.

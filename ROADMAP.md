@@ -40,6 +40,10 @@ Completed:
 - Phase 9: BPPLIB / OR-Library-style bin packing loader, external parser,
   train / validation / test split, external baseline comparison,
   synthetic-to-external transfer gap, report table, and CLI support.
+- Phase 10: TSPLIB-style routing loader, coordinate parser, distance matrix
+  builder, external routing train / validation / test split, reused nearest
+  neighbor / insertion / 2-opt baselines, `score_next_stop` candidate reruns,
+  external generalization table, final-report coverage, and CLI support.
 - Phase 11: Search mechanism ablation across seed-only, random mutation,
   deterministic template mutation, crossover, mutation+crossover,
   deterministic LLM-proxy mutation, deterministic LLM-proxy repair, and
@@ -58,16 +62,18 @@ Current phase:
 
 - Original roadmap and hardening milestone are complete.
 - Phase 9 external bin packing benchmark evidence is complete.
+- Phase 10 external routing benchmark evidence is complete for the TSPLIB-style
+  TSP slice.
 - Phase 11 search mechanism ablation is complete.
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
 - The job-search evidence track is complete; the next optional implementation
-  phase is Phase 10: External Routing Evidence.
+  phase is Phase 12: LLM Live Mutation v1.
 
 Deferred:
 
-- External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
+- CVRPLIB-style capacitated routing and optional time-window routing evidence.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
@@ -77,7 +83,7 @@ Next autonomous action:
 
 ```text
 The required job-search packaging track is complete. If continuing, execute
-optional Phase 10 only: add external routing benchmark evidence.
+optional Phase 12 only: make live LLM mutation a controlled experiment module.
 ```
 
 ## Project Positioning
@@ -607,7 +613,7 @@ Engineering-platform route:
 Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
 ```
 
-Phase 9, Phase 11, Phase 15, Phase 18, and Phase 19 are complete. The
+Phase 9, Phase 10A, Phase 11, Phase 15, Phase 18, and Phase 19 are complete. The
 job-search portfolio track is complete. Optional research phases should be
 selected deliberately rather than started by default.
 
@@ -659,18 +665,18 @@ without jumping directly to complex CVRPTW.
 
 Recommended sequence:
 
-- [ ] 10A: TSPLIB-style TSP loader.
+- [x] 10A: TSPLIB-style TSP loader.
 - [ ] 10B: CVRPLIB-style capacitated routing loader.
 - [ ] 10C: Optional time-window extension.
 
 First implementation slice:
 
-- [ ] TSPLIB coordinate parser.
-- [ ] Distance matrix builder.
-- [ ] Nearest neighbor / insertion / 2-opt baseline reuse.
-- [ ] `score_next_stop` candidate rerun.
-- [ ] External routing split.
-- [ ] Routing external generalization table.
+- [x] TSPLIB coordinate parser.
+- [x] Distance matrix builder.
+- [x] Nearest neighbor / insertion / 2-opt baseline reuse.
+- [x] `score_next_stop` candidate rerun.
+- [x] External routing split.
+- [x] Routing external generalization table.
 
 Conservative claim:
 
@@ -680,6 +686,15 @@ Conservative claim:
 
 Do not claim superiority over OR solvers, LKH, state-of-the-art CVRP solvers, or
 real Amazon operations.
+
+Acceptance criteria:
+
+- [x] Small TSPLIB-style fixtures are covered in tests.
+- [x] CLI can run `routing_external`.
+- [x] Final report includes external routing evidence.
+- [x] `reports/tables/routing_external_generalization.csv` is exported.
+- [x] Candidate failure and generalization gaps are reported conservatively.
+- [x] Claims remain bounded to external routing-style evidence.
 
 ## Phase 11: Search Mechanism Ablation
 
@@ -1000,18 +1015,21 @@ Completed foundation:
 7. Amazon routing evaluator.
 8. Amazon heuristic discovery and failure analysis.
 9. External bin packing benchmark evidence.
+10. External routing benchmark evidence.
 11. Search mechanism ablation.
 15. Pareto frontier report.
+18. Research-style technical report.
+19. Resume / portfolio packaging.
 ```
 
 Next recommended order:
 
 ```text
-18. Research-style technical report.
-19. Resume / portfolio packaging.
+12. Live LLM mutation v1.
+13. Program semantics and novelty.
 ```
 
-Phase 10, Phase 12, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
+Phase 10B, Phase 10C, Phase 12, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
 extensions unless the target audience requires deeper routing evidence, live LLM
 experiments, semantic novelty, failure repair, reproduction profiles, or scale
 infrastructure.

@@ -4,7 +4,7 @@ import math
 from dataclasses import dataclass
 from enum import Enum
 from random import Random
-from typing import Iterable, List, Sequence, Tuple
+from typing import Iterable, List, Optional, Sequence, Tuple
 
 InstanceSuites = Tuple[
     List["RoutingInstance"],
@@ -18,6 +18,7 @@ class RoutingDistribution(str, Enum):
     CLUSTERED = "clustered"
     LINE = "line"
     HELD_OUT = "held_out"
+    EXTERNAL = "external"
 
 
 @dataclass(frozen=True)
@@ -43,6 +44,8 @@ class RoutingInstance:
     depot: Point
     stops: Tuple[Stop, ...]
     distance_matrix: Tuple[Tuple[float, ...], ...]
+    instance_id: Optional[str] = None
+    source: Optional[str] = None
 
 
 def generate_routing_instance(

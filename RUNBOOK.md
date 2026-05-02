@@ -81,6 +81,7 @@ reports/technical_report.md
 reports/portfolio_brief.md
 reports/tables/*.csv
 reports/tables/external_generalization.csv
+reports/tables/routing_external_generalization.csv
 reports/tables/ablation_summary.csv
 reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
@@ -98,6 +99,7 @@ Run deterministic CLI checks:
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -119,6 +121,24 @@ PYTHONPATH=src python3 -m heuristic_discovery run \
 Do not commit large public benchmark files. Keep large or licensed data outside
 the repository and commit only parser tests, small fixtures, reports, and
 manifests.
+
+## External Routing Evidence
+
+Phase 10 supports tiny deterministic TSPLIB-style EUC_2D fixtures by default
+and user-provided files through the CLI:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark routing_external \
+  --external-path path/to/instances \
+  --external-format tsplib \
+  --output-dir /tmp/o2-routing-external
+```
+
+Do not claim LKH, CVRP solver, SOTA, or real Amazon superiority from this
+evidence. It is external routing-style transfer evidence for the existing
+`score_next_stop` evaluator. Do not commit large TSPLIB corpora; commit only
+small fixtures, parser tests, and generated summary artifacts.
 
 ## Search Mechanism Ablation
 
