@@ -52,7 +52,10 @@ Current status:
 - Phase 15 complete: Pareto frontier reporting across objective quality,
   runtime, program complexity, failure rate, generalization gap, and
   Amazon-style driver-likeness / operational realism.
-- Current phase: Phase 18 research-style technical report is the recommended next
+- Phase 18 complete: research-style technical report packaging the problem,
+  system design, sandbox boundary, benchmarks, search loop, external evidence,
+  ablation, generalization, failure analysis, limitations, and conclusion.
+- Current phase: Phase 19 resume / portfolio packaging is the recommended next
   extension.
 
 ## Setup
@@ -153,6 +156,12 @@ Pareto frontier validation:
 
 ```bash
 python3 -m pytest tests/test_pareto_frontier_phase15.py -v
+```
+
+Research-style technical report validation:
+
+```bash
+python3 -m pytest tests/test_technical_report_phase18.py -v
 ```
 
 ## CLI
@@ -564,7 +573,7 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-research_style_report
+resume_portfolio_packaging
 True
 True
 True
@@ -595,7 +604,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("research_style_report" in render_report_tables_markdown(tables))
+print("resume_portfolio_packaging" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -657,6 +666,7 @@ The checked-in evidence package contains:
 
 ```text
 reports/final_report.md
+reports/technical_report.md
 reports/tables/*.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json

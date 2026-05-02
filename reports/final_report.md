@@ -85,5 +85,5 @@ Amazon trade-off callouts: 4.
 
 ## Recommended Next Steps
 
-- `research_style_report`: Package the system design, sandbox boundary, external evidence, ablation, limitations, and conclusions.
-- `resume_portfolio_packaging`: Turn the evidence package into a concise README-first portfolio narrative and interview-ready demo.
+- `resume_portfolio_packaging`: Turn the evidence package and technical report into a concise README-first portfolio narrative and interview-ready demo.
+- `external_routing_evidence`: Optionally add TSPLIB-style routing evidence after the job-search packaging path is complete.

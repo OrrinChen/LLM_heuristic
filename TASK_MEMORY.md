@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add pareto frontier reporting`
-Current phase: Phase 18 planned; Phase 15 Pareto frontier reporting complete
-Main blocker: None for Phase 15; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
-Next recommended action: execute Phase 18 only by packaging the system design, sandbox boundary, benchmark evidence, ablation, Pareto frontier, failure analysis, limitations, and conclusions into a research-style technical report
+Latest commit: `docs: add research-style technical report`
+Current phase: Phase 19 planned; Phase 18 research-style technical report complete
+Main blocker: None for Phase 18; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
+Next recommended action: execute Phase 19 only by turning the evidence package and technical report into a README-first portfolio narrative and interview-ready demo
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, and Phase 15 Pareto frontier evidence.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, and Phase 18 research-style technical report packaging.
 
 ## Roadmap Update
 
@@ -72,6 +72,21 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   `artifacts/frontier_programs/*.py` exports.
 - Updated final report and recommended next steps so Phase 18 research-style
   technical reporting is now the next implementation phase.
+
+2026-05-02 Phase 18 completion:
+
+- Completed research-style technical report packaging only; no README-first
+  portfolio rewrite, external routing evidence, live LLM expansion, semantic
+  novelty, failure taxonomy v2, reproducibility profile, or cloud execution was
+  added.
+- Added a structured Phase 18 technical report builder and Markdown renderer
+  covering the problem, why heuristic discovery matters, system design, sandbox
+  and safety boundary, benchmarks, search loop, external benchmark evidence,
+  ablation, generalization, failure analysis, limitations, and conclusion.
+- Added `reports/technical_report.md` to the deterministic report artifact
+  export and CLI evidence package.
+- Updated final report next-step recommendations so Phase 19 resume /
+  portfolio packaging is now the next implementation phase.
 
 ## Completed Phases
 
@@ -678,6 +693,83 @@ Known limitations:
   Amazon-shaped fixtures, not proprietary or public Amazon route data.
 - External routing evidence, semantic novelty, failure taxonomy v2,
   reproduction profiles, and cloud-scale search remain deferred.
+
+### Phase 18: Research-Style Technical Report
+
+Commit: `docs: add research-style technical report`
+
+What changed:
+
+- Created `src/reports/technical_report.py` with a deterministic Phase 18
+  report builder and Markdown renderer.
+- Used the working title `Sandboxed LLM Program Search for OR Heuristic
+  Discovery`.
+- Covered the paper-style structure requested in the roadmap: problem, why
+  heuristic discovery matters, system design, sandbox and safety boundary,
+  benchmarks, search loop, external benchmark evidence, ablation,
+  generalization, failure analysis, limitations, and conclusion.
+- Mapped each major section to existing evidence artifacts such as
+  `external_generalization.csv`, `ablation_summary.csv`,
+  `generation_curve_by_method.json`, `robustness_summary.csv`,
+  `worst_generalization_gaps.csv`, `pareto_frontier.csv`,
+  `failure_taxonomy.csv`, and `artifacts/rerun_manifest.json`.
+- Added `reports/technical_report.md` to `export_report_artifacts()` and the
+  deterministic `python -m heuristic_discovery report` CLI package.
+- Updated final report next steps and `reports/tables/recommended_next_steps.csv`
+  so Phase 19 resume / portfolio packaging is next.
+- Added `tests/test_technical_report_phase18.py`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and this
+  task memory.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_technical_report_phase18.py -q`
+  failed as expected before implementation because `reports.technical_report`
+  did not exist.
+- 2026-05-02:
+  `python3 -m pytest tests/test_technical_report_phase18.py tests/test_hardening_milestone.py -q`
+  passed, 15 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_technical_report_phase18.py tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py -q`
+  passed, 18 tests.
+- 2026-05-02: `python3 -m pytest -q` passed, 121 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 76 files already
+  formatted.
+- 2026-05-02: `git diff --check -- .` passed.
+- 2026-05-02: Phase 18 smoke printed phase `18`, 12 sections, 3 benchmarks, 8
+  Pareto frontier rows, next phase `Phase 19: Resume / Portfolio Packaging`,
+  and confirmed sandbox, external evidence, and universal-dominance boundary
+  text in Markdown.
+- 2026-05-02: final-report smoke printed first recommended next step
+  `resume_portfolio_packaging`, frontier count `8`, and confirmed external
+  evidence, search ablation, Pareto frontier, conservative dominance boundary,
+  and selected trade-off language.
+- 2026-05-02: report artifact smoke wrote `/tmp/o2-phase18-report` with
+  `reports/final_report.md`, `reports/technical_report.md`,
+  `reports/tables/recommended_next_steps.csv`, and
+  `reports/tables/pareto_frontier.csv`.
+- 2026-05-02: report table/plot smoke printed ten tables, six plot series, 17
+  frontier plot points, next-step Markdown check `True`, and missing-env Gemini
+  check `GEMINI_API_KEY`.
+- 2026-05-02: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package and wrote
+  `reports/technical_report.md`.
+- 2026-05-02: required docs are present and non-empty.
+- 2026-05-02: repository content secret scan for API-key-like Gemini material
+  returned no matches.
+- 2026-05-02: large-file scan found no files larger than 1 MB in this project
+  tree.
+
+Known limitations:
+
+- The technical report is a deterministic Markdown evidence package, not a
+  peer-reviewed paper.
+- Live LLM mutation remains optional and gated by environment variables; the
+  report does not claim live LLM superiority.
+- External routing evidence, semantic novelty, failure taxonomy v2,
+  reproducibility profiles, and cloud-scale search remain deferred.
+- Phase 19 README-first portfolio packaging is still the recommended next step.
 
 ## Latest Strategic Decision
 
