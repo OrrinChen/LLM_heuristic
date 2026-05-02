@@ -70,6 +70,41 @@ def build_report_tables(
             ),
             "rows": _external_generalization_rows(final),
         },
+        "ablation_summary": {
+            "title": "Ablation Summary",
+            "columns": (
+                "method",
+                "evaluated_candidates",
+                "best_validation_score",
+                "best_test_score",
+                "failure_rate",
+                "invalid_code_rate",
+                "operator_source",
+                "live_llm_required",
+            ),
+            "rows": _ablation_summary_rows(final),
+        },
+        "invalid_code_rate_by_method": {
+            "title": "Invalid Code Rate By Method",
+            "columns": (
+                "method",
+                "invalid_code_rate",
+                "evaluated_candidates",
+                "operator_source",
+            ),
+            "rows": _invalid_code_rate_rows(final),
+        },
+        "best_score_by_budget": {
+            "title": "Best Score By Budget",
+            "columns": (
+                "method",
+                "candidate_budget",
+                "best_validation_score",
+                "best_test_score",
+                "best_program_id",
+            ),
+            "rows": _best_score_by_budget_rows(final),
+        },
         "failure_taxonomy": {
             "title": "Failure Taxonomy",
             "columns": (
@@ -218,6 +253,47 @@ def _external_generalization_rows(final_report: Mapping[str, object]) -> TableRo
             }
         )
     return rows
+
+
+def _ablation_summary_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "method": row["method"],
+            "evaluated_candidates": row["evaluated_candidates"],
+            "best_validation_score": _format_number(row["best_validation_score"]),
+            "best_test_score": _format_number(row["best_test_score"]),
+            "failure_rate": _format_number(row["failure_rate"]),
+            "invalid_code_rate": _format_number(row["invalid_code_rate"]),
+            "operator_source": row["operator_source"],
+            "live_llm_required": row["live_llm_required"],
+        }
+        for row in final_report["search_ablation"]["summary_rows"]
+    ]
+
+
+def _invalid_code_rate_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "method": row["method"],
+            "invalid_code_rate": _format_number(row["invalid_code_rate"]),
+            "evaluated_candidates": row["evaluated_candidates"],
+            "operator_source": row["operator_source"],
+        }
+        for row in final_report["search_ablation"]["invalid_code_rate_by_method"]
+    ]
+
+
+def _best_score_by_budget_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "method": row["method"],
+            "candidate_budget": row["candidate_budget"],
+            "best_validation_score": _format_number(row["best_validation_score"]),
+            "best_test_score": _format_number(row["best_test_score"]),
+            "best_program_id": row["best_program_id"],
+        }
+        for row in final_report["search_ablation"]["best_score_by_budget"]
+    ]
 
 
 def _failure_taxonomy_rows(failure_report: Mapping[str, object]) -> TableRows:

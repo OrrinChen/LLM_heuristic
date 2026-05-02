@@ -77,7 +77,7 @@ def test_final_report_links_robustness_and_failure_evidence(
     assert evidence["amazon_tradeoffs"]["tradeoff_count"] >= 1
     assert final_report["limitations"]
     assert final_report["recommended_next_steps"][0]["step"] == (
-        "search_mechanism_ablation"
+        "pareto_frontier_report"
     )
 
 
@@ -106,7 +106,7 @@ def test_final_report_smoke_signature_is_stable(
         "seed-000-tight_fit",
         "route-seed-003-slack_aware",
         "phase6-seed-000-travel_fast",
-        "search_mechanism_ablation",
+        "pareto_frontier_report",
     )
 
 

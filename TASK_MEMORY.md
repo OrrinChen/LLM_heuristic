@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add external bin packing evidence`
-Current phase: Phase 11 planned; Phase 9 external bin packing evidence complete
-Main blocker: None for Phase 9; broader external routing, live LLM experiments, and cloud execution remain deferred
-Next recommended action: execute Phase 11 only by adding search mechanism ablations under a fixed evaluation budget before Pareto frontier or portfolio packaging work
+Latest commit: `feat: add search mechanism ablation`
+Current phase: Phase 15 planned; Phase 11 search mechanism ablation complete
+Main blocker: None for Phase 11; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
+Next recommended action: execute Phase 15 only by adding quality-runtime-complexity-failure-generalization Pareto frontier reporting before research-style or portfolio packaging work
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, and Phase 9 BPPLIB / OR-Library-style external bin packing evidence.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, and Phase 11 search mechanism ablation evidence.
 
 ## Roadmap Update
 
@@ -44,6 +44,21 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   `external_generalization.csv`, final report Markdown coverage, and
   `bin_packing_external` CLI support.
 - Updated the recommended next phase to Phase 11 search mechanism ablation.
+
+2026-05-02 Phase 11 completion:
+
+- Completed search mechanism ablation under a fixed deterministic local budget;
+  no TSPLIB, CVRPLIB, live LLM expansion, semantic novelty, Pareto frontier, or
+  cloud execution was added.
+- Added an ablation runner comparing seed-only, random mutation, deterministic
+  template mutation, crossover-only, mutation plus crossover, deterministic
+  LLM-proxy mutation, deterministic LLM-proxy repair, and mutation plus repair
+  using the same benchmark split, timeout, candidate budget, and seeds.
+- Added `search_ablation` CLI support and report export for
+  `ablation_summary.csv`, `invalid_code_rate_by_method.csv`,
+  `best_score_by_budget.csv`, and `generation_curve_by_method.json`.
+- Updated final report and recommended next steps so Phase 15 Pareto frontier
+  reporting is now the next implementation phase.
 
 ## Completed Phases
 
@@ -499,6 +514,81 @@ Known limitations:
   SOTA or universal dominance.
 - Live LLM mutation remains optional and was not expanded in this phase.
 
+### Phase 11: Search Mechanism Ablation
+
+Commit: `feat: add search mechanism ablation`
+
+What changed:
+
+- Created `src/program_search/ablation.py` to compare seed-only, random
+  mutation, deterministic template mutation, crossover-only, mutation plus
+  crossover, deterministic LLM-proxy mutation, deterministic LLM-proxy repair,
+  and mutation plus repair under one fixed local evaluation budget.
+- Kept all LLM-labelled methods as deterministic local proxies; no live LLM
+  provider, API key, paid service, TSPLIB, CVRPLIB, semantic novelty, Pareto
+  frontier, or cloud execution was added.
+- Added `search_ablation` support to the deterministic CLI.
+- Integrated ablation output into final report, report tables, plot series, and
+  artifact export.
+- Added generated evidence files:
+  `reports/tables/ablation_summary.csv`,
+  `reports/tables/invalid_code_rate_by_method.csv`,
+  `reports/tables/best_score_by_budget.csv`, and
+  `reports/plots/generation_curve_by_method.json`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and this
+  task memory to mark Phase 11 complete and move the next recommended phase to
+  Phase 15 Pareto frontier reporting.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_search_ablation_phase11.py -q`
+  failed as expected before implementation because `program_search.ablation`
+  did not exist.
+- 2026-05-02: `python3 -m pytest tests/test_search_ablation_phase11.py -q`
+  passed, 7 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_search_ablation_phase11.py tests/test_report_tables_plots_and_live_llm.py tests/test_final_report.py tests/test_hardening_milestone.py -q`
+  passed, 32 tests.
+- 2026-05-02: `python3 -m pytest -q` passed, 113 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 64 files already
+  formatted.
+- 2026-05-02: Phase 11 smoke printed benchmark `bin_packing`, 8 methods,
+  candidate budget `16`, best method `llm_mutation` for the smaller smoke
+  slice, and the conservative no-live-LLM claim boundary.
+- 2026-05-02: CLI smoke for `run --benchmark search_ablation` wrote
+  `/tmp/o2-phase11-ablation/run_summary.json` and printed best method
+  `crossover_only` for the default item-count CLI slice.
+- 2026-05-02: CLI smoke for local `bin_packing`, `bin_packing_external`,
+  `report`, `inspect`, and `rerun-manifest` passed against `/tmp/o2-*` output
+  folders.
+- 2026-05-02: final-report smoke printed first recommended next step
+  `pareto_frontier_report` and confirmed external evidence, search ablation,
+  conservative dominance boundary, and selected trade-off language.
+- 2026-05-02: report artifact smoke printed nine tables including the three
+  ablation tables, five plot series including `generation_curve_by_method`, 32
+  ablation curve points, Markdown checks `True`, and missing-env Gemini check
+  `GEMINI_API_KEY`.
+- 2026-05-02: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package.
+- 2026-05-02: required docs are present and non-empty.
+- 2026-05-02: repository content secret scan for API-key-like Gemini material
+  returned no matches.
+- 2026-05-02: large-file scan found no files larger than 1 MB in this project
+  tree.
+- 2026-05-02: `git diff --check -- .` passed.
+
+Known limitations:
+
+- The ablation is a deterministic local operator comparison; it does not prove
+  live Gemini or other live LLM behavior.
+- Several methods tie on validation score in the default local suite, so the
+  report should be read as fixed-budget mechanism evidence rather than a claim
+  of a universally best operator.
+- The ablation is bin packing only. External routing evidence, semantic
+  novelty, failure taxonomy v2, Pareto frontier analysis, and cloud-scale
+  search remain deferred.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -637,8 +727,12 @@ reporting tables and plots
   configuration.
 - [x] Add subprocess sandbox isolation, rerun manifests, artifact export, and
   deterministic CLI hardening.
-- [ ] Add an external benchmark adapter for public BPPLIB, OR-Library, TSPLIB,
-  or CVRPLIB-style data.
+- [x] Add an external benchmark adapter for public BPPLIB / OR-Library-style
+  bin packing data.
+- [x] Add fixed-budget search mechanism ablation across deterministic local
+  mutation, crossover, and LLM-proxy operators.
+- [ ] Add Pareto frontier reporting across quality, runtime, complexity,
+  failure rate, and generalization gap.
 
 ## First Milestone Definition
 

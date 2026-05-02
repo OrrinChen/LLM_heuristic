@@ -9,6 +9,7 @@ from benchmarks.amazon_routing.discovery import (
 from benchmarks.bin_packing.evaluator import build_phase2_report
 from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
+from program_search.ablation import build_phase11_report
 from reports.failure_analysis import build_phase8_report
 from reports.robustness import build_phase7_report
 
@@ -18,6 +19,7 @@ FINAL_REPORT_SECTIONS = (
     "killer_experiment",
     "benchmark_results",
     "external_benchmark_evidence",
+    "search_mechanism_ablation",
     "generalization_and_robustness",
     "failure_analysis",
     "limitations",
@@ -47,6 +49,12 @@ def build_final_report() -> Dict[str, object]:
     phase7 = build_phase7_report()
     phase8 = build_phase8_report()
     phase9 = build_phase9_report(candidate_count=48, synthetic_item_count=25)
+    phase11 = build_phase11_report(
+        candidate_budget=32,
+        generations=3,
+        item_count=20,
+        random_seed=23,
+    )
 
     report: Dict[str, object] = {
         "phase": "final_report",
@@ -85,6 +93,7 @@ def build_final_report() -> Dict[str, object]:
             },
         },
         "external_benchmark": _external_bin_packing_summary(phase9),
+        "search_ablation": _search_ablation_summary(phase11),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
             "Live LLM mutation is optional and remains gated behind "
@@ -104,13 +113,6 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "search_mechanism_ablation",
-                "reason": (
-                    "Compare seed-only, deterministic mutation, crossover, and "
-                    "LLM-enabled operators under a fixed evaluation budget."
-                ),
-            },
-            {
                 "step": "pareto_frontier_report",
                 "reason": (
                     "Report objective-quality, runtime, complexity, failure, "
@@ -124,6 +126,13 @@ def build_final_report() -> Dict[str, object]:
                     "evidence, ablation, limitations, and conclusions."
                 ),
             },
+            {
+                "step": "resume_portfolio_packaging",
+                "reason": (
+                    "Turn the evidence package into a concise README-first "
+                    "portfolio narrative and interview-ready demo."
+                ),
+            },
         ),
     }
     return report
@@ -134,6 +143,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     claims = report["claims"]
     killer = report["killer_experiment"]["benchmarks"]
     external = report["external_benchmark"]
+    ablation = report["search_ablation"]
     evidence = report["evidence"]
 
     lines = [
@@ -197,6 +207,23 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 "Claim boundary: this section does not claim SOTA or universal "
                 "dominance."
             ),
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## Search Mechanism Ablation",
+            "",
+            ablation["summary"],
+            "",
+            f"Best method under fixed local budget: `{ablation['best_method']}`.",
+            f"Best validation score: `{ablation['best_validation_score']}`.",
+            (
+                "Methods compared: "
+                + ", ".join(f"`{method}`" for method in ablation["methods"])
+                + "."
+            ),
+            f"Claim boundary: {ablation['claim_boundary']}.",
             "",
         ]
     )
@@ -342,6 +369,28 @@ def _external_bin_packing_summary(
             "OR-Library-style external fixtures with separate train, "
             "validation, and test splits, then compares synthetic-selected and "
             "external-selected programs against classical baselines."
+        ),
+    }
+
+
+def _search_ablation_summary(phase11: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmark": phase11["benchmark"],
+        "methods": phase11["methods"],
+        "controls": phase11["controls"],
+        "summary_rows": phase11["summary_rows"],
+        "generation_curve_by_method": phase11["generation_curve_by_method"],
+        "invalid_code_rate_by_method": phase11["invalid_code_rate_by_method"],
+        "best_score_by_budget": phase11["best_score_by_budget"],
+        "best_method": phase11["best_method"],
+        "best_program_id": phase11["best_program_id"],
+        "best_validation_score": phase11["best_validation_score"],
+        "claim_boundary": phase11["claim_boundary"],
+        "summary": (
+            "Phase 11 compares seed-only, mutation, crossover, deterministic "
+            "LLM-proxy, and repair operators under the same candidate budget, "
+            "split, timeout, and random seed. This is a fixed local budget "
+            "ablation, not evidence about live LLM behavior."
         ),
     }
 

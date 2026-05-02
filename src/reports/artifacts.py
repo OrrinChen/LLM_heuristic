@@ -49,6 +49,7 @@ def export_report_artifacts(
         json.dumps(plots, indent=2, sort_keys=True),
         encoding="utf-8",
     )
+    extra_plot_paths = _write_extra_plot_series(plots, plots_dir)
 
     manifest = build_bin_packing_rerun_manifest(top_k=top_k)
     manifest_path = artifacts_dir / "rerun_manifest.json"
@@ -67,11 +68,29 @@ def export_report_artifacts(
         "final_report": str(final_report_path),
         "tables": [str(path) for path in table_paths],
         "plot_series": str(plot_series_path),
+        "extra_plot_series": [str(path) for path in extra_plot_paths],
         "top_programs": [str(path) for path in top_program_paths],
         "rerun_manifest": str(manifest_path),
         "png_rendered": bool(png_paths),
         "png_paths": [str(path) for path in png_paths],
     }
+
+
+def _write_extra_plot_series(
+    plots: Mapping[str, object],
+    plots_dir: Path,
+) -> Sequence[Path]:
+    paths = []
+    for plot_name in ("generation_curve_by_method",):
+        if plot_name not in plots:
+            continue
+        path = plots_dir / f"{plot_name}.json"
+        path.write_text(
+            json.dumps(plots[plot_name], indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+        paths.append(path)
+    return paths
 
 
 def _write_tables(tables: Mapping[str, object], tables_dir: Path) -> Sequence[Path]:

@@ -79,7 +79,11 @@ Expected generated files:
 reports/final_report.md
 reports/tables/*.csv
 reports/tables/external_generalization.csv
+reports/tables/ablation_summary.csv
+reports/tables/invalid_code_rate_by_method.csv
+reports/tables/best_score_by_budget.csv
 reports/plots/plot_series.json
+reports/plots/generation_curve_by_method.json
 artifacts/top_programs/*.py
 artifacts/rerun_manifest.json
 ```
@@ -89,6 +93,7 @@ Run deterministic CLI checks:
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
 ```
@@ -109,6 +114,29 @@ PYTHONPATH=src python3 -m heuristic_discovery run \
 Do not commit large public benchmark files. Keep large or licensed data outside
 the repository and commit only parser tests, small fixtures, reports, and
 manifests.
+
+## Search Mechanism Ablation
+
+Phase 11 compares search operators under one deterministic local budget. It
+does not call live LLM providers and does not claim that live LLM behavior has
+been proven:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark search_ablation \
+  --candidate-budget 16 \
+  --generations 3 \
+  --output-dir /tmp/o2-ablation
+```
+
+Expected artifacts after a report export:
+
+```text
+reports/tables/ablation_summary.csv
+reports/tables/invalid_code_rate_by_method.csv
+reports/tables/best_score_by_budget.csv
+reports/plots/generation_curve_by_method.json
+```
 
 ## Benchmark Progression
 

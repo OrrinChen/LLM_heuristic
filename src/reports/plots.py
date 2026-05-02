@@ -6,6 +6,7 @@ from benchmarks.amazon_routing.discovery import (
     AmazonDiscoveryConfig,
     build_phase6_report,
 )
+from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from reports.failure_analysis import build_phase8_report
 from reports.robustness import build_phase7_report
@@ -17,6 +18,7 @@ def build_report_plots(
     *,
     phase3_report: Optional[Mapping[str, object]] = None,
     phase6_report: Optional[Mapping[str, object]] = None,
+    phase11_report: Optional[Mapping[str, object]] = None,
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
@@ -41,6 +43,12 @@ def build_report_plots(
             random_seed=23,
         )
     )
+    phase11 = phase11_report or build_phase11_report(
+        candidate_budget=32,
+        generations=3,
+        item_count=20,
+        random_seed=23,
+    )
     robustness = robustness_report or build_phase7_report()
     failures = failure_report or build_phase8_report()
 
@@ -55,6 +63,9 @@ def build_report_plots(
         ),
         "robustness_generalization_gaps": _robustness_gap_plot(
             robustness["slice_summary"]
+        ),
+        "generation_curve_by_method": _ablation_curve_plot(
+            phase11["generation_curve_by_method"]
         ),
         "failure_rate_by_generation": _failure_rate_plot(
             failures["failure_rate_by_generation"]
@@ -184,6 +195,48 @@ def _failure_rate_plot(rows: Sequence[Mapping[str, object]]) -> Mapping[str, obj
             points,
             label_key="label",
             value_key="failure_rate",
+        ),
+    }
+
+
+def _ablation_curve_plot(
+    curves: Mapping[str, Sequence[Mapping[str, object]]],
+) -> Mapping[str, object]:
+    points: PlotPoints = []
+    for method, rows in curves.items():
+        for row in rows:
+            points.append(
+                {
+                    "method": method,
+                    "generation": row["generation"],
+                    "evaluated_candidates": row["evaluated_candidates"],
+                    "best_score": row["best_score"],
+                    "median_score": row["median_score"],
+                    "failure_rate": row["failure_rate"],
+                    "invalid_code_rate": row["invalid_code_rate"],
+                    "best_program_id": row["best_program_id"],
+                    "label": f"{method} generation={row['generation']}",
+                }
+            )
+    latest_points = [
+        point
+        for point in points
+        if point["generation"]
+        == max(
+            int(candidate["generation"])
+            for candidate in points
+            if candidate["method"] == point["method"]
+        )
+    ]
+    return {
+        "title": "Generation Curve By Method",
+        "x": "evaluated_candidates",
+        "y": "best_score",
+        "points": points,
+        "ascii": render_ascii_bar_plot(
+            latest_points,
+            label_key="label",
+            value_key="best_score",
         ),
     }
 

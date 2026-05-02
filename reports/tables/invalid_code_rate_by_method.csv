@@ -1,0 +1,9 @@
+method,invalid_code_rate,evaluated_candidates,operator_source
+seed_only,0.125000,32,seed_library
+random_mutation,0.156250,32,deterministic_random_mutation
+deterministic_template_mutation,0.000000,32,deterministic_template_mutation
+crossover_only,0.000000,32,deterministic_crossover
+mutation_plus_crossover,0.000000,32,deterministic_mutation_crossover
+llm_mutation,0.125000,32,deterministic_llm_proxy
+llm_repair,0.000000,32,deterministic_llm_proxy
+llm_mutation_plus_repair,0.000000,32,deterministic_llm_proxy

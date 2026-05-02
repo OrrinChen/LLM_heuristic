@@ -40,17 +40,21 @@ Completed:
 - Phase 9: BPPLIB / OR-Library-style bin packing loader, external parser,
   train / validation / test split, external baseline comparison,
   synthetic-to-external transfer gap, report table, and CLI support.
+- Phase 11: Search mechanism ablation across seed-only, random mutation,
+  deterministic template mutation, crossover, mutation+crossover,
+  deterministic LLM-proxy mutation, deterministic LLM-proxy repair, and
+  mutation+repair under one fixed local budget.
 
 Current phase:
 
 - Original roadmap and hardening milestone are complete.
 - Phase 9 external bin packing benchmark evidence is complete.
-- Next implementation phase is Phase 11: Search Mechanism Ablation.
+- Phase 11 search mechanism ablation is complete.
+- Next implementation phase is Phase 15: Pareto Frontier Report.
 
 Deferred:
 
 - External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
-- Search mechanism ablations.
 - Pareto frontier reporting.
 - Research-style and resume / portfolio packaging.
 - Crossover beyond simple mutation.
@@ -61,9 +65,8 @@ Deferred:
 Next autonomous action:
 
 ```text
-Execute Phase 11 only: compare seed-only, deterministic mutation, crossover,
-and optional LLM operators under one controlled evaluation budget before
-Pareto frontier or portfolio packaging work.
+Execute Phase 15 only: report quality-runtime-complexity-failure-generalization
+trade-off frontiers before research-style or portfolio packaging work.
 ```
 
 ## Project Positioning
@@ -593,8 +596,8 @@ Engineering-platform route:
 Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
 ```
 
-Phase 9 is complete. The current priority is Phase 11. Do not implement later
-phases while Phase 11 is in progress.
+Phase 9 and Phase 11 are complete. The current priority is Phase 15. Do not
+implement later phases while Phase 15 is in progress.
 
 ## Phase 9: External Benchmark Evidence
 
@@ -672,29 +675,29 @@ Goal: show that improvements are not just seed heuristics or random chance.
 
 Methods to compare under one evaluation budget:
 
-- [ ] Seed-only baseline.
-- [ ] Random mutation.
-- [ ] Deterministic template mutation.
-- [ ] Crossover only.
-- [ ] Mutation plus crossover.
-- [ ] LLM mutation.
-- [ ] LLM repair.
-- [ ] LLM mutation plus repair.
+- [x] Seed-only baseline.
+- [x] Random mutation.
+- [x] Deterministic template mutation.
+- [x] Crossover only.
+- [x] Mutation plus crossover.
+- [x] LLM mutation.
+- [x] LLM repair.
+- [x] LLM mutation plus repair.
 
 Controls:
 
-- [ ] Same number of candidates.
-- [ ] Same benchmark split.
-- [ ] Same timeout.
-- [ ] Same evaluation budget.
-- [ ] Same seeds.
+- [x] Same number of candidates.
+- [x] Same benchmark split.
+- [x] Same timeout.
+- [x] Same evaluation budget.
+- [x] Same seeds.
 
 Required outputs:
 
-- [ ] `reports/tables/ablation_summary.csv`.
-- [ ] `reports/plots/generation_curve_by_method.json`.
-- [ ] `reports/tables/invalid_code_rate_by_method.csv`.
-- [ ] `reports/tables/best_score_by_budget.csv`.
+- [x] `reports/tables/ablation_summary.csv`.
+- [x] `reports/plots/generation_curve_by_method.json`.
+- [x] `reports/tables/invalid_code_rate_by_method.csv`.
+- [x] `reports/tables/best_score_by_budget.csv`.
 
 ## Phase 12: LLM Live Mutation v1
 
@@ -981,12 +984,12 @@ Completed foundation:
 7. Amazon routing evaluator.
 8. Amazon heuristic discovery and failure analysis.
 9. External bin packing benchmark evidence.
+11. Search mechanism ablation.
 ```
 
 Next recommended order:
 
 ```text
-11. Search mechanism ablation.
 15. Pareto frontier report.
 18. Research-style technical report.
 19. Resume / portfolio packaging.
