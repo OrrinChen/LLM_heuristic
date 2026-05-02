@@ -1,4 +1,3 @@
 step,reason
-pareto_frontier_report,"Report objective-quality, runtime, complexity, failure, and generalization trade-offs instead of a single winner."
 research_style_report,"Package the system design, sandbox boundary, external evidence, ablation, limitations, and conclusions."
 resume_portfolio_packaging,Turn the evidence package into a concise README-first portfolio narrative and interview-ready demo.

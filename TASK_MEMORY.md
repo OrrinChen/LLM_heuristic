@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add search mechanism ablation`
-Current phase: Phase 15 planned; Phase 11 search mechanism ablation complete
-Main blocker: None for Phase 11; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
-Next recommended action: execute Phase 15 only by adding quality-runtime-complexity-failure-generalization Pareto frontier reporting before research-style or portfolio packaging work
+Latest commit: `feat: add pareto frontier reporting`
+Current phase: Phase 18 planned; Phase 15 Pareto frontier reporting complete
+Main blocker: None for Phase 15; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
+Next recommended action: execute Phase 18 only by packaging the system design, sandbox boundary, benchmark evidence, ablation, Pareto frontier, failure analysis, limitations, and conclusions into a research-style technical report
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, and Phase 11 search mechanism ablation evidence.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, and Phase 15 Pareto frontier evidence.
 
 ## Roadmap Update
 
@@ -59,6 +59,19 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   `best_score_by_budget.csv`, and `generation_curve_by_method.json`.
 - Updated final report and recommended next steps so Phase 15 Pareto frontier
   reporting is now the next implementation phase.
+
+2026-05-02 Phase 15 completion:
+
+- Completed Pareto frontier reporting only; no external routing, live LLM
+  expansion, semantic novelty, failure taxonomy v2, reproducibility profile, or
+  cloud execution was added.
+- Added a deterministic Phase 15 report comparing objective quality, runtime,
+  program complexity, failure rate, generalization gap, and Amazon-style
+  driver-likeness / operational realism.
+- Added `pareto_frontier.csv`, `frontier_plot_series.json`, and
+  `artifacts/frontier_programs/*.py` exports.
+- Updated final report and recommended next steps so Phase 18 research-style
+  technical reporting is now the next implementation phase.
 
 ## Completed Phases
 
@@ -589,6 +602,83 @@ Known limitations:
   novelty, failure taxonomy v2, Pareto frontier analysis, and cloud-scale
   search remain deferred.
 
+### Phase 15: Pareto Frontier Report
+
+Commit: `feat: add pareto frontier reporting`
+
+What changed:
+
+- Created `src/reports/pareto.py` to build deterministic Pareto frontier rows
+  across bin packing, simple routing, and Amazon-style routing candidates.
+- Compared objective quality, runtime, program complexity, failure rate,
+  generalization gap, and operational realism / driver-likeness where
+  available.
+- Computed nondominated frontier rows within each benchmark, not across
+  unrelated benchmarks.
+- Added `pareto_frontier` to report tables and `frontier_plot_series` to report
+  plots.
+- Added artifact export for `reports/tables/pareto_frontier.csv`,
+  `reports/plots/frontier_plot_series.json`, and
+  `artifacts/frontier_programs/*.py`.
+- Updated the final report to include a Pareto Frontier section and moved the
+  next recommended phase to Phase 18 research-style technical reporting.
+- Added `tests/test_pareto_frontier_phase15.py`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and this
+  task memory.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_pareto_frontier_phase15.py -q`
+  failed as expected before implementation because `reports.pareto` did not
+  exist.
+- 2026-05-02: `python3 -m pytest tests/test_pareto_frontier_phase15.py -q`
+  passed, 4 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_pareto_frontier_phase15.py tests/test_report_tables_plots_and_live_llm.py tests/test_final_report.py tests/test_hardening_milestone.py -q`
+  passed, 29 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_search_ablation_phase11.py tests/test_pareto_frontier_phase15.py tests/test_final_report.py -q`
+  passed, 16 tests after updating the previous next-step expectation.
+- 2026-05-02: `python3 -m pytest -q` passed, 117 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 74 files already
+  formatted.
+- 2026-05-02: Phase 15 smoke printed phase `15`, 17 candidate rows, 8 frontier
+  rows, benchmark tuple `('amazon_routing', 'bin_packing', 'simple_routing')`,
+  first frontier row `amazon_routing`, program
+  `phase6-seed-000-travel_fast`, and the conservative frontier claim boundary.
+- 2026-05-02: final-report smoke printed first recommended next step
+  `research_style_report`, frontier count `8`, and confirmed external
+  evidence, search ablation, Pareto frontier, conservative dominance boundary,
+  and selected trade-off language.
+- 2026-05-02: report artifact smoke printed ten tables including
+  `pareto_frontier`, six plot series including `frontier_plot_series`, 17
+  frontier plot points, Markdown checks `True`, and missing-env Gemini check
+  `GEMINI_API_KEY`.
+- 2026-05-02: CLI smoke for local `bin_packing`, `bin_packing_external`,
+  `search_ablation`, `report`, `inspect`, and `rerun-manifest` passed against
+  `/tmp/o2-*` output folders.
+- 2026-05-02: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package.
+- 2026-05-02: required docs are present and non-empty.
+- 2026-05-02: repository content secret scan for API-key-like Gemini material
+  returned no matches.
+- 2026-05-02: large-file scan found no files larger than 1 MB in this project
+  tree.
+- 2026-05-02: `git diff --check -- .` passed.
+
+Known limitations:
+
+- The frontier uses deterministic local benchmark candidates and a deterministic
+  runtime proxy; it should not be read as hardware-independent runtime
+  benchmarking.
+- Pareto dominance is computed within each benchmark because bin packing,
+  routing, and Amazon-style routing scores are not directly comparable.
+- Amazon operational realism uses available driver-likeness metrics from local
+  Amazon-shaped fixtures, not proprietary or public Amazon route data.
+- External routing evidence, semantic novelty, failure taxonomy v2,
+  reproduction profiles, and cloud-scale search remain deferred.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -731,8 +821,9 @@ reporting tables and plots
   bin packing data.
 - [x] Add fixed-budget search mechanism ablation across deterministic local
   mutation, crossover, and LLM-proxy operators.
-- [ ] Add Pareto frontier reporting across quality, runtime, complexity,
+- [x] Add Pareto frontier reporting across quality, runtime, complexity,
   failure rate, and generalization gap.
+- [ ] Package a research-style technical report.
 
 ## First Milestone Definition
 

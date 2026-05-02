@@ -23,12 +23,14 @@ def export_report_artifacts(
     plots_dir = reports_dir / "plots"
     artifacts_dir = root / "artifacts"
     top_programs_dir = artifacts_dir / "top_programs"
+    frontier_programs_dir = artifacts_dir / "frontier_programs"
     directories = (
         reports_dir,
         tables_dir,
         plots_dir,
         artifacts_dir,
         top_programs_dir,
+        frontier_programs_dir,
     )
     for directory in directories:
         directory.mkdir(parents=True, exist_ok=True)
@@ -58,6 +60,10 @@ def export_report_artifacts(
         encoding="utf-8",
     )
     top_program_paths = _write_top_programs(manifest, top_programs_dir)
+    frontier_program_paths = _write_frontier_programs(
+        final_report,
+        frontier_programs_dir,
+    )
 
     png_paths: Sequence[Path] = ()
     if render_png:
@@ -70,6 +76,7 @@ def export_report_artifacts(
         "plot_series": str(plot_series_path),
         "extra_plot_series": [str(path) for path in extra_plot_paths],
         "top_programs": [str(path) for path in top_program_paths],
+        "frontier_programs": [str(path) for path in frontier_program_paths],
         "rerun_manifest": str(manifest_path),
         "png_rendered": bool(png_paths),
         "png_paths": [str(path) for path in png_paths],
@@ -81,12 +88,49 @@ def _write_extra_plot_series(
     plots_dir: Path,
 ) -> Sequence[Path]:
     paths = []
-    for plot_name in ("generation_curve_by_method",):
+    for plot_name in ("generation_curve_by_method", "frontier_plot_series"):
         if plot_name not in plots:
             continue
         path = plots_dir / f"{plot_name}.json"
         path.write_text(
             json.dumps(plots[plot_name], indent=2, sort_keys=True),
+            encoding="utf-8",
+        )
+        paths.append(path)
+    return paths
+
+
+def _write_frontier_programs(
+    final_report: Mapping[str, object],
+    frontier_programs_dir: Path,
+) -> Sequence[Path]:
+    for stale_path in frontier_programs_dir.glob("*.py"):
+        stale_path.unlink()
+    paths = []
+    for row in final_report["pareto_frontier"]["frontier_rows"]:
+        candidate_id = str(row["program_id"])
+        benchmark = str(row["benchmark"])
+        path = (
+            frontier_programs_dir
+            / f"{_safe_name(benchmark)}-{_safe_name(candidate_id)}.py"
+        )
+        path.write_text(
+            "\n".join(
+                [
+                    f"# candidate_id: {candidate_id}",
+                    f"# benchmark: {benchmark}",
+                    f"# source: {row['source']}",
+                    f"# objective_quality: {row['objective_quality']}",
+                    f"# runtime: {row['runtime']}",
+                    f"# program_complexity: {row['program_complexity']}",
+                    f"# generalization_gap: {row['generalization_gap']}",
+                    f"# selected_tradeoff: {row['selected_tradeoff']}",
+                    "",
+                    "",
+                    str(row["code"]).rstrip(),
+                    "",
+                ]
+            ),
             encoding="utf-8",
         )
         paths.append(path)

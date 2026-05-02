@@ -82,9 +82,12 @@ reports/tables/external_generalization.csv
 reports/tables/ablation_summary.csv
 reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
+reports/tables/pareto_frontier.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
+reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
+artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
 ```
 
@@ -136,6 +139,31 @@ reports/tables/ablation_summary.csv
 reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
 reports/plots/generation_curve_by_method.json
+```
+
+## Pareto Frontier Evidence
+
+Phase 15 reports nondominated trade-offs per benchmark. It compares objective
+quality, runtime, complexity, failure rate, generalization gap, and
+driver-likeness where applicable:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.pareto import build_phase15_report
+
+report = build_phase15_report()
+print(report["phase"])
+print(len(report["frontier_rows"]))
+print(report["claim_boundary"])
+PY
+```
+
+Expected artifacts after a report export:
+
+```text
+reports/tables/pareto_frontier.csv
+reports/plots/frontier_plot_series.json
+artifacts/frontier_programs/*.py
 ```
 
 ## Benchmark Progression
