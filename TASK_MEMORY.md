@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `docs: add research-style technical report`
-Current phase: Phase 19 planned; Phase 18 research-style technical report complete
-Main blocker: None for Phase 18; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
-Next recommended action: execute Phase 19 only by turning the evidence package and technical report into a README-first portfolio narrative and interview-ready demo
+Latest commit: `docs: package portfolio-ready project evidence`
+Current phase: job-search portfolio track complete; Phase 19 resume / portfolio packaging complete
+Main blocker: None for Phase 19; external routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
+Next recommended action: optional Phase 10 external routing evidence, if continuing beyond the portfolio track
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, and Phase 18 research-style technical report packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -87,6 +87,24 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   export and CLI evidence package.
 - Updated final report next-step recommendations so Phase 19 resume /
   portfolio packaging is now the next implementation phase.
+
+2026-05-02 Phase 19 completion:
+
+- Completed resume / portfolio packaging only; no external routing evidence,
+  live LLM expansion, semantic novelty, failure taxonomy v2, reproducibility
+  profile, or cloud execution was added.
+- Added a structured Phase 19 portfolio package with resume bullets,
+  one-command demo command, architecture diagram text, benchmark evidence rows,
+  safety boundary, limitations, conservative claim boundaries, and an optional
+  next phase.
+- Added `reports/portfolio_brief.md` to the deterministic report artifact
+  export and CLI evidence package.
+- Rewrote the README first screen around what the system does, why it matters,
+  one-command demo, core architecture, benchmark results, safety boundary, and
+  limitations.
+- Updated final report next-step recommendations so optional Phase 10 external
+  routing evidence is now the next extension after the completed job-search
+  portfolio track.
 
 ## Completed Phases
 
@@ -769,7 +787,79 @@ Known limitations:
   report does not claim live LLM superiority.
 - External routing evidence, semantic novelty, failure taxonomy v2,
   reproducibility profiles, and cloud-scale search remain deferred.
-- Phase 19 README-first portfolio packaging is still the recommended next step.
+- Phase 19 README-first portfolio packaging was completed after this phase.
+
+### Phase 19: Resume / Portfolio Packaging
+
+Commit: `docs: package portfolio-ready project evidence`
+
+What changed:
+
+- Created `src/reports/portfolio.py` with a deterministic Phase 19 portfolio
+  package builder and Markdown renderer.
+- Added resume bullets, a one-command demo command, architecture diagram text,
+  benchmark evidence rows, safety boundary, limitations, and conservative claim
+  boundaries for interview and GitHub presentation.
+- Added `reports/portfolio_brief.md` to `export_report_artifacts()` and the
+  deterministic `python -m heuristic_discovery report` CLI package.
+- Rewrote the README first screen to include what the system does, why it
+  matters, one-command demo, core architecture, benchmark results, safety
+  boundary, and limitations before the longer status log.
+- Updated final report next steps and `reports/tables/recommended_next_steps.csv`
+  so optional Phase 10 external routing evidence is next after the completed
+  portfolio track.
+- Added `tests/test_portfolio_packaging_phase19.py`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and this
+  task memory.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_portfolio_packaging_phase19.py -q`
+  failed as expected before implementation because `reports.portfolio` did not
+  exist.
+- 2026-05-02:
+  `python3 -m pytest tests/test_portfolio_packaging_phase19.py tests/test_hardening_milestone.py -q`
+  passed, 16 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_portfolio_packaging_phase19.py tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_pareto_frontier_phase15.py tests/test_search_ablation_phase11.py -q`
+  passed, 30 tests.
+- 2026-05-02: `python3 -m pytest -q` passed, 126 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 78 files already
+  formatted.
+- 2026-05-02: `git diff --check -- .` passed.
+- 2026-05-02: Phase 19 smoke printed phase `19`, six benchmark evidence rows,
+  next phase `Optional Phase 10: External Routing Evidence`, and confirmed the
+  resume bullet, one-command demo, core architecture, and conservative README
+  claim boundary.
+- 2026-05-02: final-report smoke printed first recommended next step
+  `external_routing_evidence`, frontier count `8`, and confirmed external
+  evidence, search ablation, Pareto frontier, conservative dominance boundary,
+  and selected trade-off language.
+- 2026-05-02: CLI report artifact smoke wrote `/tmp/o2-phase19-report` with
+  `reports/final_report.md`, `reports/technical_report.md`,
+  `reports/portfolio_brief.md`, and `reports/tables/recommended_next_steps.csv`.
+- 2026-05-02: report table/plot smoke printed ten tables, six plot series, 17
+  frontier plot points, next-step Markdown check `True`, and missing-env Gemini
+  check `GEMINI_API_KEY`.
+- 2026-05-02: `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package and wrote
+  `reports/portfolio_brief.md`.
+- 2026-05-02: required docs are present and non-empty.
+- 2026-05-02: repository content secret scan for API-key-like Gemini material
+  returned no matches.
+- 2026-05-02: large-file scan found no files larger than 1 MB in this project
+  tree.
+
+Known limitations:
+
+- Phase 19 packages the existing evidence; it does not add new benchmark
+  results.
+- External routing evidence, live LLM experiment runs, semantic novelty,
+  failure taxonomy v2, reproducibility profiles, and cloud-scale search remain
+  deferred.
+- The README claim remains deliberately conservative and does not claim
+  universal dominance or SOTA solver performance.
 
 ## Latest Strategic Decision
 

@@ -119,18 +119,18 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "resume_portfolio_packaging",
-                "reason": (
-                    "Turn the evidence package and technical report into a "
-                    "concise README-first portfolio narrative and "
-                    "interview-ready demo."
-                ),
-            },
-            {
                 "step": "external_routing_evidence",
                 "reason": (
                     "Optionally add TSPLIB-style routing evidence after the "
-                    "job-search packaging path is complete."
+                    "job-search evidence and portfolio package are complete."
+                ),
+            },
+            {
+                "step": "live_llm_mutation_v1",
+                "reason": (
+                    "Optionally convert Gemini mutation from smoke-tested "
+                    "provider support into a controlled live-operator "
+                    "experiment."
                 ),
             },
         ),

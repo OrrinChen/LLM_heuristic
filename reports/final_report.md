@@ -85,5 +85,5 @@ Amazon trade-off callouts: 4.
 
 ## Recommended Next Steps
 
-- `resume_portfolio_packaging`: Turn the evidence package and technical report into a concise README-first portfolio narrative and interview-ready demo.
-- `external_routing_evidence`: Optionally add TSPLIB-style routing evidence after the job-search packaging path is complete.
+- `external_routing_evidence`: Optionally add TSPLIB-style routing evidence after the job-search evidence and portfolio package are complete.
+- `live_llm_mutation_v1`: Optionally convert Gemini mutation from smoke-tested provider support into a controlled live-operator experiment.

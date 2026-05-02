@@ -8,6 +8,7 @@ from typing import Dict, Mapping, Sequence, Union
 from program_search.rerun_manifest import build_bin_packing_rerun_manifest
 from reports.final_report import build_final_report, render_final_report_markdown
 from reports.plots import build_report_plots
+from reports.portfolio import build_phase19_package, render_portfolio_brief_markdown
 from reports.tables import build_report_tables
 from reports.technical_report import (
     build_phase18_report,
@@ -51,6 +52,12 @@ def export_report_artifacts(
         render_technical_report_markdown(technical_report),
         encoding="utf-8",
     )
+    portfolio_package = build_phase19_package(final_report=final_report)
+    portfolio_brief_path = reports_dir / "portfolio_brief.md"
+    portfolio_brief_path.write_text(
+        render_portfolio_brief_markdown(portfolio_package),
+        encoding="utf-8",
+    )
 
     tables = build_report_tables(final_report=final_report)
     table_paths = _write_tables(tables, tables_dir)
@@ -83,6 +90,7 @@ def export_report_artifacts(
         "output_dir": str(root),
         "final_report": str(final_report_path),
         "technical_report": str(technical_report_path),
+        "portfolio_brief": str(portfolio_brief_path),
         "tables": [str(path) for path in table_paths],
         "plot_series": str(plot_series_path),
         "extra_plot_series": [str(path) for path in extra_plot_paths],

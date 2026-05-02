@@ -78,6 +78,7 @@ Expected generated files:
 ```text
 reports/final_report.md
 reports/technical_report.md
+reports/portfolio_brief.md
 reports/tables/*.csv
 reports/tables/external_generalization.csv
 reports/tables/ablation_summary.csv
@@ -192,6 +193,33 @@ Expected artifact after a report export:
 
 ```text
 reports/technical_report.md
+```
+
+## Portfolio Brief
+
+Phase 19 packages the project for resumes, GitHub, demos, and interviews:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.portfolio import (
+    build_phase19_package,
+    render_portfolio_brief_markdown,
+)
+
+package = build_phase19_package()
+markdown = render_portfolio_brief_markdown(package)
+print(package["phase"])
+print(len(package["benchmark_results"]))
+print(package["recommended_next_phase"])
+print("Resume Bullets" in markdown)
+print("universal dominance" in markdown)
+PY
+```
+
+Expected artifact after a report export:
+
+```text
+reports/portfolio_brief.md
 ```
 
 ## Benchmark Progression
