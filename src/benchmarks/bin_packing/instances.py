@@ -19,6 +19,7 @@ class InstanceDistribution(str, Enum):
     TINY_PLUS_LARGE = "tiny_plus_large"
     ADVERSARIAL = "adversarial"
     HELD_OUT = "held_out"
+    EXTERNAL = "external"
 
 
 @dataclass(frozen=True)
@@ -27,6 +28,9 @@ class BinPackingInstance:
     seed: int
     items: Tuple[float, ...]
     capacity: float = 1.0
+    instance_id: str = ""
+    source: str = "synthetic"
+    known_optimum: Optional[int] = None
 
 
 def generate_instance(
@@ -36,6 +40,9 @@ def generate_instance(
     item_count: int = 50,
     capacity: float = 1.0,
     items: Optional[Sequence[float]] = None,
+    instance_id: str = "",
+    source: str = "synthetic",
+    known_optimum: Optional[int] = None,
 ) -> BinPackingInstance:
     if capacity <= 0:
         raise ValueError("capacity must be positive")
@@ -47,6 +54,9 @@ def generate_instance(
             seed=seed,
             items=normalized,
             capacity=float(capacity),
+            instance_id=instance_id,
+            source=source,
+            known_optimum=known_optimum,
         )
     if item_count < 0:
         raise ValueError("item_count must be non-negative")
@@ -62,6 +72,9 @@ def generate_instance(
         seed=seed,
         items=generated,
         capacity=float(capacity),
+        instance_id=instance_id,
+        source=source,
+        known_optimum=known_optimum,
     )
 
 

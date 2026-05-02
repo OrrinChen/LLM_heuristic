@@ -22,6 +22,7 @@ class PackingResult:
     bins: List[List[float]]
     runtime: float
     is_valid: bool
+    capacity: float = 1.0
     failure_reason: Optional[str] = None
 
     @property
@@ -30,7 +31,7 @@ class PackingResult:
 
     @property
     def total_waste(self) -> float:
-        return sum(1.0 - sum(bin_items) for bin_items in self.bins)
+        return sum(self.capacity - sum(bin_items) for bin_items in self.bins)
 
     @property
     def average_waste(self) -> float:
@@ -142,6 +143,7 @@ def _pack_online(
                 bins=bins,
                 runtime=perf_counter() - started,
                 is_valid=False,
+                capacity=instance.capacity,
                 failure_reason="invalid_bin_index",
             )
         if sum(bins[chosen]) + item > instance.capacity + EPSILON:
@@ -150,6 +152,7 @@ def _pack_online(
                 bins=bins,
                 runtime=perf_counter() - started,
                 is_valid=False,
+                capacity=instance.capacity,
                 failure_reason="bin_capacity_exceeded",
             )
         bins[chosen].append(item)
@@ -160,6 +163,7 @@ def _pack_online(
         bins=bins,
         runtime=perf_counter() - started,
         is_valid=validation.ok,
+        capacity=instance.capacity,
         failure_reason=validation.failure_reason,
     )
 
@@ -207,6 +211,9 @@ def _with_items(
         seed=instance.seed,
         items=tuple(items),
         capacity=instance.capacity,
+        instance_id=instance.instance_id,
+        source=instance.source,
+        known_optimum=instance.known_optimum,
     )
 
 

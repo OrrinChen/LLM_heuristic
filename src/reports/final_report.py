@@ -7,6 +7,7 @@ from benchmarks.amazon_routing.discovery import (
     build_phase6_report,
 )
 from benchmarks.bin_packing.evaluator import build_phase2_report
+from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
 from reports.failure_analysis import build_phase8_report
 from reports.robustness import build_phase7_report
@@ -16,6 +17,7 @@ FINAL_REPORT_SECTIONS = (
     "system_architecture",
     "killer_experiment",
     "benchmark_results",
+    "external_benchmark_evidence",
     "generalization_and_robustness",
     "failure_analysis",
     "limitations",
@@ -44,6 +46,7 @@ def build_final_report() -> Dict[str, object]:
     )
     phase7 = build_phase7_report()
     phase8 = build_phase8_report()
+    phase9 = build_phase9_report(candidate_count=48, synthetic_item_count=25)
 
     report: Dict[str, object] = {
         "phase": "final_report",
@@ -81,10 +84,14 @@ def build_final_report() -> Dict[str, object]:
                 "amazon_routing": _amazon_routing_summary(phase6),
             },
         },
+        "external_benchmark": _external_bin_packing_summary(phase9),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
             "Live LLM mutation is optional and remains gated behind "
             "environment-variable configuration.",
+            "External bin packing evidence uses parser-backed, small "
+            "benchmark-style local fixtures by default; large public benchmark "
+            "files are intentionally not committed.",
             "Amazon routing data is represented by deterministic local "
             "Amazon-shaped fixtures until public or user-provided data is "
             "configured.",
@@ -97,25 +104,24 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "external_benchmark_adapter",
+                "step": "search_mechanism_ablation",
                 "reason": (
-                    "Add BPPLIB, OR-Library, TSPLIB, or CVRPLIB-style adapters "
-                    "to test whether discovered heuristics transfer beyond "
-                    "synthetic suites."
+                    "Compare seed-only, deterministic mutation, crossover, and "
+                    "LLM-enabled operators under a fixed evaluation budget."
                 ),
             },
             {
-                "step": "broader_crossover",
+                "step": "pareto_frontier_report",
                 "reason": (
-                    "Add AST-level, feature-weight, and fragment crossover only "
-                    "after the hardened evidence package remains stable."
+                    "Report objective-quality, runtime, complexity, failure, "
+                    "and generalization trade-offs instead of a single winner."
                 ),
             },
             {
-                "step": "cloud_scale_experiments",
+                "step": "research_style_report",
                 "reason": (
-                    "Scale deterministic runs after sandbox isolation and "
-                    "external-data adapters are in place."
+                    "Package the system design, sandbox boundary, external "
+                    "evidence, ablation, limitations, and conclusions."
                 ),
             },
         ),
@@ -127,6 +133,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     project = report["project"]
     claims = report["claims"]
     killer = report["killer_experiment"]["benchmarks"]
+    external = report["external_benchmark"]
     evidence = report["evidence"]
 
     lines = [
@@ -170,6 +177,29 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 "",
             ]
         )
+    lines.extend(
+        [
+            "## External Benchmark Evidence",
+            "",
+            external["summary"],
+            "",
+            f"Benchmark: `{external['benchmark']}`.",
+            f"External top program: `{external['best_external_program_id']}`.",
+            (
+                "External held-out test score: "
+                f"`{external['best_external_test_score']}`."
+            ),
+            (
+                "Synthetic-selected program external test score: "
+                f"`{external['synthetic_top_external_test_score']}`."
+            ),
+            (
+                "Claim boundary: this section does not claim SOTA or universal "
+                "dominance."
+            ),
+            "",
+        ]
+    )
     lines.extend(
         [
             "## Generalization And Robustness",
@@ -287,6 +317,32 @@ def _amazon_routing_summary(phase6: Mapping[str, object]) -> Mapping[str, object
                 top["test_score"], "held_out_test"
             ),
         },
+    }
+
+
+def _external_bin_packing_summary(
+    phase9: Mapping[str, object],
+) -> Mapping[str, object]:
+    return {
+        "benchmark": phase9["benchmark"],
+        "source": phase9["source"],
+        "best_external_program_id": phase9["best_external_program_id"],
+        "best_external_validation_score": phase9["best_external_validation_score"],
+        "best_external_test_score": phase9["best_external_test_score"],
+        "synthetic_top_program_id": phase9["synthetic_top_program_id"],
+        "synthetic_top_external_test_score": (
+            phase9["synthetic_top_external_test_score"]
+        ),
+        "synthetic_to_external_gap": phase9["synthetic_to_external_gap"],
+        "external_generalization_gap": phase9["external_generalization_gap"],
+        "external_test_baseline_scores": phase9["external_test_baseline_scores"],
+        "claim_boundary": phase9["claim_boundary"],
+        "summary": (
+            "Phase 9 evaluates bin packing candidates on BPPLIB / "
+            "OR-Library-style external fixtures with separate train, "
+            "validation, and test splits, then compares synthetic-selected and "
+            "external-selected programs against classical baselines."
+        ),
     }
 
 
