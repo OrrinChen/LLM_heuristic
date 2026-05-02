@@ -78,6 +78,7 @@ Expected generated files:
 ```text
 reports/final_report.md
 reports/tables/*.csv
+reports/tables/external_generalization.csv
 reports/plots/plot_series.json
 artifacts/top_programs/*.py
 artifacts/rerun_manifest.json
@@ -87,9 +88,27 @@ Run deterministic CLI checks:
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
 ```
+
+## External Bin Packing Evidence
+
+Phase 9 supports tiny deterministic BPPLIB / OR-Library-style fixtures by
+default and user-provided files through the CLI:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark bin_packing_external \
+  --external-path path/to/instances.txt \
+  --external-format auto \
+  --output-dir /tmp/o2-external
+```
+
+Do not commit large public benchmark files. Keep large or licensed data outside
+the repository and commit only parser tests, small fixtures, reports, and
+manifests.
 
 ## Benchmark Progression
 

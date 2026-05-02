@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: harden evidence package`
-Current phase: Hardening milestone complete
-Main blocker: None for the original roadmap or hardening milestone; external benchmark data remains the next credibility extension
-Next recommended action: add an external benchmark adapter before broader crossover or cloud-scale experiments
+Latest commit: `feat: add external bin packing evidence`
+Current phase: Phase 11 planned; Phase 9 external bin packing evidence complete
+Main blocker: None for Phase 9; broader external routing, live LLM experiments, and cloud execution remain deferred
+Next recommended action: execute Phase 11 only by adding search mechanism ablations under a fixed evaluation budget before Pareto frontier or portfolio packaging work
 
 ## Current Project State
 
@@ -15,7 +15,35 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, and a deterministic CLI.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, and Phase 9 BPPLIB / OR-Library-style external bin packing evidence.
+
+## Roadmap Update
+
+2026-05-02:
+
+- Added the post-hardening roadmap to `ROADMAP.md` using the project constraint
+  that work should now strengthen evidence and presentation instead of adding
+  disconnected features.
+- Set Phase 9 as the next implementation phase: external bin packing benchmark
+  evidence with BPPLIB / OR-Library-style parsing, external splits, baseline
+  comparison, synthetic-to-external generalization gap, CLI support, and
+  `external_generalization.csv`.
+- Recorded the recommended job-search sequence as Phase 9 -> Phase 11 -> Phase
+  15 -> Phase 18 -> Phase 19.
+- Explicitly deferred routing external evidence, live LLM expansion, semantic
+  novelty, failure taxonomy v2, reproducibility v2, and cloud-scale execution
+  until after the external bin packing evidence phase.
+
+2026-05-02 Phase 9 completion:
+
+- Completed external bin packing benchmark evidence only; no TSPLIB, CVRPLIB,
+  live LLM, broader crossover, or cloud execution was added.
+- Added BPPLIB / OR-Library-style parsers, tiny deterministic external
+  benchmark-style fixtures, external train / validation / test splits, external
+  baseline comparison, synthetic-to-external transfer reporting,
+  `external_generalization.csv`, final report Markdown coverage, and
+  `bin_packing_external` CLI support.
+- Updated the recommended next phase to Phase 11 search mechanism ablation.
 
 ## Completed Phases
 
@@ -403,6 +431,73 @@ Known limitations:
 - Subprocess memory limits depend on host `resource` support. If unsupported, requested memory limits fail closed with `memory_limit_unsupported`.
 - The committed report plots are JSON series, not mandatory PNGs; PNG rendering remains optional when matplotlib is available.
 - The hardening milestone does not add external BPPLIB, OR-Library, TSPLIB, or CVRPLIB data adapters.
+
+### Phase 9: External Benchmark Evidence
+
+Commit: `feat: add external bin packing evidence`
+
+What changed:
+
+- Created `src/benchmarks/bin_packing/external.py` with OR-Library-style and
+  BPPLIB-style parsers, user-file loading, deterministic external splitting,
+  tiny benchmark-style local fixtures, and `build_phase9_report`.
+- Extended `BinPackingInstance` with `EXTERNAL`, `instance_id`, `source`, and
+  `known_optimum` metadata while preserving existing synthetic defaults.
+- Updated bin packing `PackingResult` waste metrics to use instance capacity so
+  external instances with capacities other than `1.0` report waste correctly.
+- Added Phase 9 report integration to `reports/final_report.py`,
+  `reports/tables.py`, and artifact export through
+  `reports/tables/external_generalization.csv`.
+- Added `bin_packing_external` support to the deterministic CLI, with optional
+  `--external-path` and `--external-format` arguments for user-provided files.
+- Added `tests/test_external_bin_packing_phase9.py`.
+- Regenerated `reports/final_report.md`,
+  `reports/tables/external_generalization.csv`, and
+  `reports/tables/recommended_next_steps.csv`.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, and
+  `TASK_MEMORY.md`.
+
+Validation:
+
+- 2026-05-02: `python3 -m pytest tests/test_external_bin_packing_phase9.py -q`
+  failed as expected before implementation because
+  `benchmarks.bin_packing.external` did not exist.
+- 2026-05-02: `python3 -m pytest tests/test_external_bin_packing_phase9.py -q`
+  passed, 8 tests.
+- 2026-05-02:
+  `python3 -m pytest tests/test_external_bin_packing_phase9.py tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_hardening_milestone.py -q`
+  passed, 33 tests.
+- 2026-05-02: `python3 -m pytest -q` passed, 106 tests.
+- 2026-05-02: `python3 -m ruff check .` passed.
+- 2026-05-02: `python3 -m ruff format --check .` passed, 62 files already
+  formatted.
+- 2026-05-02: Phase 9 smoke printed `bin_packing_external`, test count `2`,
+  top program `seed-000-tight_fit`, external held-out score `5.0`, baseline
+  presence `True`, and the conservative claim boundary.
+- 2026-05-02: CLI smoke for `run --benchmark bin_packing_external` wrote
+  `/tmp/o2-phase9-external/run_summary.json` and printed top program
+  `seed-000-tight_fit`.
+- 2026-05-02: CLI smoke for local `bin_packing`, `inspect`, `report`, and
+  `rerun-manifest` passed against `/tmp/o2-*` output folders.
+- 2026-05-02: final-report smoke printed the stable signature with
+  `search_mechanism_ablation` as the first recommended next step and confirmed
+  the external section, conservative dominance boundary, and selected trade-off
+  language.
+- 2026-05-02: report artifact smoke printed six tables including
+  `external_generalization`, 16 benchmark rows, 5 external-generalization rows,
+  9 failure rows, 4 plot series, 15 robustness-gap points, Markdown checks
+  `True`, and missing-env Gemini check `GEMINI_API_KEY`.
+
+Known limitations:
+
+- Phase 9 includes parser-backed, small benchmark-style fixtures for local,
+  deterministic validation. Large public BPPLIB or OR-Library files are not
+  committed.
+- The external evidence is bin packing only; TSPLIB / CVRPLIB routing evidence
+  remains deferred.
+- The report compares transfer and baselines conservatively and does not claim
+  SOTA or universal dominance.
+- Live LLM mutation remains optional and was not expanded in this phase.
 
 ## Latest Strategic Decision
 

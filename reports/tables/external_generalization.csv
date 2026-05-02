@@ -1,0 +1,6 @@
+benchmark,selection_source,program_id,validation_score,external_test_score,synthetic_to_external_gap,baseline_reference,claim
+bin_packing_external,external_validation,seed-000-tight_fit,4.500000,5.000000,0.500000,,external benchmark-style evidence only; no SOTA or universal dominance claim
+bin_packing_external,synthetic_validation,seed-000-tight_fit,,5.000000,3.500000,,external benchmark-style evidence only; no SOTA or universal dominance claim
+bin_packing_external,external_test_baseline,,,5.000000,,first_fit,external benchmark-style evidence only; no SOTA or universal dominance claim
+bin_packing_external,external_test_baseline,,,5.000000,,best_fit,external benchmark-style evidence only; no SOTA or universal dominance claim
+bin_packing_external,external_test_baseline,,,5.000000,,best_fit_decreasing,external benchmark-style evidence only; no SOTA or universal dominance claim

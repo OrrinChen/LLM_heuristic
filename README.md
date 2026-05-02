@@ -41,8 +41,12 @@ Current status:
   clock timeout handling, optional platform memory limits, rerun manifests,
   exported report artifacts, top-program evidence files, and a deterministic
   CLI.
-- Current phase: original roadmap and hardening milestone are complete; the
-  recommended next extension is an external benchmark adapter.
+- Phase 9 complete: BPPLIB / OR-Library-style bin packing parser, external
+  train / validation / test split, external baseline comparison,
+  synthetic-to-external transfer gap, final report section,
+  `external_generalization.csv`, and `bin_packing_external` CLI support.
+- Current phase: Phase 11 search mechanism ablation is the recommended next
+  extension.
 
 ## Setup
 
@@ -126,12 +130,19 @@ Hardening validation:
 python3 -m pytest tests/test_hardening_milestone.py -v
 ```
 
+External bin packing validation:
+
+```bash
+python3 -m pytest tests/test_external_bin_packing_phase9.py -v
+```
+
 ## CLI
 
 The deterministic local CLI is available through the package module:
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --generations 1
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -142,6 +153,11 @@ After installation, the console script is also available:
 ```bash
 heuristic-discovery report --output-dir .
 ```
+
+The external bin packing command uses tiny parser-backed benchmark-style
+fixtures by default, so the demo does not require large public benchmark files.
+User-provided OR-Library-style or BPPLIB-style files can be passed with
+`--external-path` and `--external-format`.
 
 ## Smoke Check
 
@@ -230,6 +246,33 @@ Expected output:
 True
 7.75
 ['dangerous_call']
+```
+
+## External Bin Packing Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from benchmarks.bin_packing.external import build_phase9_report
+
+report = build_phase9_report(candidate_count=24, synthetic_item_count=16)
+print(report["benchmark"])
+print(report["external_split"]["test_count"])
+print(report["best_external_program_id"])
+print(report["best_external_test_score"])
+print("first_fit" in report["external_test_baseline_scores"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected output:
+
+```text
+bin_packing_external
+2
+seed-000-tight_fit
+5.0
+True
+external benchmark-style evidence only; no SOTA or universal dominance claim
 ```
 
 ## Routing Smoke Check
@@ -428,6 +471,7 @@ print(benchmarks["bin_packing"]["top_program_id"])
 print(benchmarks["simple_routing"]["top_program_id"])
 print(benchmarks["amazon_routing"]["top_program_id"])
 print(report["recommended_next_steps"][0]["step"])
+print("External Benchmark Evidence" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
 PY
@@ -442,7 +486,8 @@ Expected output for the deterministic final report:
 seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
-external_benchmark_adapter
+search_mechanism_ablation
+True
 True
 True
 ```
@@ -459,11 +504,12 @@ tables = build_report_tables()
 plots = build_report_plots()
 print(tuple(tables["tables"]))
 print(len(tables["benchmark_comparison"]["rows"]))
+print(len(tables["external_generalization"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("external_benchmark_adapter" in render_report_tables_markdown(tables))
+print("search_mechanism_ablation" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -474,8 +520,9 @@ PY
 Expected output without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'failure_taxonomy', 'recommended_next_steps')
 16
+5
 9
 ('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'failure_rate_by_generation')
 15

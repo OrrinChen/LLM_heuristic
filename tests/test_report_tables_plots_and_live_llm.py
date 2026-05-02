@@ -24,12 +24,14 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "benchmark_comparison",
         "robustness_summary",
         "worst_generalization_gaps",
+        "external_generalization",
         "failure_taxonomy",
         "recommended_next_steps",
     )
     assert len(tables["benchmark_comparison"]["rows"]) == 16
     assert len(tables["robustness_summary"]["rows"]) == 3
     assert len(tables["worst_generalization_gaps"]["rows"]) == 5
+    assert len(tables["external_generalization"]["rows"]) == 5
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert tables["benchmark_comparison"]["rows"][0] == {
         "benchmark": "Online Bin Packing",
@@ -47,7 +49,8 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## Benchmark Comparison" in markdown
     assert "| benchmark | method | split | score | top_program_id |" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
-    assert "external_benchmark_adapter" in markdown
+    assert "## External Generalization" in markdown
+    assert "search_mechanism_ablation" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:

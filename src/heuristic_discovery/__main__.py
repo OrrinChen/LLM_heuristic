@@ -5,6 +5,10 @@ import json
 from pathlib import Path
 from typing import Optional, Sequence
 
+from benchmarks.bin_packing.external import (
+    build_phase9_report,
+    load_external_bin_packing_instances,
+)
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from program_search.rerun_manifest import (
     build_bin_packing_rerun_manifest,
@@ -36,12 +40,23 @@ def _build_parser() -> argparse.ArgumentParser:
     subcommands = parser.add_subparsers(dest="command", required=True)
 
     run = subcommands.add_parser("run", help="Run a deterministic local search.")
-    run.add_argument("--benchmark", choices=("bin_packing",), default="bin_packing")
+    run.add_argument(
+        "--benchmark",
+        choices=("bin_packing", "bin_packing_external"),
+        default="bin_packing",
+    )
     run.add_argument("--generations", type=int, default=3)
     run.add_argument("--population-size", type=int, default=16)
     run.add_argument("--offspring-per-generation", type=int, default=12)
+    run.add_argument("--candidate-count", type=int, default=48)
     run.add_argument("--item-count", type=int, default=20)
     run.add_argument("--random-seed", type=int, default=23)
+    run.add_argument("--external-path")
+    run.add_argument(
+        "--external-format",
+        choices=("auto", "or_library", "bpplib"),
+        default="auto",
+    )
     run.add_argument("--output-dir", default=".")
 
     report = subcommands.add_parser("report", help="Export report artifacts.")
@@ -64,17 +79,30 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _run(args: argparse.Namespace) -> int:
-    report = build_phase3_report(
-        config=EvolutionConfig(
-            generations=args.generations,
-            population_size=args.population_size,
-            offspring_per_generation=args.offspring_per_generation,
-            elite_size=4,
-            tournament_size=3,
-            random_seed=args.random_seed,
-        ),
-        item_count=args.item_count,
-    )
+    if args.benchmark == "bin_packing_external":
+        external_instances = None
+        if args.external_path:
+            external_instances = load_external_bin_packing_instances(
+                args.external_path,
+                parser=args.external_format,
+            )
+        report = build_phase9_report(
+            candidate_count=args.candidate_count,
+            synthetic_item_count=args.item_count,
+            external_instances=external_instances,
+        )
+    else:
+        report = build_phase3_report(
+            config=EvolutionConfig(
+                generations=args.generations,
+                population_size=args.population_size,
+                offspring_per_generation=args.offspring_per_generation,
+                elite_size=4,
+                tournament_size=3,
+                random_seed=args.random_seed,
+            ),
+            item_count=args.item_count,
+        )
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     output_path = output_dir / "run_summary.json"
@@ -82,14 +110,19 @@ def _run(args: argparse.Namespace) -> int:
         json.dumps(report, indent=2, sort_keys=True),
         encoding="utf-8",
     )
-    print(
-        json.dumps(
-            {
-                "generation_count": report["generation_count"],
-                "path": str(output_path),
-            }
-        )
-    )
+    if args.benchmark == "bin_packing_external":
+        payload = {
+            "benchmark": args.benchmark,
+            "best_external_program_id": report["best_external_program_id"],
+            "path": str(output_path),
+        }
+    else:
+        payload = {
+            "benchmark": args.benchmark,
+            "generation_count": report["generation_count"],
+            "path": str(output_path),
+        }
+    print(json.dumps(payload))
     return 0
 
 

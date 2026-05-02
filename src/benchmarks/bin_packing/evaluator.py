@@ -162,6 +162,7 @@ class BinPackingEvaluator:
                             bins=bins,
                             runtime=perf_counter() - started,
                             is_valid=False,
+                            capacity=instance.capacity,
                             failure_reason="item_exceeds_capacity",
                         )
                     if not bins:
@@ -187,6 +188,7 @@ class BinPackingEvaluator:
                                 bins=bins,
                                 runtime=perf_counter() - started,
                                 is_valid=False,
+                                capacity=instance.capacity,
                                 failure_reason=str(failure),
                             )
                         scored_bins.append((score, bin_index, remaining))
@@ -209,6 +211,7 @@ class BinPackingEvaluator:
                             bins=bins,
                             runtime=perf_counter() - started,
                             is_valid=False,
+                            capacity=instance.capacity,
                             failure_reason="no_feasible_bin_selected",
                         )
                     _, chosen = min(feasible, key=lambda entry: (entry[0], entry[1]))
@@ -219,6 +222,7 @@ class BinPackingEvaluator:
                 bins=bins,
                 runtime=perf_counter() - started,
                 is_valid=False,
+                capacity=instance.capacity,
                 failure_reason=(
                     f"timeout: candidate exceeded {self.timeout_seconds} seconds"
                 ),
@@ -230,6 +234,7 @@ class BinPackingEvaluator:
             bins=bins,
             runtime=perf_counter() - started,
             is_valid=validation.ok,
+            capacity=instance.capacity,
             failure_reason=validation.failure_reason,
         )
 

@@ -37,15 +37,22 @@ Completed:
 - Hardening milestone: subprocess scoring-function isolation, wall-clock
   timeout handling, optional platform memory limits, rerun manifests, exported
   report artifacts, top-program evidence files, and deterministic CLI commands.
+- Phase 9: BPPLIB / OR-Library-style bin packing loader, external parser,
+  train / validation / test split, external baseline comparison,
+  synthetic-to-external transfer gap, report table, and CLI support.
 
 Current phase:
 
 - Original roadmap and hardening milestone are complete.
+- Phase 9 external bin packing benchmark evidence is complete.
+- Next implementation phase is Phase 11: Search Mechanism Ablation.
 
 Deferred:
 
-- External benchmark adapters for BPPLIB, OR-Library, TSPLIB, or CVRPLIB-style
-  data.
+- External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
+- Search mechanism ablations.
+- Pareto frontier reporting.
+- Research-style and resume / portfolio packaging.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
@@ -54,7 +61,9 @@ Deferred:
 Next autonomous action:
 
 ```text
-Add an external benchmark adapter before broader crossover or cloud-scale experiments.
+Execute Phase 11 only: compare seed-only, deterministic mutation, crossover,
+and optional LLM operators under one controlled evaluation budget before
+Pareto frontier or portfolio packaging work.
 ```
 
 ## Project Positioning
@@ -550,6 +559,382 @@ Final report must include:
 - [x] Patterns that worked.
 - [x] Patterns that failed.
 
+## Post-Hardening Roadmap
+
+The core system is complete. The remaining work should strengthen evidence and
+presentation rather than add disconnected features.
+
+Main line:
+
+```text
+core system complete
+-> external benchmark credibility
+-> search mechanism evidence
+-> LLM-as-operator evidence
+-> paper / resume / demo packaging
+```
+
+Recommended execution order for a job-search portfolio:
+
+```text
+Phase 9 -> Phase 11 -> Phase 15 -> Phase 18 -> Phase 19
+```
+
+Full research route:
+
+```text
+Phase 9 -> Phase 10 -> Phase 11 -> Phase 12 -> Phase 13 -> Phase 14
+-> Phase 15 -> Phase 16 -> Phase 18 -> Phase 19
+```
+
+Engineering-platform route:
+
+```text
+Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
+```
+
+Phase 9 is complete. The current priority is Phase 11. Do not implement later
+phases while Phase 11 is in progress.
+
+## Phase 9: External Benchmark Evidence
+
+Goal: show that discovered bin packing heuristics are not only tuned to
+synthetic in-repo generators.
+
+Scope discipline:
+
+- [x] Do bin packing first.
+- [x] Do not add TSPLIB, CVRPLIB, live LLM changes, or cloud execution in this
+  phase.
+- [x] Do not commit large benchmark files.
+- [x] Do not claim SOTA or universal dominance.
+
+Required components:
+
+- [x] BPPLIB / OR-Library-style bin packing loader.
+- [x] External instance parser.
+- [x] External train / validation / test split.
+- [x] External baseline comparison.
+- [x] Synthetic-to-external generalization gap.
+- [x] External benchmark report table.
+- [x] CLI support for `bin_packing_external`.
+
+Core question:
+
+```text
+Do discovered heuristics transfer to public benchmark-style bin packing
+instances under the same sandbox, baseline, and held-out evaluation discipline?
+```
+
+Acceptance criteria:
+
+- [x] Full pytest suite passes.
+- [x] Ruff check passes.
+- [x] Ruff format check passes.
+- [x] CLI can run `bin_packing_external`.
+- [x] `reports/final_report.md` includes an external benchmark section.
+- [x] `reports/tables/external_generalization.csv` is exported.
+- [x] No large benchmark data files are committed.
+- [x] Claims remain conservative.
+
+## Phase 10: External Routing Evidence
+
+Goal: evaluate routing-style discovery on public-format routing instances
+without jumping directly to complex CVRPTW.
+
+Recommended sequence:
+
+- [ ] 10A: TSPLIB-style TSP loader.
+- [ ] 10B: CVRPLIB-style capacitated routing loader.
+- [ ] 10C: Optional time-window extension.
+
+First implementation slice:
+
+- [ ] TSPLIB coordinate parser.
+- [ ] Distance matrix builder.
+- [ ] Nearest neighbor / insertion / 2-opt baseline reuse.
+- [ ] `score_next_stop` candidate rerun.
+- [ ] External routing split.
+- [ ] Routing external generalization table.
+
+Conservative claim:
+
+> The same heuristic discovery loop can be evaluated on external routing-style
+> instances, but performance depends on instance structure and baseline
+> strength.
+
+Do not claim superiority over OR solvers, LKH, state-of-the-art CVRP solvers, or
+real Amazon operations.
+
+## Phase 11: Search Mechanism Ablation
+
+Goal: show that improvements are not just seed heuristics or random chance.
+
+Methods to compare under one evaluation budget:
+
+- [ ] Seed-only baseline.
+- [ ] Random mutation.
+- [ ] Deterministic template mutation.
+- [ ] Crossover only.
+- [ ] Mutation plus crossover.
+- [ ] LLM mutation.
+- [ ] LLM repair.
+- [ ] LLM mutation plus repair.
+
+Controls:
+
+- [ ] Same number of candidates.
+- [ ] Same benchmark split.
+- [ ] Same timeout.
+- [ ] Same evaluation budget.
+- [ ] Same seeds.
+
+Required outputs:
+
+- [ ] `reports/tables/ablation_summary.csv`.
+- [ ] `reports/plots/generation_curve_by_method.json`.
+- [ ] `reports/tables/invalid_code_rate_by_method.csv`.
+- [ ] `reports/tables/best_score_by_budget.csv`.
+
+## Phase 12: LLM Live Mutation v1
+
+Goal: make Gemini live mutation a controlled experiment module while keeping
+deterministic local providers as the default.
+
+Required components:
+
+- [ ] Provider abstraction polish.
+- [ ] Gemini mutation provider.
+- [ ] LLM repair provider.
+- [ ] Prompt template versioning.
+- [ ] LLM response logging without secrets.
+- [ ] Cost / token / latency tracking.
+- [ ] Invalid-code-rate tracking.
+- [ ] Deterministic provider fallback.
+
+Each LLM candidate should record:
+
+```text
+model name
+prompt version
+temperature
+parent program ids
+raw response hash
+cleaned code hash
+static check result
+sandbox result
+score
+failure reason
+```
+
+Acceptance criteria:
+
+- [ ] Tests pass without `GEMINI_API_KEY`.
+- [ ] Optional live smoke runs with `GEMINI_API_KEY`.
+- [ ] LLM output never bypasses sandboxing.
+- [ ] Reports can compare deterministic and live LLM search.
+- [ ] No API key or raw secret is committed.
+
+Core framing:
+
+> LLM is one mutation operator inside a constrained program-search system.
+
+## Phase 13: Program Semantics and Novelty
+
+Goal: distinguish code novelty from behavioral novelty.
+
+Required components:
+
+- [ ] Behavioral fingerprinting on probe instances.
+- [ ] Semantic novelty score.
+- [ ] Feature usage summary.
+- [ ] Program complexity decomposition.
+- [ ] Equivalence detection on probe instances.
+
+Novelty dimensions:
+
+- [ ] Code novelty.
+- [ ] Behavior novelty.
+- [ ] Feature novelty.
+- [ ] Performance novelty.
+
+Required outputs:
+
+- [ ] `reports/tables/novelty_table.csv`.
+- [ ] `reports/plots/behavior_fingerprint.json`.
+- [ ] `reports/tables/duplicate_behavior_clusters.csv`.
+
+## Phase 14: Failure Taxonomy v2
+
+Goal: explain why failures occur, not just count them.
+
+Failure categories to cover:
+
+- [ ] Invalid syntax.
+- [ ] Unsafe code.
+- [ ] Timeout.
+- [ ] Over-complex code.
+- [ ] Overfit small instances.
+- [ ] Poor external transfer.
+- [ ] Baseline-dominated.
+- [ ] Runtime too slow.
+- [ ] Behavior duplicate.
+- [ ] LLM hallucinated feature.
+- [ ] Objective gaming.
+
+Each failure type should include:
+
+- [ ] Example program.
+- [ ] Trigger condition.
+- [ ] Validator or evaluator that detected it.
+- [ ] Score impact.
+- [ ] Possible repair strategy.
+
+Required outputs:
+
+- [ ] `reports/failure_cards.md`.
+- [ ] `reports/tables/failure_taxonomy_v2.csv`.
+- [ ] `reports/tables/repair_success_rate.csv`.
+
+## Phase 15: Pareto Frontier Report
+
+Goal: report trade-off frontiers instead of only single-score winners.
+
+Compare:
+
+- [ ] Objective quality.
+- [ ] Runtime.
+- [ ] Program complexity.
+- [ ] Failure rate.
+- [ ] Generalization gap.
+- [ ] Driver-likeness / operational realism where applicable.
+
+Required outputs:
+
+- [ ] `reports/tables/pareto_frontier.csv`.
+- [ ] `artifacts/frontier_programs/*.py`.
+- [ ] `reports/plots/frontier_plot_series.json`.
+
+Conservative upgraded claim:
+
+> The system discovers compact heuristic programs that improve selected
+> quality-runtime-generalization trade-offs, rather than universally dominating
+> classical baselines.
+
+## Phase 16: Reproducibility Package v2
+
+Goal: make core results reproducible from a fresh clone without paid services
+or large external files.
+
+Commands may be Make targets or CLI profiles:
+
+```text
+make reproduce
+make test
+make report
+make demo
+```
+
+or:
+
+```bash
+python -m heuristic_discovery reproduce --profile local_demo
+python -m heuristic_discovery reproduce --profile external_small
+python -m heuristic_discovery reproduce --profile llm_optional
+```
+
+Required outputs:
+
+- [ ] `artifacts/reproduction_manifest.json`.
+- [ ] `artifacts/reproduction_summary.md`.
+- [ ] `reports/final_report.md`.
+- [ ] `reports/tables/*.csv`.
+- [ ] `reports/plots/*.json`.
+
+Acceptance criteria:
+
+- [ ] Fresh clone can run `local_demo`.
+- [ ] API key is not required.
+- [ ] Large external data is not required.
+- [ ] Results are deterministic.
+
+## Phase 17: Optional Cloud-Scale Search
+
+Goal: scale candidate evaluation only after evidence and reproducibility are
+strong.
+
+Priority order:
+
+- [ ] 17A: Local parallel runner.
+- [ ] 17B: Checkpoint / resume.
+- [ ] 17C: Cloud adapter abstraction.
+- [ ] 17D: Optional cloud execution.
+
+Acceptance criteria:
+
+- [ ] Same seed gives the same selected top programs.
+- [ ] Parallel results equal sequential results.
+- [ ] Failed workers do not corrupt the archive.
+- [ ] Cost budget can stop an experiment.
+
+## Phase 18: Research-Style Technical Report
+
+Goal: produce a defendable paper-style narrative.
+
+Working title:
+
+```text
+Sandboxed LLM Program Search for OR Heuristic Discovery
+```
+
+Report structure:
+
+- [ ] Problem.
+- [ ] Why heuristic discovery matters.
+- [ ] System design.
+- [ ] Sandbox and safety boundary.
+- [ ] Benchmarks.
+- [ ] Search loop.
+- [ ] External benchmark evidence.
+- [ ] Ablation.
+- [ ] Generalization.
+- [ ] Failure analysis.
+- [ ] Limitations.
+- [ ] Conclusion.
+
+Conservative abstract:
+
+> This project studies whether compact heuristic scoring programs can be
+> discovered through constrained program search. The system uses LLM or
+> deterministic mutation operators, static validation, subprocess sandboxing,
+> benchmark evaluators, evolutionary selection, rerun manifests, and held-out
+> generalization tests. Results show that generated heuristics can improve
+> selected trade-offs on bin packing and routing-style benchmarks, while failure
+> analysis shows clear limits under external transfer and strong classical
+> baselines.
+
+## Phase 19: Resume / Portfolio Packaging
+
+Goal: make the project directly usable in resumes, GitHub, demos, and
+interviews.
+
+Resume bullet target:
+
+> Built a sandboxed LLM-driven OR heuristic discovery system that evolves
+> compact bin-packing and routing scoring programs through subprocess-isolated
+> execution, evolutionary selection, external benchmark evaluation, rerun
+> manifests, robustness analysis, and failure taxonomy reporting.
+
+README first-screen requirements:
+
+- [ ] What the system does.
+- [ ] Why it matters.
+- [ ] One-command demo.
+- [ ] Core architecture diagram.
+- [ ] Benchmark results table.
+- [ ] Safety boundary.
+- [ ] Limitations.
+
 ## Killer Experiment
 
 Credible target claim:
@@ -584,7 +969,7 @@ Benchmarks:
 
 ## Execution Priority
 
-Recommended order:
+Completed foundation:
 
 ```text
 1. Program-search skeleton.
@@ -595,7 +980,22 @@ Recommended order:
 6. Simple routing evaluator and baselines.
 7. Amazon routing evaluator.
 8. Amazon heuristic discovery and failure analysis.
+9. External bin packing benchmark evidence.
 ```
+
+Next recommended order:
+
+```text
+11. Search mechanism ablation.
+15. Pareto frontier report.
+18. Research-style technical report.
+19. Resume / portfolio packaging.
+```
+
+Phase 10, Phase 12, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
+extensions unless the target audience requires deeper routing evidence, live LLM
+experiments, semantic novelty, failure repair, reproduction profiles, or scale
+infrastructure.
 
 MVP cut line:
 
