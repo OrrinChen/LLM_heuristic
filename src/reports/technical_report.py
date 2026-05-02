@@ -1,0 +1,279 @@
+from __future__ import annotations
+
+from typing import Dict, Mapping, Optional, Sequence
+
+from reports.final_report import build_final_report
+
+TECHNICAL_REPORT_TITLE = "Sandboxed LLM Program Search for OR Heuristic Discovery"
+
+TECHNICAL_REPORT_SECTIONS = (
+    "problem",
+    "why_heuristic_discovery_matters",
+    "system_design",
+    "sandbox_and_safety_boundary",
+    "benchmarks",
+    "search_loop",
+    "external_benchmark_evidence",
+    "ablation",
+    "generalization",
+    "failure_analysis",
+    "limitations",
+    "conclusion",
+)
+
+TECHNICAL_REPORT_ABSTRACT = (
+    "This project studies whether compact heuristic scoring programs can be "
+    "discovered through constrained program search. The system uses LLM or "
+    "deterministic mutation operators, static validation, subprocess sandboxing, "
+    "benchmark evaluators, evolutionary selection, rerun manifests, and "
+    "held-out generalization tests. Results show that generated heuristics can "
+    "improve selected trade-offs on bin packing and routing-style benchmarks, "
+    "while failure analysis shows clear limits under external transfer and "
+    "strong classical baselines."
+)
+
+
+def build_phase18_report(
+    *,
+    final_report: Optional[Mapping[str, object]] = None,
+) -> Dict[str, object]:
+    source = final_report if final_report is not None else build_final_report()
+    benchmarks = source["killer_experiment"]["benchmarks"]
+    evidence = source["evidence"]
+    external = source["external_benchmark"]
+    ablation = source["search_ablation"]
+    frontier = source["pareto_frontier"]
+
+    sections = (
+        _section(
+            "problem",
+            "Problem",
+            (
+                "Operations research heuristics are often hand-designed for a "
+                "specific objective, benchmark family, or operational setting. "
+                "O2 frames heuristic design as constrained program search over "
+                "small scoring functions rather than full solver generation."
+            ),
+            ("project_thesis", "generated_scoring_function_contract"),
+        ),
+        _section(
+            "why_heuristic_discovery_matters",
+            "Why Heuristic Discovery Matters",
+            (
+                "Compact scoring heuristics are inspectable, cheap to rerun, "
+                "and easier to audit than opaque end-to-end solvers. This makes "
+                "them useful for studying quality-runtime-generalization "
+                "trade-offs under explicit evaluator constraints."
+            ),
+            ("pareto_frontier.csv", "failure_taxonomy.csv"),
+        ),
+        _section(
+            "system_design",
+            "System Design",
+            (
+                "The system connects seed programs, mutation operators, static "
+                "validation, sandbox execution, benchmark evaluators, archive "
+                "selection, rerun manifests, and report artifact export. "
+                "Generated code only implements narrow scoring functions."
+            ),
+            ("architecture", "rerun_manifest.json", "top_programs"),
+        ),
+        _section(
+            "sandbox_and_safety_boundary",
+            "Sandbox and Safety Boundary",
+            (
+                "Generated functions are statically checked before execution "
+                "and can run inside subprocess isolation with wall-clock "
+                "timeouts and optional platform memory limits. File access, "
+                "network access, imports, dangerous calls, and hidden labels "
+                "remain outside the candidate interface."
+            ),
+            ("tests/test_program_sandbox.py", "tests/test_hardening_milestone.py"),
+        ),
+        _section(
+            "benchmarks",
+            "Benchmarks",
+            (
+                "Evidence covers online bin packing, simple routing, "
+                "Amazon-style routing fixtures, and parser-backed external "
+                "bin-packing benchmark-style instances. Each benchmark is "
+                "compared against deterministic classical baselines."
+            ),
+            (
+                "bin_packing",
+                "simple_routing",
+                "amazon_routing",
+                "external_bin_packing",
+            ),
+        ),
+        _section(
+            "search_loop",
+            "Search Loop",
+            (
+                "Evolutionary selection evaluates generated candidates under "
+                "fixed interfaces, records lineage, filters exact duplicate "
+                "programs, and keeps elite candidates for held-out evaluation."
+            ),
+            ("generation_curve_by_method.json", "artifacts/rerun_manifest.json"),
+        ),
+        _section(
+            "external_benchmark_evidence",
+            "External Benchmark Evidence",
+            (
+                "External bin packing evidence uses BPPLIB / OR-Library-style "
+                "fixtures with train, validation, and test splits. The report "
+                "compares synthetic-selected and external-selected programs "
+                "without claiming SOTA or universal transfer."
+            ),
+            ("external_generalization.csv", external["benchmark"]),
+        ),
+        _section(
+            "ablation",
+            "Ablation",
+            (
+                "The ablation fixes candidate budget, benchmark split, timeout, "
+                "evaluation budget, and seeds while comparing seed-only, random "
+                "mutation, deterministic templates, crossover, LLM-proxy "
+                "mutation, and repair-style operators."
+            ),
+            ("ablation_summary.csv", "generation_curve_by_method.json"),
+        ),
+        _section(
+            "generalization",
+            "Generalization",
+            (
+                "Generalization evidence combines held-out benchmark slices, "
+                "external bin-packing transfer gaps, and Pareto frontier rows "
+                "that expose quality, runtime, complexity, failure, and "
+                "generalization trade-offs."
+            ),
+            (
+                "robustness_summary.csv",
+                "worst_generalization_gaps.csv",
+                "pareto_frontier.csv",
+            ),
+        ),
+        _section(
+            "failure_analysis",
+            "Failure Analysis",
+            (
+                "Failure analysis reports invalid code, unsafe code, timeout, "
+                "overfitting, poor transfer, complexity, feasibility boundary, "
+                "and routing trade-off patterns instead of hiding rejected or "
+                "weak candidates."
+            ),
+            ("failure_taxonomy.csv", "failure_cards"),
+        ),
+        _section(
+            "limitations",
+            "Limitations",
+            (
+                "The evidence package is deterministic and local by default. "
+                "Live LLM mutation remains optional, routing external evidence "
+                "is deferred, external fixtures are intentionally small, and "
+                "runtime frontier values use a deterministic proxy."
+            ),
+            ("README.md", "TASK_MEMORY.md", "ROADMAP.md"),
+        ),
+        _section(
+            "conclusion",
+            "Conclusion",
+            (
+                "O2 supports a conservative claim: constrained program search "
+                "can discover compact heuristics that improve selected "
+                "trade-offs under strict evaluator and sandbox constraints. It "
+                "does not establish universal dominance over classical OR "
+                "baselines."
+            ),
+            ("final_report.md", "technical_report.md"),
+        ),
+    )
+
+    return {
+        "phase": 18,
+        "title": TECHNICAL_REPORT_TITLE,
+        "abstract": TECHNICAL_REPORT_ABSTRACT,
+        "sections": sections,
+        "claim_boundaries": {
+            "supports": source["claims"]["conservative"],
+            "does_not_claim": source["claims"]["does_not_claim"],
+            "live_llm_status": source["claims"]["live_llm_status"],
+        },
+        "evidence_snapshot": {
+            "benchmark_count": len(benchmarks),
+            "robustness_slice_count": evidence["robustness"]["slice_count"],
+            "failure_category_count": (
+                evidence["failure_analysis"]["failure_category_count"]
+            ),
+            "external_benchmark": external["benchmark"],
+            "ablation_best_method": ablation["best_method"],
+            "pareto_frontier_count": frontier["frontier_count"],
+        },
+        "recommended_next_phase": "Phase 19: Resume / Portfolio Packaging",
+    }
+
+
+def render_technical_report_markdown(report: Mapping[str, object]) -> str:
+    lines = [
+        f"# {report['title']}",
+        "",
+        "## Abstract",
+        "",
+        str(report["abstract"]),
+        "",
+        "## Claim Boundary",
+        "",
+        f"Supported claim: {report['claim_boundaries']['supports']}",
+        "",
+        (
+            "The system does not claim universal dominance: "
+            f"{report['claim_boundaries']['does_not_claim']}"
+        ),
+        "",
+    ]
+    for section in report["sections"]:
+        lines.extend(
+            [
+                f"## {section['title']}",
+                "",
+                str(section["body"]),
+                "",
+                "Evidence references: "
+                + ", ".join(f"`{item}`" for item in section["evidence_refs"])
+                + ".",
+                "",
+            ]
+        )
+    snapshot = report["evidence_snapshot"]
+    lines.extend(
+        [
+            "## Evidence Snapshot",
+            "",
+            f"- Benchmarks summarized: `{snapshot['benchmark_count']}`.",
+            f"- Robustness slices: `{snapshot['robustness_slice_count']}`.",
+            f"- Failure categories: `{snapshot['failure_category_count']}`.",
+            f"- External benchmark: `{snapshot['external_benchmark']}`.",
+            f"- Ablation best method: `{snapshot['ablation_best_method']}`.",
+            f"- Pareto frontier rows: `{snapshot['pareto_frontier_count']}`.",
+            "",
+            "## Next Phase",
+            "",
+            f"{report['recommended_next_phase']}.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def _section(
+    section_id: str,
+    title: str,
+    body: str,
+    evidence_refs: Sequence[object],
+) -> Dict[str, object]:
+    return {
+        "id": section_id,
+        "title": title,
+        "body": body,
+        "evidence_refs": tuple(str(item) for item in evidence_refs),
+    }

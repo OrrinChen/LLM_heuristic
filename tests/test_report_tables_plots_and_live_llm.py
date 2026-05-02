@@ -60,7 +60,7 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## External Generalization" in markdown
     assert "## Ablation Summary" in markdown
     assert "## Pareto Frontier" in markdown
-    assert "research_style_report" in markdown
+    assert "resume_portfolio_packaging" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:

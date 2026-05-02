@@ -145,6 +145,8 @@ def test_export_report_artifacts_writes_evidence_package(tmp_path: Path) -> None
     assert summary["output_dir"] == str(tmp_path)
     assert summary["png_rendered"] is False
     assert (tmp_path / "reports" / "final_report.md").is_file()
+    assert (tmp_path / "reports" / "technical_report.md").is_file()
+    assert "technical_report.md" in summary["technical_report"]
     assert (tmp_path / "reports" / "tables" / "benchmark_comparison.csv").is_file()
     assert (tmp_path / "reports" / "tables" / "failure_taxonomy.csv").is_file()
     assert (tmp_path / "reports" / "plots" / "plot_series.json").is_file()
@@ -164,7 +166,9 @@ def test_cli_report_exports_artifacts(tmp_path: Path) -> None:
 
     assert result.returncode == 0
     assert "final_report.md" in result.stdout
+    assert "technical_report.md" in result.stdout
     assert (tmp_path / "reports" / "final_report.md").is_file()
+    assert (tmp_path / "reports" / "technical_report.md").is_file()
 
 
 def test_cli_run_inspect_and_rerun_manifest(tmp_path: Path) -> None:

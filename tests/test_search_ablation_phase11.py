@@ -111,7 +111,7 @@ def test_final_report_includes_search_ablation_section_and_next_phase() -> None:
     assert report["search_ablation"]["best_method"]
     assert "Search Mechanism Ablation" in markdown
     assert "fixed local budget" in markdown
-    assert report["recommended_next_steps"][0]["step"] == "research_style_report"
+    assert report["recommended_next_steps"][0]["step"] == ("resume_portfolio_packaging")
 
 
 def test_report_artifacts_export_ablation_tables_and_curve(tmp_path: Path) -> None:

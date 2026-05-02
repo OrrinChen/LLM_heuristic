@@ -119,17 +119,18 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "research_style_report",
+                "step": "resume_portfolio_packaging",
                 "reason": (
-                    "Package the system design, sandbox boundary, external "
-                    "evidence, ablation, limitations, and conclusions."
+                    "Turn the evidence package and technical report into a "
+                    "concise README-first portfolio narrative and "
+                    "interview-ready demo."
                 ),
             },
             {
-                "step": "resume_portfolio_packaging",
+                "step": "external_routing_evidence",
                 "reason": (
-                    "Turn the evidence package into a concise README-first "
-                    "portfolio narrative and interview-ready demo."
+                    "Optionally add TSPLIB-style routing evidence after the "
+                    "job-search packaging path is complete."
                 ),
             },
         ),

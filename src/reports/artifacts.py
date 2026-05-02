@@ -9,6 +9,10 @@ from program_search.rerun_manifest import build_bin_packing_rerun_manifest
 from reports.final_report import build_final_report, render_final_report_markdown
 from reports.plots import build_report_plots
 from reports.tables import build_report_tables
+from reports.technical_report import (
+    build_phase18_report,
+    render_technical_report_markdown,
+)
 
 
 def export_report_artifacts(
@@ -39,6 +43,12 @@ def export_report_artifacts(
     final_report_path = reports_dir / "final_report.md"
     final_report_path.write_text(
         render_final_report_markdown(final_report),
+        encoding="utf-8",
+    )
+    technical_report = build_phase18_report(final_report=final_report)
+    technical_report_path = reports_dir / "technical_report.md"
+    technical_report_path.write_text(
+        render_technical_report_markdown(technical_report),
         encoding="utf-8",
     )
 
@@ -72,6 +82,7 @@ def export_report_artifacts(
     return {
         "output_dir": str(root),
         "final_report": str(final_report_path),
+        "technical_report": str(technical_report_path),
         "tables": [str(path) for path in table_paths],
         "plot_series": str(plot_series_path),
         "extra_plot_series": [str(path) for path in extra_plot_paths],

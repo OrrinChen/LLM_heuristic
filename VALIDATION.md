@@ -472,7 +472,7 @@ Markdown rendering states selected trade-offs without universal dominance claims
 external benchmark evidence is included without SOTA claims
 search mechanism ablation evidence is included under a fixed local budget
 Pareto frontier evidence is included without universal dominance claims
-recommended next steps prioritize research-style reporting after Phase 15
+recommended next steps prioritize resume / portfolio packaging after Phase 18
 ```
 
 ## Final Report Smoke Validation
@@ -512,7 +512,7 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-research_style_report
+resume_portfolio_packaging
 True
 True
 True
@@ -536,7 +536,63 @@ generalization gap, and operational realism axes are reported
 Pareto frontier rows are nondominated within each benchmark
 pareto_frontier.csv, frontier_plot_series.json, and frontier program files
 are exported
-final report includes Pareto frontier evidence and advances to Phase 18
+final report includes Pareto frontier evidence and now advances to Phase 19
+```
+
+## Research-Style Technical Report Validation
+
+Run these once Phase 18 technical reporting exists:
+
+```bash
+python3 -m pytest tests/test_technical_report_phase18.py -v
+```
+
+Expected result:
+
+```text
+paper-style sections cover problem, system design, sandbox boundary,
+benchmarks, search loop, external evidence, ablation, generalization, failure
+analysis, limitations, and conclusion
+claim boundaries remain conservative and reject universal dominance
+the technical report maps every major section to existing evidence artifacts
+report artifact export writes reports/technical_report.md
+```
+
+## Research-Style Technical Report Smoke Validation
+
+Run this after Phase 18 modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.technical_report import (
+    build_phase18_report,
+    render_technical_report_markdown,
+)
+
+report = build_phase18_report()
+markdown = render_technical_report_markdown(report)
+print(report["phase"])
+print(len(report["sections"]))
+print(report["evidence_snapshot"]["benchmark_count"])
+print(report["evidence_snapshot"]["pareto_frontier_count"])
+print(report["recommended_next_phase"])
+print("Sandbox and Safety Boundary" in markdown)
+print("External Benchmark Evidence" in markdown)
+print("The system does not claim universal dominance" in markdown)
+PY
+```
+
+Expected result:
+
+```text
+18
+12
+3
+8
+Phase 19: Resume / Portfolio Packaging
+True
+True
+True
 ```
 
 ## Pareto Frontier Smoke Validation
@@ -660,7 +716,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("research_style_report" in render_report_tables_markdown(tables))
+print("resume_portfolio_packaging" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:

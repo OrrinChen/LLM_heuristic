@@ -47,6 +47,9 @@ Completed:
 - Phase 15: Pareto frontier reporting across objective quality, runtime,
   program complexity, failure rate, generalization gap, and Amazon-style
   driver-likeness / operational realism.
+- Phase 18: Research-style technical report with problem framing, system
+  design, sandbox boundary, benchmarks, search loop, external evidence,
+  ablation, generalization, failure analysis, limitations, and conclusion.
 
 Current phase:
 
@@ -54,12 +57,13 @@ Current phase:
 - Phase 9 external bin packing benchmark evidence is complete.
 - Phase 11 search mechanism ablation is complete.
 - Phase 15 Pareto frontier reporting is complete.
-- Next implementation phase is Phase 18: Research-Style Technical Report.
+- Phase 18 research-style technical report is complete.
+- Next implementation phase is Phase 19: Resume / Portfolio Packaging.
 
 Deferred:
 
 - External routing benchmark evidence on TSPLIB / CVRPLIB-style data.
-- Research-style and resume / portfolio packaging.
+- Resume / portfolio packaging.
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
@@ -68,9 +72,8 @@ Deferred:
 Next autonomous action:
 
 ```text
-Execute Phase 18 only: package the system design, sandbox boundary, benchmark
-evidence, ablation, Pareto frontier, failure analysis, and limitations into a
-research-style technical report.
+Execute Phase 19 only: turn the evidence package and technical report into a
+README-first portfolio narrative and interview-ready demo.
 ```
 
 ## Project Positioning
@@ -600,8 +603,9 @@ Engineering-platform route:
 Phase 9 -> Phase 11 -> Phase 16 -> Phase 17 -> Phase 19
 ```
 
-Phase 9, Phase 11, and Phase 15 are complete. The current priority is Phase
-18. Do not implement later phases while Phase 18 is in progress.
+Phase 9, Phase 11, Phase 15, and Phase 18 are complete. The current priority
+is Phase 19. Do not implement optional research or cloud phases while Phase 19
+is in progress.
 
 ## Phase 9: External Benchmark Evidence
 
@@ -886,6 +890,8 @@ Acceptance criteria:
 
 ## Phase 18: Research-Style Technical Report
 
+Status: complete.
+
 Goal: produce a defendable paper-style narrative.
 
 Working title:
@@ -896,18 +902,18 @@ Sandboxed LLM Program Search for OR Heuristic Discovery
 
 Report structure:
 
-- [ ] Problem.
-- [ ] Why heuristic discovery matters.
-- [ ] System design.
-- [ ] Sandbox and safety boundary.
-- [ ] Benchmarks.
-- [ ] Search loop.
-- [ ] External benchmark evidence.
-- [ ] Ablation.
-- [ ] Generalization.
-- [ ] Failure analysis.
-- [ ] Limitations.
-- [ ] Conclusion.
+- [x] Problem.
+- [x] Why heuristic discovery matters.
+- [x] System design.
+- [x] Sandbox and safety boundary.
+- [x] Benchmarks.
+- [x] Search loop.
+- [x] External benchmark evidence.
+- [x] Ablation.
+- [x] Generalization.
+- [x] Failure analysis.
+- [x] Limitations.
+- [x] Conclusion.
 
 Conservative abstract:
 

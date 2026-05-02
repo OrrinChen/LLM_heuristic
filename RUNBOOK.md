@@ -77,6 +77,7 @@ Expected generated files:
 
 ```text
 reports/final_report.md
+reports/technical_report.md
 reports/tables/*.csv
 reports/tables/external_generalization.csv
 reports/tables/ablation_summary.csv
@@ -164,6 +165,33 @@ Expected artifacts after a report export:
 reports/tables/pareto_frontier.csv
 reports/plots/frontier_plot_series.json
 artifacts/frontier_programs/*.py
+```
+
+## Research-Style Technical Report
+
+Phase 18 packages the evidence into a paper-style Markdown report:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.technical_report import (
+    build_phase18_report,
+    render_technical_report_markdown,
+)
+
+report = build_phase18_report()
+markdown = render_technical_report_markdown(report)
+print(report["phase"])
+print(len(report["sections"]))
+print(report["recommended_next_phase"])
+print("Sandbox and Safety Boundary" in markdown)
+print("The system does not claim universal dominance" in markdown)
+PY
+```
+
+Expected artifact after a report export:
+
+```text
+reports/technical_report.md
 ```
 
 ## Benchmark Progression
