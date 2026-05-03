@@ -77,7 +77,7 @@ def test_final_report_links_robustness_and_failure_evidence(
     assert evidence["amazon_tradeoffs"]["tradeoff_count"] >= 1
     assert final_report["pareto_frontier"]["frontier_count"] >= 3
     assert final_report["limitations"]
-    assert final_report["recommended_next_steps"][0]["step"] == "live_llm_mutation_v1"
+    assert final_report["recommended_next_steps"][0]["step"] == "semantic_novelty"
 
 
 def test_final_report_markdown_is_conservative_and_complete(
@@ -106,7 +106,7 @@ def test_final_report_smoke_signature_is_stable(
         "seed-000-tight_fit",
         "route-seed-003-slack_aware",
         "phase6-seed-000-travel_fast",
-        "live_llm_mutation_v1",
+        "semantic_novelty",
     )
 
 

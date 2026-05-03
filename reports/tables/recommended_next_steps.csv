@@ -1,3 +1,2 @@
 step,reason
-live_llm_mutation_v1,Optionally convert Gemini mutation from smoke-tested provider support into a controlled live-operator experiment.
 semantic_novelty,Optionally add behavioral fingerprints to distinguish code novelty from behavior novelty.

@@ -85,6 +85,8 @@ reports/tables/routing_external_generalization.csv
 reports/tables/ablation_summary.csv
 reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
+reports/tables/llm_operator_comparison.csv
+reports/tables/llm_candidate_audit.csv
 reports/tables/pareto_frontier.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
@@ -101,6 +103,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --gene
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
 ```
@@ -161,6 +164,42 @@ reports/tables/ablation_summary.csv
 reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
 reports/plots/generation_curve_by_method.json
+```
+
+## Live LLM Mutation V1
+
+Phase 12 makes live Gemini mutation a controlled experiment path. Default runs
+use deterministic fallback and repair providers, so validation does not require
+an API key:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark live_llm \
+  --candidate-count 4 \
+  --output-dir /tmp/o2-live-llm
+```
+
+Optional live Gemini smoke checks require an exported `GEMINI_API_KEY` and an
+explicit CLI flag:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark live_llm \
+  --use-live-llm \
+  --candidate-count 1 \
+  --output-dir /tmp/o2-live-gemini
+```
+
+Do not commit API keys, raw responses, raw generated proprietary data, or large
+logs. Phase 12 artifacts should store prompt version, model, temperature,
+parent ids, response/code hashes, static-check result, sandbox result, scores,
+token counts, latency, and cost proxies.
+
+Expected artifacts after a report export:
+
+```text
+reports/tables/llm_operator_comparison.csv
+reports/tables/llm_candidate_audit.csv
 ```
 
 ## Pareto Frontier Evidence

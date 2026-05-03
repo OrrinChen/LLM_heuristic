@@ -58,6 +58,7 @@ flowchart LR
 | Simple Routing | Held-out route sizes plus 2-opt | `route-seed-003-slack_aware` | `score_next_stop` heuristic comparison |
 | Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
 | Search Ablation | Fixed local candidate budget | seed, mutation, crossover, LLM-proxy, repair operators | mechanism evidence without live LLM superiority claims |
+| LLM Live Mutation v1 | Hash-only candidate audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
 | Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
 
 ## Safety Boundary
@@ -70,7 +71,8 @@ platform memory limits.
 
 ## Limitations
 
-- Live LLM mutation is optional and requires environment variables.
+- Live Gemini mutation is controlled and environment-gated; default runs use
+  deterministic fallback providers.
 - External bin packing fixtures are intentionally small and parser-backed.
 - External routing fixtures are intentionally small TSPLIB-style EUC_2D examples.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
@@ -127,6 +129,11 @@ Current status:
   mutation, crossover, deterministic LLM-proxy mutation, deterministic
   LLM-proxy repair, and mutation+repair under the same local budget, split,
   timeout, and seeds.
+- Phase 12 complete: controlled live LLM mutation v1 with deterministic
+  fallback, repair provider, prompt versioning, hash-only response audit,
+  token / latency / cost tracking, static-check and sandbox outcomes,
+  `llm_operator_comparison.csv`, `llm_candidate_audit.csv`, and `live_llm` CLI
+  support.
 - Phase 15 complete: Pareto frontier reporting across objective quality,
   runtime, program complexity, failure rate, generalization gap, and
   Amazon-style driver-likeness / operational realism.
@@ -136,9 +143,9 @@ Current status:
 - Phase 19 complete: README-first portfolio narrative, one-command demo,
   architecture diagram, benchmark evidence table, safety boundary,
   limitations, resume bullets, and portfolio brief artifact.
-- Current phase: the job-search portfolio track and Phase 10A routing evidence
-  are complete; optional Phase 12 live LLM mutation v1 is the next research
-  extension.
+- Current phase: the job-search portfolio track, Phase 10A routing evidence,
+  and Phase 12 live LLM mutation v1 are complete; optional Phase 13 program
+  semantics and novelty is the next research extension.
 
 ## Setup
 
@@ -240,6 +247,12 @@ Search ablation validation:
 python3 -m pytest tests/test_search_ablation_phase11.py -v
 ```
 
+Live LLM mutation validation:
+
+```bash
+python3 -m pytest tests/test_live_llm_phase12.py -v
+```
+
 Pareto frontier validation:
 
 ```bash
@@ -267,6 +280,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --gene
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 32 --output-dir /tmp/o2-ablation
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -455,6 +469,39 @@ bin_packing
 16
 llm_mutation
 ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed
+```
+
+## Live LLM Mutation Smoke Check
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from llm.live_experiment import LLMExperimentConfig, build_phase12_report
+
+report = build_phase12_report(
+    config=LLMExperimentConfig(candidate_budget=3, item_count=12)
+)
+print(report["phase"])
+print(report["benchmark"])
+print(report["live_provider_configured"])
+print(len(report["operator_comparison"]))
+print(len(report["candidate_audit"]))
+print(report["operator_comparison"][0]["method"])
+print(report["candidate_audit"][0]["prompt_version"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected output for the deterministic default:
+
+```text
+12
+live_llm_mutation
+False
+3
+6
+deterministic_fallback
+score-bin-mutation-v1
+LLM is one mutation operator inside a constrained program-search system; live LLM superiority is not claimed
 ```
 
 ## Pareto Frontier Smoke Check
@@ -684,6 +731,7 @@ print(benchmarks["amazon_routing"]["top_program_id"])
 print(report["pareto_frontier"]["frontier_count"])
 print(report["recommended_next_steps"][0]["step"])
 print("External Benchmark Evidence" in markdown)
+print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
@@ -701,7 +749,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-live_llm_mutation_v1
+semantic_novelty
+True
 True
 True
 True
@@ -726,6 +775,8 @@ print(len(tables["routing_external_generalization"]["rows"]))
 print(len(tables["ablation_summary"]["rows"]))
 print(len(tables["invalid_code_rate_by_method"]["rows"]))
 print(len(tables["best_score_by_budget"]["rows"]))
+print(len(tables["llm_operator_comparison"]["rows"]))
+print(len(tables["llm_candidate_audit"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
@@ -733,7 +784,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("live_llm_mutation_v1" in render_report_tables_markdown(tables))
+print("semantic_novelty" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -744,12 +795,14 @@ PY
 Expected output without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
 16
 5
 5
 8
 8
+8
+3
 8
 17
 9
@@ -764,17 +817,28 @@ GEMINI_API_KEY
 
 ## Optional Gemini Mutation
 
-Live mutation is configured only through environment variables. Do not commit
-API keys or generated proprietary data.
+Phase 12 keeps live mutation as a controlled experiment. The default command
+uses deterministic fallback and repair providers. To opt into a real Gemini
+provider for local smoke testing, set environment variables and pass
+`--use-live-llm`; do not commit API keys, raw responses, or generated
+proprietary data.
 
 ```bash
 export GEMINI_API_KEY="..."
 export GEMINI_MODEL="gemini-2.5-flash"  # optional; client default is gemini-2.5-flash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark live_llm \
+  --use-live-llm \
+  --candidate-count 1 \
+  --output-dir /tmp/o2-live-gemini-smoke
 ```
 
 `GeminiMutationProvider.from_env()` implements the existing mutation-provider
 protocol. The `MutationEngine` still statically validates the returned code
-before any evaluator can execute it.
+before any evaluator can execute it. Phase 12 report rows store model,
+prompt version, temperature, parent ids, raw-response hash, cleaned-code hash,
+static-check result, sandbox result, score, failure reason, token counts,
+latency, and a cost proxy without storing raw response text.
 
 ## Safety Boundary
 
@@ -801,6 +865,8 @@ reports/portfolio_brief.md
 reports/tables/*.csv
 reports/tables/external_generalization.csv
 reports/tables/routing_external_generalization.csv
+reports/tables/llm_operator_comparison.csv
+reports/tables/llm_candidate_audit.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
 reports/plots/frontier_plot_series.json

@@ -28,7 +28,8 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
     assert (
-        package["recommended_next_phase"] == "Optional Phase 12: Live LLM Mutation v1"
+        package["recommended_next_phase"]
+        == "Optional Phase 13: Program Semantics and Novelty"
     )
 
 
@@ -46,7 +47,7 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     }.issubset({row["benchmark"] for row in package["benchmark_results"]})
     assert "subprocess" in package["safety_boundary"]
     assert "file access" in package["safety_boundary"]
-    assert any("Live LLM" in limitation for limitation in package["limitations"])
+    assert any("Live Gemini" in limitation for limitation in package["limitations"])
     assert any("TSPLIB-style" in limitation for limitation in package["limitations"])
 
 

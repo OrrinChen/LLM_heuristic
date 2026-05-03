@@ -58,6 +58,12 @@ The ablation fixes candidate budget, benchmark split, timeout, evaluation budget
 
 Evidence references: `ablation_summary.csv`, `generation_curve_by_method.json`.
 
+## LLM As Operator
+
+Phase 12 treats live Gemini as one mutation operator inside the constrained search loop. Candidate audit rows record model, prompt version, temperature, parent ids, response hashes, static-check outcome, sandbox outcome, score, tokens, latency, and cost proxy without storing raw responses or secrets.
+
+Evidence references: `llm_operator_comparison.csv`, `llm_candidate_audit.csv`.
+
 ## Generalization
 
 Generalization evidence combines held-out benchmark slices, external bin-packing transfer gaps, and Pareto frontier rows that expose quality, runtime, complexity, failure, and generalization trade-offs.
@@ -72,7 +78,7 @@ Evidence references: `failure_taxonomy.csv`, `failure_cards`.
 
 ## Limitations
 
-The evidence package is deterministic and local by default. Live LLM mutation remains optional, external fixtures are intentionally small, CVRPLIB and time-window routing are deferred, and runtime frontier values use a deterministic proxy.
+The evidence package is deterministic and local by default. Live Gemini mutation remains environment-gated, external fixtures are intentionally small, CVRPLIB and time-window routing are deferred, and runtime frontier values use a deterministic proxy.
 
 Evidence references: `README.md`, `TASK_MEMORY.md`, `ROADMAP.md`.
 
@@ -93,4 +99,4 @@ Evidence references: `final_report.md`, `technical_report.md`.
 
 ## Next Phase
 
-Phase 19: Resume / Portfolio Packaging.
+Phase 13: Program Semantics and Novelty.

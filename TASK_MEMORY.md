@@ -2,11 +2,11 @@
 
 ## Latest Status
 
-Current branch: `codex/ashare-radar-phase1a`
-Latest commit: `feat: add external routing benchmark evidence`
-Current phase: Phase 10 external routing evidence complete for the TSPLIB-style TSP slice
-Main blocker: None for Phase 10A; CVRPLIB, time-window routing, live LLM experiments, semantic novelty, and cloud execution remain deferred
-Next recommended action: optional Phase 12 live LLM mutation v1, if continuing beyond external routing evidence
+Current branch: `codex/sandboxed-agent-eval-freeze`
+Latest commit: `feat: add controlled live llm mutation evidence`
+Current phase: Phase 12 live LLM mutation v1 complete as a controlled, environment-gated experiment module
+Main blocker: None for Phase 12; semantic novelty, failure taxonomy v2, CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
+Next recommended action: optional Phase 13 program semantics and novelty
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -121,6 +121,27 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated final report, report tables, technical report, portfolio brief,
   README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 12
   live LLM mutation v1 is now the next research extension.
+
+2026-05-03 Phase 12 completion:
+
+- Completed controlled live LLM mutation v1 only; no semantic novelty, failure
+  taxonomy v2, CVRPLIB/time-window routing, reproduction profile, or cloud
+  execution was added.
+- Added provider metadata records with model name, prompt version, temperature,
+  response/code hashes, token counts, latency, and cost proxy while preserving
+  the existing `generate(prompt) -> code` provider behavior.
+- Added deterministic fallback and repair providers plus a Phase 12 experiment
+  runner that evaluates generated `score_bin` programs only through existing
+  static validation and sandboxed bin-packing scoring.
+- Added hash-only candidate audit rows for parent ids, static-check result,
+  sandbox result, score, failure reason, runtime, and repair source without
+  storing raw responses or API keys.
+- Added `live_llm` CLI support and report exports for
+  `reports/tables/llm_operator_comparison.csv` and
+  `reports/tables/llm_candidate_audit.csv`.
+- Updated final report, report tables, technical report, portfolio brief,
+  README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 13
+  program semantics and novelty is now the next research extension.
 
 ## Completed Phases
 
@@ -954,6 +975,85 @@ Known limitations:
   baselines and do not claim LKH, CVRP solver, SOTA, real Amazon, or universal
   superiority.
 
+### Phase 12: LLM Live Mutation v1
+
+Commit: `feat: add controlled live llm mutation evidence`
+
+What changed:
+
+- Added `src/llm/live_experiment.py` with deterministic fallback providers,
+  scripted/fake-provider support for tests, repair-provider handling, and
+  `build_phase12_report`.
+- Extended `src/llm/model_client.py` with metadata-producing generation records
+  while preserving the existing `GeminiMutationProvider.generate(prompt)` API.
+- Added prompt versioning to `PromptBuilder`.
+- Added `live_llm` CLI support with deterministic defaults and optional
+  `--use-live-llm` environment-gated Gemini execution.
+- Added final-report, report-table, technical-report, and portfolio integration
+  for live LLM as one constrained mutation operator.
+- Added generated table artifacts:
+  `reports/tables/llm_operator_comparison.csv` and
+  `reports/tables/llm_candidate_audit.csv`.
+- Added `tests/test_live_llm_phase12.py` and updated report integration tests.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, this task
+  memory, and the Phase 12 implementation plan.
+
+Validation:
+
+- 2026-05-03: `python3 -m pytest tests/test_live_llm_phase12.py -q` failed as
+  expected before implementation because `llm.live_experiment` did not exist.
+- 2026-05-03: `python3 -m pytest tests/test_live_llm_phase12.py -q` passed, 5
+  tests.
+- 2026-05-03:
+  `python3 -m pytest tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_pareto_frontier_phase15.py tests/test_search_ablation_phase11.py tests/test_portfolio_packaging_phase19.py tests/test_technical_report_phase18.py tests/test_live_llm_phase12.py -q`
+  passed, 39 tests.
+- 2026-05-03: `python3 -m pytest -q` passed, 139 tests.
+- 2026-05-03: `python3 -m ruff check .` passed.
+- 2026-05-03: `python3 -m ruff format --check .` passed, 82 files already
+  formatted.
+- 2026-05-03: `git diff --check -- .` passed.
+- 2026-05-03: Phase 12 direct smoke printed phase `12`, benchmark
+  `live_llm_mutation`, live provider configured `False`, three operator rows,
+  six candidate audit rows, first method `deterministic_fallback`, prompt
+  version `score-bin-mutation-v1`, and the conservative LLM-as-operator claim
+  boundary.
+- 2026-05-03: report tables / plots smoke printed thirteen tables including
+  `llm_operator_comparison` and `llm_candidate_audit`, six plot series,
+  frontier point count `17`, next-step Markdown check `True`, and missing-env
+  Gemini check `GEMINI_API_KEY`.
+- 2026-05-03: final-report smoke printed first recommended next step
+  `semantic_novelty` and confirmed external evidence, LLM live mutation,
+  ablation, Pareto frontier, conservative dominance boundary, and selected
+  trade-off language.
+- 2026-05-03: CLI smoke for `bin_packing`, `bin_packing_external`,
+  `routing_external`, `search_ablation`, `live_llm`, `report`, `inspect`, and
+  `rerun-manifest` passed against `/tmp/o2-cli-*` output folders; `live_llm`
+  wrote eight audited candidates with `live_provider_configured` set to
+  `False`.
+- 2026-05-03: portfolio / technical-report smoke printed portfolio phase `19`
+  with eight benchmark rows, technical report phase `18` with thirteen
+  sections, and recommended next phase `Phase 13: Program Semantics and
+  Novelty`.
+- 2026-05-03:
+  `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5`
+  regenerated the checked-in evidence package and wrote
+  `reports/tables/llm_operator_comparison.csv` plus
+  `reports/tables/llm_candidate_audit.csv`.
+- 2026-05-03: required docs are present and non-empty.
+- 2026-05-03: repository content secret scan for API-key-like Gemini material
+  returned zero matches.
+- 2026-05-03: large-file scan found no files larger than 1 MB in this project
+  tree.
+
+Known limitations:
+
+- Default Phase 12 runs use deterministic fallback and repair providers. Live
+  Gemini execution remains optional, environment-gated, and excluded from
+  required tests.
+- Candidate audit records store hashes and metadata, not raw LLM responses.
+- Phase 12 compares LLM-as-operator plumbing and safety boundaries; it does not
+  claim live LLM superiority or universal dominance.
+
 ## Latest Strategic Decision
 
 The old O2 idea, Driver-Aware Last-Mile Routing, is no longer the main project. It becomes a realistic evaluator / benchmark scene inside a broader LLM-driven OR heuristic discovery system.
@@ -1096,6 +1196,8 @@ reporting tables and plots
   bin packing data.
 - [x] Add fixed-budget search mechanism ablation across deterministic local
   mutation, crossover, and LLM-proxy operators.
+- [x] Add controlled live LLM mutation evidence with deterministic fallback,
+  repair, prompt versioning, hash-only audit logs, and sandboxed scoring.
 - [x] Add Pareto frontier reporting across quality, runtime, complexity,
   failure rate, and generalization gap.
 - [x] Package a research-style technical report.

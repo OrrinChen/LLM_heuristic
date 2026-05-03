@@ -24,7 +24,7 @@ def test_phase18_report_has_paper_sections_and_conservative_claims() -> None:
     assert "subprocess sandboxing" in report["abstract"]
     assert "universal dominance" in report["claim_boundaries"]["does_not_claim"]
     assert report["recommended_next_phase"] == (
-        "Phase 19: Resume / Portfolio Packaging"
+        "Phase 13: Program Semantics and Novelty"
     )
 
 
@@ -70,6 +70,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
         "Search Loop",
         "External Benchmark Evidence",
         "Ablation",
+        "LLM As Operator",
         "Generalization",
         "Failure Analysis",
         "Limitations",
@@ -77,7 +78,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
     ):
         assert f"## {heading}" in markdown
     assert "The system does not claim universal dominance" in markdown
-    assert "Phase 19: Resume / Portfolio Packaging" in markdown
+    assert "Phase 13: Program Semantics and Novelty" in markdown
 
 
 def test_phase18_technical_report_is_exported_with_artifact_package(
