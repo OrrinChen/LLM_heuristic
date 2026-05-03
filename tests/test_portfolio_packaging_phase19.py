@@ -27,17 +27,14 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
     assert package["claim_boundaries"]["does_not_claim"] == (
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
-    assert (
-        package["recommended_next_phase"]
-        == "Optional Phase 13: Program Semantics and Novelty"
-    )
+    assert package["recommended_next_phase"] == "Optional Phase 14: Failure Taxonomy v2"
 
 
 def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     package = build_phase19_package()
 
     assert "seed heuristic library" in package["architecture_diagram"]
-    assert len(package["benchmark_results"]) >= 5
+    assert len(package["benchmark_results"]) >= 9
     assert {
         "Online Bin Packing",
         "External Bin Packing",
@@ -48,6 +45,9 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     assert "subprocess" in package["safety_boundary"]
     assert "file access" in package["safety_boundary"]
     assert any("Live Gemini" in limitation for limitation in package["limitations"])
+    assert any(
+        "Semantic novelty" in limitation for limitation in package["limitations"]
+    )
     assert any("TSPLIB-style" in limitation for limitation in package["limitations"])
 
 

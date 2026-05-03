@@ -8,6 +8,7 @@ from benchmarks.amazon_routing.discovery import (
 )
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
+from program_search.semantic_novelty import build_phase13_report
 from reports.failure_analysis import build_phase8_report
 from reports.pareto import build_phase15_report
 from reports.robustness import build_phase7_report
@@ -20,6 +21,7 @@ def build_report_plots(
     phase3_report: Optional[Mapping[str, object]] = None,
     phase6_report: Optional[Mapping[str, object]] = None,
     phase11_report: Optional[Mapping[str, object]] = None,
+    phase13_report: Optional[Mapping[str, object]] = None,
     phase15_report: Optional[Mapping[str, object]] = None,
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
@@ -51,6 +53,7 @@ def build_report_plots(
         item_count=20,
         random_seed=23,
     )
+    phase13 = phase13_report or build_phase13_report()
     phase15 = phase15_report or build_phase15_report()
     robustness = robustness_report or build_phase7_report()
     failures = failure_report or build_phase8_report()
@@ -70,6 +73,7 @@ def build_report_plots(
         "generation_curve_by_method": _ablation_curve_plot(
             phase11["generation_curve_by_method"]
         ),
+        "behavior_fingerprint": _behavior_fingerprint_plot(phase13),
         "frontier_plot_series": _frontier_plot(phase15["candidate_rows"]),
         "failure_rate_by_generation": _failure_rate_plot(
             failures["failure_rate_by_generation"]
@@ -278,6 +282,40 @@ def _frontier_plot(rows: Sequence[Mapping[str, object]]) -> Mapping[str, object]
             ),
             label_key="label",
             value_key="objective_quality",
+        ),
+    }
+
+
+def _behavior_fingerprint_plot(phase13: Mapping[str, object]) -> Mapping[str, object]:
+    points: PlotPoints = [
+        {
+            "program_id": row["program_id"],
+            "behavior_hash": row["behavior_hash"],
+            "semantic_novelty_score": row["semantic_novelty_score"],
+            "behavior_novelty": row["behavior_novelty"],
+            "feature_novelty": row["feature_novelty"],
+            "label": f"{row['program_id']} {str(row['behavior_hash'])[:8]}",
+        }
+        for row in phase13["novelty_rows"]
+    ]
+    return {
+        "title": "Behavior Fingerprint",
+        "x": "program_id",
+        "y": "semantic_novelty_score",
+        "points": points,
+        "probe_schema": phase13["probe_schema"],
+        "program_fingerprints": phase13["behavior_fingerprints"],
+        "duplicate_behavior_clusters": phase13["duplicate_behavior_clusters"],
+        "ascii": render_ascii_bar_plot(
+            sorted(
+                points,
+                key=lambda point: (
+                    -float(point["semantic_novelty_score"]),
+                    str(point["program_id"]),
+                ),
+            )[:8],
+            label_key="label",
+            value_key="semantic_novelty_score",
         ),
     }
 

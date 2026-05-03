@@ -107,7 +107,11 @@ def _write_extra_plot_series(
     plots_dir: Path,
 ) -> Sequence[Path]:
     paths = []
-    for plot_name in ("generation_curve_by_method", "frontier_plot_series"):
+    for plot_name in (
+        "generation_curve_by_method",
+        "behavior_fingerprint",
+        "frontier_plot_series",
+    ):
         if plot_name not in plots:
             continue
         path = plots_dir / f"{plot_name}.json"

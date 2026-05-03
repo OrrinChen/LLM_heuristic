@@ -2,11 +2,11 @@
 
 ## Latest Status
 
-Current branch: `codex/sandboxed-agent-eval-freeze`
-Latest commit: `feat: add controlled live llm mutation evidence`
-Current phase: Phase 12 live LLM mutation v1 complete as a controlled, environment-gated experiment module
-Main blocker: None for Phase 12; semantic novelty, failure taxonomy v2, CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
-Next recommended action: optional Phase 13 program semantics and novelty
+Current branch: `codex/financial-evidence-release-packaging`
+Latest commit: `feat: add semantic novelty evidence`
+Current phase: Phase 13 program semantics and novelty complete as probe-based behavior evidence
+Main blocker: None for Phase 13; failure taxonomy v2, CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
+Next recommended action: optional Phase 14 failure taxonomy v2
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -142,6 +142,22 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated final report, report tables, technical report, portfolio brief,
   README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 13
   program semantics and novelty is now the next research extension.
+
+2026-05-03 Phase 13 completion:
+
+- Completed program semantics and novelty only; no failure taxonomy v2,
+  CVRPLIB/time-window routing, reproduction profile, or cloud execution was
+  added.
+- Added deterministic bin-packing behavior probes, `score_bin` behavior
+  fingerprints, behavior hash equivalence clusters, semantic novelty scoring,
+  feature usage summaries, performance novelty, and complexity decomposition.
+- Added `semantic_novelty` CLI support and report exports for
+  `reports/tables/novelty_table.csv`,
+  `reports/tables/duplicate_behavior_clusters.csv`, and
+  `reports/plots/behavior_fingerprint.json`.
+- Updated final report, report tables, plot series, technical report,
+  portfolio brief, README, RUNBOOK, ROADMAP, VALIDATION, and task memory so
+  optional Phase 14 failure taxonomy v2 is now the next research extension.
 
 ## Completed Phases
 
@@ -1053,6 +1069,89 @@ Known limitations:
 - Candidate audit records store hashes and metadata, not raw LLM responses.
 - Phase 12 compares LLM-as-operator plumbing and safety boundaries; it does not
   claim live LLM superiority or universal dominance.
+
+### Phase 13: Program Semantics and Novelty
+
+Commit: `feat: add semantic novelty evidence`
+
+What changed:
+
+- Added `src/program_search/semantic_novelty.py` with deterministic
+  bin-packing behavior probes, behavior fingerprints, semantic novelty scoring,
+  feature usage summaries, complexity decomposition, and duplicate behavior
+  cluster detection.
+- Added `semantic_novelty` CLI support with deterministic local defaults.
+- Added final-report, report-table, plot-series, technical-report, and
+  portfolio integration for program semantics and novelty evidence.
+- Added generated artifacts:
+  `reports/tables/novelty_table.csv`,
+  `reports/tables/duplicate_behavior_clusters.csv`, and
+  `reports/plots/behavior_fingerprint.json`.
+- Added `tests/test_semantic_novelty_phase13.py` and updated report
+  integration tests.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, this task
+  memory, and the Phase 13 implementation plan.
+
+Validation:
+
+- 2026-05-03: `python3 -m pytest tests/test_semantic_novelty_phase13.py -q`
+  failed as expected before implementation because
+  `program_search.semantic_novelty` did not exist.
+- 2026-05-03: `python3 -m pytest tests/test_semantic_novelty_phase13.py -q`
+  passed, 4 tests.
+- 2026-05-03:
+  `python3 -m pytest tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py tests/test_pareto_frontier_phase15.py tests/test_portfolio_packaging_phase19.py tests/test_technical_report_phase18.py tests/test_search_ablation_phase11.py tests/test_live_llm_phase12.py tests/test_semantic_novelty_phase13.py -q`
+  passed, 43 tests.
+- 2026-05-03:
+  `python3 -m pytest tests/test_semantic_novelty_phase13.py tests/test_report_tables_plots_and_live_llm.py -q`
+  passed, 13 tests.
+- 2026-05-03:
+  `python3 -m pytest tests/test_final_report.py tests/test_pareto_frontier_phase15.py tests/test_portfolio_packaging_phase19.py tests/test_technical_report_phase18.py tests/test_search_ablation_phase11.py tests/test_live_llm_phase12.py -q`
+  passed, 30 tests.
+- 2026-05-03: `python3 -m pytest -q` passed, 143 tests.
+- 2026-05-03: `python3 -m ruff check .` passed.
+- 2026-05-03: `python3 -m ruff format --check .` passed, 84 files
+  already formatted.
+- 2026-05-03: `git diff --check -- .` passed.
+- 2026-05-03: Phase 13 direct smoke returned phase 13,
+  `bin_packing_semantic_novelty`, 12 candidates, 5 probes, 4 behavior
+  clusters, 3 duplicate behavior clusters, top row
+  `seed-010-prefer_used_bins`, and the conservative claim boundary.
+- 2026-05-03: `semantic_novelty` CLI smoke wrote `/tmp/o2-cli-semantic`
+  with 24 candidates, 7 behavior clusters, and 4 duplicate behavior clusters.
+- 2026-05-03: report artifact smoke wrote Phase 13 artifacts to
+  `/tmp/o2-phase13-report`, including 24 novelty rows, 4 duplicate behavior
+  cluster rows, 24 behavior-fingerprint points, and a final-report Program
+  Semantics And Novelty section.
+- 2026-05-03: report table/plot smoke confirmed 15 tables, 7 plot series, 24
+  novelty rows, 4 duplicate behavior clusters, 24 behavior-fingerprint points,
+  and next step `failure_taxonomy_v2`; missing live key check returned
+  `GEMINI_API_KEY` as expected.
+- 2026-05-03: final-report smoke confirmed next step
+  `failure_taxonomy_v2`, Pareto frontier evidence, LLM live mutation evidence,
+  search ablation evidence, and Program Semantics And Novelty evidence.
+- 2026-05-03: portfolio and technical-report smoke confirmed Phase 19 has 9
+  benchmark rows, Phase 18 has 14 sections, and both recommend Phase 14 failure
+  taxonomy v2.
+- 2026-05-03: CLI smoke confirmed `bin_packing`, `bin_packing_external`,
+  `routing_external`, `search_ablation`, `live_llm`, `semantic_novelty`,
+  `report`, `inspect`, and `rerun-manifest` commands work with deterministic
+  local defaults.
+- 2026-05-03: docs non-empty check confirmed `AGENTS.md`, `ROADMAP.md`,
+  `README.md`, `TASK_MEMORY.md`, `VALIDATION.md`, and `RUNBOOK.md` are present
+  and non-empty.
+- 2026-05-03: strict secret scan found zero committed API keys or long token
+  patterns; large-file scan found no files larger than 1 MB.
+
+Known limitations:
+
+- Phase 13 semantic novelty is probe-based and bin-packing focused; it detects
+  equivalent ranking behavior on fixed `score_bin` probes, not human-level
+  semantic equivalence.
+- Feature novelty is derived from static AST feature references and does not
+  infer latent mathematical intent.
+- Performance novelty is a deterministic local score-distance signal, not a
+  claim of universal performance improvement.
 
 ## Latest Strategic Decision
 

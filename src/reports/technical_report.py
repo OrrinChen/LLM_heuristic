@@ -16,6 +16,7 @@ TECHNICAL_REPORT_SECTIONS = (
     "external_benchmark_evidence",
     "ablation",
     "llm_as_operator",
+    "program_semantics_and_novelty",
     "generalization",
     "failure_analysis",
     "limitations",
@@ -45,6 +46,7 @@ def build_phase18_report(
     routing_external = source["routing_external"]
     ablation = source["search_ablation"]
     live_llm = source["live_llm"]
+    semantic = source["semantic_novelty"]
     frontier = source["pareto_frontier"]
 
     sections = (
@@ -163,6 +165,22 @@ def build_phase18_report(
             ("llm_operator_comparison.csv", "llm_candidate_audit.csv"),
         ),
         _section(
+            "program_semantics_and_novelty",
+            "Program Semantics And Novelty",
+            (
+                "Phase 13 adds probe-based behavior fingerprints for "
+                "`score_bin` candidates, separates exact code novelty from "
+                "behavior, feature, and performance novelty, and reports "
+                "duplicate behavior clusters where different programs rank "
+                "candidate actions identically."
+            ),
+            (
+                "novelty_table.csv",
+                "behavior_fingerprint.json",
+                "duplicate_behavior_clusters.csv",
+            ),
+        ),
+        _section(
             "generalization",
             "Generalization",
             (
@@ -233,9 +251,10 @@ def build_phase18_report(
             "external_benchmark": external["benchmark"],
             "ablation_best_method": ablation["best_method"],
             "live_llm_best_method": live_llm["best_method"],
+            "semantic_behavior_clusters": semantic["behavior_cluster_count"],
             "pareto_frontier_count": frontier["frontier_count"],
         },
-        "recommended_next_phase": "Phase 13: Program Semantics and Novelty",
+        "recommended_next_phase": "Phase 14: Failure Taxonomy v2",
     }
 
 

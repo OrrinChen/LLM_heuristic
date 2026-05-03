@@ -1,2 +1,2 @@
 step,reason
-semantic_novelty,Optionally add behavioral fingerprints to distinguish code novelty from behavior novelty.
+failure_taxonomy_v2,"Optionally expand failure cards with trigger conditions, validator sources, score impact, and repair strategies."

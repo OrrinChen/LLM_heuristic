@@ -23,9 +23,7 @@ def test_phase18_report_has_paper_sections_and_conservative_claims() -> None:
     assert "compact heuristic scoring programs" in report["abstract"]
     assert "subprocess sandboxing" in report["abstract"]
     assert "universal dominance" in report["claim_boundaries"]["does_not_claim"]
-    assert report["recommended_next_phase"] == (
-        "Phase 13: Program Semantics and Novelty"
-    )
+    assert report["recommended_next_phase"] == ("Phase 14: Failure Taxonomy v2")
 
 
 def test_phase18_report_sections_map_to_existing_evidence() -> None:
@@ -71,6 +69,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
         "External Benchmark Evidence",
         "Ablation",
         "LLM As Operator",
+        "Program Semantics And Novelty",
         "Generalization",
         "Failure Analysis",
         "Limitations",
@@ -78,7 +77,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
     ):
         assert f"## {heading}" in markdown
     assert "The system does not claim universal dominance" in markdown
-    assert "Phase 13: Program Semantics and Novelty" in markdown
+    assert "Phase 14: Failure Taxonomy v2" in markdown
 
 
 def test_phase18_technical_report_is_exported_with_artifact_package(

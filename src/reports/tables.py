@@ -161,6 +161,42 @@ def build_report_tables(
             ),
             "rows": _llm_candidate_audit_rows(final),
         },
+        "novelty_table": {
+            "title": "Novelty Table",
+            "columns": (
+                "program_id",
+                "source",
+                "generation",
+                "code_hash",
+                "behavior_hash",
+                "code_novelty",
+                "behavior_novelty",
+                "feature_novelty",
+                "performance_novelty",
+                "semantic_novelty_score",
+                "feature_usage",
+                "complexity_nodes",
+                "complexity_branches",
+                "complexity_operations",
+                "complexity_literals",
+                "validation_score",
+                "test_score",
+                "failure_reason",
+            ),
+            "rows": _novelty_rows(final),
+        },
+        "duplicate_behavior_clusters": {
+            "title": "Duplicate Behavior Clusters",
+            "columns": (
+                "behavior_hash",
+                "cluster_size",
+                "program_ids",
+                "representative_program_id",
+                "shared_ranking",
+                "explanation",
+            ),
+            "rows": _duplicate_behavior_cluster_rows(final),
+        },
         "pareto_frontier": {
             "title": "Pareto Frontier",
             "columns": (
@@ -466,6 +502,48 @@ def _llm_candidate_audit_rows(final_report: Mapping[str, object]) -> TableRows:
             "repair_of_failure_reason": row["repair_of_failure_reason"],
         }
         for row in final_report["live_llm"]["candidate_audit"]
+    ]
+
+
+def _novelty_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "program_id": row["program_id"],
+            "source": row["source"],
+            "generation": row["generation"],
+            "code_hash": row["code_hash"],
+            "behavior_hash": row["behavior_hash"],
+            "code_novelty": _format_number(row["code_novelty"]),
+            "behavior_novelty": _format_number(row["behavior_novelty"]),
+            "feature_novelty": _format_number(row["feature_novelty"]),
+            "performance_novelty": _format_number(row["performance_novelty"]),
+            "semantic_novelty_score": _format_number(row["semantic_novelty_score"]),
+            "feature_usage": ";".join(str(feature) for feature in row["feature_usage"]),
+            "complexity_nodes": row["complexity_nodes"],
+            "complexity_branches": row["complexity_branches"],
+            "complexity_operations": row["complexity_operations"],
+            "complexity_literals": row["complexity_literals"],
+            "validation_score": _format_number(row["validation_score"]),
+            "test_score": _format_number(row["test_score"]),
+            "failure_reason": row["failure_reason"] or "",
+        }
+        for row in final_report["semantic_novelty"]["novelty_rows"]
+    ]
+
+
+def _duplicate_behavior_cluster_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "behavior_hash": row["behavior_hash"],
+            "cluster_size": row["cluster_size"],
+            "program_ids": ";".join(
+                str(program_id) for program_id in row["program_ids"]
+            ),
+            "representative_program_id": row["representative_program_id"],
+            "shared_ranking": row["shared_ranking"],
+            "explanation": row["explanation"],
+        }
+        for row in final_report["semantic_novelty"]["duplicate_behavior_clusters"]
     ]
 
 

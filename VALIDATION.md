@@ -521,7 +521,8 @@ Markdown rendering states selected trade-offs without universal dominance claims
 external benchmark evidence is included without SOTA claims
 search mechanism ablation evidence is included under a fixed local budget
 Pareto frontier evidence is included without universal dominance claims
-recommended next steps prioritize semantic novelty after Phase 12
+program semantics and novelty evidence is included without human-level semantic claims
+recommended next steps prioritize failure taxonomy v2 after Phase 13
 ```
 
 ## Final Report Smoke Validation
@@ -546,6 +547,7 @@ print(report["recommended_next_steps"][0]["step"])
 print("External Benchmark Evidence" in markdown)
 print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
+print("Program Semantics And Novelty" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
@@ -562,7 +564,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-semantic_novelty
+failure_taxonomy_v2
+True
 True
 True
 True
@@ -658,8 +661,8 @@ Expected result:
 
 ```text
 19
-8
-Optional Phase 13: Program Semantics and Novelty
+9
+Optional Phase 14: Failure Taxonomy v2
 True
 True
 True
@@ -694,10 +697,10 @@ Expected result:
 
 ```text
 18
-13
+14
 3
 8
-Phase 13: Program Semantics and Novelty
+Phase 14: Failure Taxonomy v2
 True
 True
 True
@@ -834,6 +837,57 @@ score-bin-mutation-v1
 LLM is one mutation operator inside a constrained program-search system; live LLM superiority is not claimed
 ```
 
+## Program Semantics And Novelty Validation
+
+Run these once Phase 13 semantic novelty exists:
+
+```bash
+python3 -m pytest tests/test_semantic_novelty_phase13.py -v
+```
+
+Expected result:
+
+```text
+behavior fingerprints are generated from fixed bin-packing probes
+semantic novelty separates code, behavior, feature, and performance novelty
+equivalent ranking behavior clusters different programs together
+novelty_table, duplicate_behavior_clusters, behavior_fingerprint, final report,
+artifact export, and CLI expose Phase 13 evidence
+```
+
+## Phase 13 Smoke Validation
+
+Run this after Phase 13 modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from program_search.semantic_novelty import build_phase13_report
+
+report = build_phase13_report(candidate_count=12)
+print(report["phase"])
+print(report["benchmark"])
+print(report["candidate_count"])
+print(report["probe_count"])
+print(report["behavior_cluster_count"])
+print(len(report["duplicate_behavior_clusters"]))
+print(report["novelty_rows"][0]["program_id"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected result:
+
+```text
+13
+bin_packing_semantic_novelty
+12
+5
+4
+3
+seed-010-prefer_used_bins
+semantic novelty reports probe-based behavior evidence and equivalence clusters; it does not prove human-level semantic understanding or universal performance improvement
+```
+
 ## Report Tables, Plots, and Live-LLM Client Validation
 
 Run these after report artifact and optional live-LLM modules exist:
@@ -873,14 +927,17 @@ print(len(tables["invalid_code_rate_by_method"]["rows"]))
 print(len(tables["best_score_by_budget"]["rows"]))
 print(len(tables["llm_operator_comparison"]["rows"]))
 print(len(tables["llm_candidate_audit"]["rows"]))
+print(len(tables["novelty_table"]["rows"]))
+print(len(tables["duplicate_behavior_clusters"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
+print(len(plots["behavior_fingerprint"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("semantic_novelty" in render_report_tables_markdown(tables))
+print("failure_taxonomy_v2" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -891,7 +948,7 @@ PY
 Expected result without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
 16
 5
 5
@@ -900,11 +957,14 @@ Expected result without a live key exported:
 8
 3
 8
+24
+4
 17
 9
-('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'frontier_plot_series', 'failure_rate_by_generation')
+('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'behavior_fingerprint', 'frontier_plot_series', 'failure_rate_by_generation')
 15
 32
+24
 17
 True
 True
@@ -977,6 +1037,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_extern
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-cli-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-cli-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-cli-live-llm
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-cli-semantic
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir /tmp/o2-cli-rerun --top-k 2
@@ -990,7 +1051,8 @@ bin_packing_external run prints best_external_program_id and writes run_summary.
 routing_external run prints best_external_program_id and writes run_summary.json
 search_ablation run prints best_method and writes run_summary.json
 live_llm run prints best_method and writes run_summary.json
-report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/tables/llm_operator_comparison.csv, reports/tables/llm_candidate_audit.csv, reports/plots/plot_series.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
+semantic_novelty run prints behavior_cluster_count and writes run_summary.json
+report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/tables/llm_operator_comparison.csv, reports/tables/llm_candidate_audit.csv, reports/tables/novelty_table.csv, reports/tables/duplicate_behavior_clusters.csv, reports/plots/plot_series.json, reports/plots/behavior_fingerprint.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
 inspect prints candidate_id rows
 rerun-manifest prints code_hash_matches true rows
 ```
