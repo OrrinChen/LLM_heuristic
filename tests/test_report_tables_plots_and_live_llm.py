@@ -31,6 +31,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "best_score_by_budget",
         "llm_operator_comparison",
         "llm_candidate_audit",
+        "novelty_table",
+        "duplicate_behavior_clusters",
         "pareto_frontier",
         "failure_taxonomy",
         "recommended_next_steps",
@@ -45,6 +47,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["best_score_by_budget"]["rows"]) == 8
     assert len(tables["llm_operator_comparison"]["rows"]) == 3
     assert len(tables["llm_candidate_audit"]["rows"]) == 8
+    assert len(tables["novelty_table"]["rows"]) == 24
+    assert len(tables["duplicate_behavior_clusters"]["rows"]) == 4
     assert len(tables["pareto_frontier"]["rows"]) >= 3
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert tables["benchmark_comparison"]["rows"][0] == {
@@ -68,8 +72,10 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## Ablation Summary" in markdown
     assert "## LLM Operator Comparison" in markdown
     assert "## LLM Candidate Audit" in markdown
+    assert "## Novelty Table" in markdown
+    assert "## Duplicate Behavior Clusters" in markdown
     assert "## Pareto Frontier" in markdown
-    assert "semantic_novelty" in markdown
+    assert "failure_taxonomy_v2" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
@@ -80,6 +86,7 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
         "amazon_discovery_best_score",
         "robustness_generalization_gaps",
         "generation_curve_by_method",
+        "behavior_fingerprint",
         "frontier_plot_series",
         "failure_rate_by_generation",
     )
@@ -87,6 +94,7 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
     assert len(plots["amazon_discovery_best_score"]["points"]) == 3
     assert len(plots["robustness_generalization_gaps"]["points"]) == 15
     assert len(plots["generation_curve_by_method"]["points"]) == 32
+    assert len(plots["behavior_fingerprint"]["points"]) == 24
     assert len(plots["frontier_plot_series"]["points"]) >= 3
     assert len(plots["failure_rate_by_generation"]["points"]) == 7
     assert plots["bin_packing_evolution_best_score"]["ascii"]
@@ -99,6 +107,7 @@ def test_report_plots_markdown_contains_curve_and_gap_sections() -> None:
     assert markdown.startswith("# Report Plots")
     assert "## Bin Packing Evolution Best Score" in markdown
     assert "## Robustness Generalization Gaps" in markdown
+    assert "## Behavior Fingerprint" in markdown
     assert "routing-large-routes" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
 

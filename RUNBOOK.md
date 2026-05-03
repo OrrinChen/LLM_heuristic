@@ -87,9 +87,12 @@ reports/tables/invalid_code_rate_by_method.csv
 reports/tables/best_score_by_budget.csv
 reports/tables/llm_operator_comparison.csv
 reports/tables/llm_candidate_audit.csv
+reports/tables/novelty_table.csv
+reports/tables/duplicate_behavior_clusters.csv
 reports/tables/pareto_frontier.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
+reports/plots/behavior_fingerprint.json
 reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
@@ -104,6 +107,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_extern
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
 ```
@@ -201,6 +205,30 @@ Expected artifacts after a report export:
 reports/tables/llm_operator_comparison.csv
 reports/tables/llm_candidate_audit.csv
 ```
+
+## Program Semantics And Novelty
+
+Phase 13 fingerprints bin-packing `score_bin` programs on fixed probe states
+and separates exact code novelty from behavior, feature, performance, and
+complexity novelty:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark semantic_novelty \
+  --candidate-count 24 \
+  --output-dir /tmp/o2-semantic
+```
+
+Expected artifacts after a report export:
+
+```text
+reports/tables/novelty_table.csv
+reports/tables/duplicate_behavior_clusters.csv
+reports/plots/behavior_fingerprint.json
+```
+
+This evidence is probe-based. It detects equivalent ranking behavior on fixed
+bin-packing probes and does not claim human-level semantic understanding.
 
 ## Pareto Frontier Evidence
 

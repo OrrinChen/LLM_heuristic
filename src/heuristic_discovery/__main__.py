@@ -20,6 +20,7 @@ from program_search.rerun_manifest import (
     build_bin_packing_rerun_manifest,
     rerun_manifest_entries,
 )
+from program_search.semantic_novelty import build_phase13_report
 from reports.artifacts import export_report_artifacts
 
 
@@ -54,6 +55,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "routing_external",
             "search_ablation",
             "live_llm",
+            "semantic_novelty",
         ),
         default="bin_packing",
     )
@@ -139,6 +141,8 @@ def _run(args: argparse.Namespace) -> int:
                 use_env_live_provider=args.use_live_llm,
             )
         )
+    elif args.benchmark == "semantic_novelty":
+        report = build_phase13_report(candidate_count=args.candidate_count)
     else:
         report = build_phase3_report(
             config=EvolutionConfig(
@@ -175,6 +179,15 @@ def _run(args: argparse.Namespace) -> int:
             "benchmark": args.benchmark,
             "best_method": report["best_method"],
             "live_provider_configured": report["live_provider_configured"],
+            "path": str(output_path),
+        }
+    elif args.benchmark == "semantic_novelty":
+        payload = {
+            "benchmark": args.benchmark,
+            "behavior_cluster_count": report["behavior_cluster_count"],
+            "duplicate_behavior_cluster_count": len(
+                report["duplicate_behavior_clusters"]
+            ),
             "path": str(output_path),
         }
     else:

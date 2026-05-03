@@ -52,6 +52,7 @@ def build_phase19_package(
     external = final["external_benchmark"]
     ablation = final["search_ablation"]
     live_llm = final["live_llm"]
+    semantic = final["semantic_novelty"]
     frontier = final["pareto_frontier"]
     evidence = final["evidence"]
 
@@ -106,6 +107,13 @@ def build_phase19_package(
             "claim": "LLM as one sandboxed mutation operator, not a solver",
         },
         {
+            "benchmark": "Program Semantics",
+            "evidence": "behavior fingerprints and duplicate behavior clusters",
+            "top_program": f"{semantic['behavior_cluster_count']} behavior clusters",
+            "reported_metric": semantic["equivalent_program_count"],
+            "claim": "semantic novelty is probe-based, not human-level meaning",
+        },
+        {
             "benchmark": "Pareto Frontier",
             "evidence": "quality-runtime-complexity-generalization rows",
             "top_program": f"{frontier['frontier_count']} frontier rows",
@@ -130,6 +138,8 @@ def build_phase19_package(
         "limitations": (
             "Live Gemini mutation is controlled and environment-gated; default "
             "runs use deterministic fallback providers.",
+            "Semantic novelty is based on fixed probe behavior fingerprints and "
+            "does not prove human-level semantic understanding.",
             "External bin packing fixtures are small and committed only as "
             "parser-backed benchmark-style examples.",
             "External routing fixtures are small TSPLIB-style examples, not "
@@ -152,8 +162,9 @@ def build_phase19_package(
                 "failure_category_count"
             ],
             "pareto_frontier_rows": frontier["frontier_count"],
+            "semantic_behavior_clusters": semantic["behavior_cluster_count"],
         },
-        "recommended_next_phase": "Optional Phase 13: Program Semantics and Novelty",
+        "recommended_next_phase": "Optional Phase 14: Failure Taxonomy v2",
     }
 
 

@@ -12,6 +12,7 @@ from benchmarks.routing.evaluator import build_phase4_report
 from benchmarks.routing.external import build_phase10_report
 from llm.live_experiment import build_phase12_report
 from program_search.ablation import build_phase11_report
+from program_search.semantic_novelty import build_phase13_report
 from reports.failure_analysis import build_phase8_report
 from reports.pareto import build_phase15_report
 from reports.robustness import build_phase7_report
@@ -25,6 +26,7 @@ FINAL_REPORT_SECTIONS = (
     "routing_external_benchmark_evidence",
     "search_mechanism_ablation",
     "llm_live_mutation_v1",
+    "program_semantics_and_novelty",
     "pareto_frontier_report",
     "generalization_and_robustness",
     "failure_analysis",
@@ -63,6 +65,7 @@ def build_final_report() -> Dict[str, object]:
         random_seed=23,
     )
     phase12 = build_phase12_report()
+    phase13 = build_phase13_report()
     phase15 = build_phase15_report()
 
     report: Dict[str, object] = {
@@ -105,6 +108,7 @@ def build_final_report() -> Dict[str, object]:
         "routing_external": _external_routing_summary(phase10),
         "search_ablation": _search_ablation_summary(phase11),
         "live_llm": _live_llm_summary(phase12),
+        "semantic_novelty": _semantic_novelty_summary(phase13),
         "pareto_frontier": _pareto_frontier_summary(phase15),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
@@ -127,13 +131,16 @@ def build_final_report() -> Dict[str, object]:
             "rather than emitting full routes.",
             "Subprocess memory limits are applied only on platforms that expose "
             "compatible resource limits.",
+            "Semantic novelty is probe-based and detects behavior equivalence on "
+            "fixed probe states; it does not prove human-level semantic "
+            "understanding.",
         ),
         "recommended_next_steps": (
             {
-                "step": "semantic_novelty",
+                "step": "failure_taxonomy_v2",
                 "reason": (
-                    "Optionally add behavioral fingerprints to distinguish "
-                    "code novelty from behavior novelty."
+                    "Optionally expand failure cards with trigger conditions, "
+                    "validator sources, score impact, and repair strategies."
                 ),
             },
         ),
@@ -149,6 +156,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     routing_external = report["routing_external"]
     ablation = report["search_ablation"]
     live_llm = report["live_llm"]
+    semantic = report["semantic_novelty"]
     frontier = report["pareto_frontier"]
     evidence = report["evidence"]
 
@@ -273,6 +281,24 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 f"`{live_llm['live_provider_configured']}`."
             ),
             f"Claim boundary: {live_llm['claim_boundary']}.",
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## Program Semantics And Novelty",
+            "",
+            semantic["summary"],
+            "",
+            f"Benchmark: `{semantic['benchmark']}`.",
+            f"Candidates fingerprinted: `{semantic['candidate_count']}`.",
+            f"Behavior probes: `{semantic['probe_count']}`.",
+            f"Behavior clusters: `{semantic['behavior_cluster_count']}`.",
+            (
+                "Equivalent-program members detected: "
+                f"`{semantic['equivalent_program_count']}`."
+            ),
+            f"Claim boundary: {semantic['claim_boundary']}.",
             "",
         ]
     )
@@ -505,6 +531,29 @@ def _live_llm_summary(phase12: Mapping[str, object]) -> Mapping[str, object]:
             "checked by static validation and sandboxed scoring. The framing is "
             "that LLM is one mutation operator inside a constrained "
             "program-search system."
+        ),
+    }
+
+
+def _semantic_novelty_summary(phase13: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmark": phase13["benchmark"],
+        "candidate_count": phase13["candidate_count"],
+        "probe_count": phase13["probe_count"],
+        "probe_schema": phase13["probe_schema"],
+        "novelty_dimensions": phase13["novelty_dimensions"],
+        "novelty_rows": phase13["novelty_rows"],
+        "behavior_fingerprints": phase13["behavior_fingerprints"],
+        "duplicate_behavior_clusters": phase13["duplicate_behavior_clusters"],
+        "behavior_cluster_count": phase13["behavior_cluster_count"],
+        "equivalent_program_count": phase13["equivalent_program_count"],
+        "claim_boundary": phase13["claim_boundary"],
+        "summary": (
+            "Phase 13 adds probe-based behavior fingerprints for `score_bin` "
+            "programs, then separates exact code novelty from behavior, "
+            "feature, performance, and complexity evidence. It flags programs "
+            "that look different in code but rank candidate bins identically "
+            "on fixed probes."
         ),
     }
 

@@ -74,6 +74,17 @@ Best validation score: `5.8`.
 Live provider configured by default run: `False`.
 Claim boundary: LLM is one mutation operator inside a constrained program-search system; live LLM superiority is not claimed.
 
+## Program Semantics And Novelty
+
+Phase 13 adds probe-based behavior fingerprints for `score_bin` programs, then separates exact code novelty from behavior, feature, performance, and complexity evidence. It flags programs that look different in code but rank candidate bins identically on fixed probes.
+
+Benchmark: `bin_packing_semantic_novelty`.
+Candidates fingerprinted: `24`.
+Behavior probes: `5`.
+Behavior clusters: `7`.
+Equivalent-program members detected: `21`.
+Claim boundary: semantic novelty reports probe-based behavior evidence and equivalence clusters; it does not prove human-level semantic understanding or universal performance improvement.
+
 ## Pareto Frontier Report
 
 Phase 15 reports nondominated quality-runtime-complexity-failure-generalization trade-offs per benchmark, with driver-likeness included for Amazon-style routing where that operational metric is available.
@@ -103,7 +114,8 @@ Amazon trade-off callouts: 4.
 - Pareto frontier runtime is a deterministic local proxy for frontier comparison, not a hardware-independent benchmark.
 - The current routing generated-program interface ranks next stops rather than emitting full routes.
 - Subprocess memory limits are applied only on platforms that expose compatible resource limits.
+- Semantic novelty is probe-based and detects behavior equivalence on fixed probe states; it does not prove human-level semantic understanding.
 
 ## Recommended Next Steps
 
-- `semantic_novelty`: Optionally add behavioral fingerprints to distinguish code novelty from behavior novelty.
+- `failure_taxonomy_v2`: Optionally expand failure cards with trigger conditions, validator sources, score impact, and repair strategies.

@@ -34,6 +34,7 @@ seed heuristic library
 | Amazon-Style Routing | deterministic Amazon-shaped route fixtures | phase6-seed-000-travel_fast | 10.833333333333332 | travel-time and driver-likeness frontier trade-off |
 | Search Ablation | fixed local candidate budget | crossover_only-000 | 7.1 | operator comparison without live LLM superiority claim |
 | LLM Live Mutation v1 | hash-only candidate audit with deterministic fallback | deterministic_fallback | 5.8 | LLM as one sandboxed mutation operator, not a solver |
+| Program Semantics | behavior fingerprints and duplicate behavior clusters | 7 behavior clusters | 21 | semantic novelty is probe-based, not human-level meaning |
 | Pareto Frontier | quality-runtime-complexity-generalization rows | 8 frontier rows | 17 | selected trade-offs, not universal dominance |
 
 ## Safety Boundary
@@ -49,6 +50,7 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 ## Limitations
 
 - Live Gemini mutation is controlled and environment-gated; default runs use deterministic fallback providers.
+- Semantic novelty is based on fixed probe behavior fingerprints and does not prove human-level semantic understanding.
 - External bin packing fixtures are small and committed only as parser-backed benchmark-style examples.
 - External routing fixtures are small TSPLIB-style examples, not large TSPLIB benchmark corpora.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or public Amazon route data.
@@ -56,4 +58,4 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 
 ## Recommended Next Phase
 
-Optional Phase 13: Program Semantics and Novelty
+Optional Phase 14: Failure Taxonomy v2

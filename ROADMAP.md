@@ -52,6 +52,9 @@ Completed:
   deterministic fallback, repair provider, prompt versioning, hash-only
   response audit, token / latency / cost tracking, sandboxed evaluation, report
   tables, and CLI support.
+- Phase 13: Probe-based behavior fingerprints, semantic novelty scoring,
+  feature usage summaries, complexity decomposition, equivalence detection,
+  novelty tables, behavior fingerprint JSON, and duplicate behavior clusters.
 - Phase 15: Pareto frontier reporting across objective quality, runtime,
   program complexity, failure rate, generalization gap, and Amazon-style
   driver-likeness / operational realism.
@@ -71,11 +74,13 @@ Current phase:
 - Phase 11 search mechanism ablation is complete.
 - Phase 12 live LLM mutation v1 is complete as a controlled, environment-gated
   experiment module with deterministic fallback.
+- Phase 13 program semantics and novelty is complete as probe-based behavioral
+  fingerprint evidence for bin-packing `score_bin` programs.
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
 - The job-search evidence track is complete; the next optional implementation
-  phase is Phase 13: Program Semantics and Novelty.
+  phase is Phase 14: Failure Taxonomy v2.
 
 Deferred:
 
@@ -89,7 +94,7 @@ Next autonomous action:
 
 ```text
 The required job-search packaging track is complete. If continuing, execute
-optional Phase 13 only: add program semantics and behavioral novelty evidence.
+optional Phase 14 only: add failure taxonomy v2 cards and repair evidence.
 ```
 
 ## Project Positioning
@@ -781,24 +786,24 @@ Goal: distinguish code novelty from behavioral novelty.
 
 Required components:
 
-- [ ] Behavioral fingerprinting on probe instances.
-- [ ] Semantic novelty score.
-- [ ] Feature usage summary.
-- [ ] Program complexity decomposition.
-- [ ] Equivalence detection on probe instances.
+- [x] Behavioral fingerprinting on probe instances.
+- [x] Semantic novelty score.
+- [x] Feature usage summary.
+- [x] Program complexity decomposition.
+- [x] Equivalence detection on probe instances.
 
 Novelty dimensions:
 
-- [ ] Code novelty.
-- [ ] Behavior novelty.
-- [ ] Feature novelty.
-- [ ] Performance novelty.
+- [x] Code novelty.
+- [x] Behavior novelty.
+- [x] Feature novelty.
+- [x] Performance novelty.
 
 Required outputs:
 
-- [ ] `reports/tables/novelty_table.csv`.
-- [ ] `reports/plots/behavior_fingerprint.json`.
-- [ ] `reports/tables/duplicate_behavior_clusters.csv`.
+- [x] `reports/tables/novelty_table.csv`.
+- [x] `reports/plots/behavior_fingerprint.json`.
+- [x] `reports/tables/duplicate_behavior_clusters.csv`.
 
 ## Phase 14: Failure Taxonomy v2
 
@@ -1024,6 +1029,7 @@ Completed foundation:
 10. External routing benchmark evidence.
 11. Search mechanism ablation.
 12. Live LLM mutation v1.
+13. Program semantics and novelty.
 15. Pareto frontier report.
 18. Research-style technical report.
 19. Resume / portfolio packaging.
@@ -1032,14 +1038,12 @@ Completed foundation:
 Next recommended order:
 
 ```text
-13. Program semantics and novelty.
 14. Failure taxonomy v2.
 ```
 
-Phase 10B, Phase 10C, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
-extensions unless the target audience requires deeper routing evidence, live LLM
-experiments, semantic novelty, failure repair, reproduction profiles, or scale
-infrastructure.
+Phase 10B, Phase 10C, Phase 14, Phase 16, and Phase 17 remain optional
+extensions unless the target audience requires deeper routing evidence, failure
+repair, reproduction profiles, or scale infrastructure.
 
 MVP cut line:
 

@@ -64,6 +64,12 @@ Phase 12 treats live Gemini as one mutation operator inside the constrained sear
 
 Evidence references: `llm_operator_comparison.csv`, `llm_candidate_audit.csv`.
 
+## Program Semantics And Novelty
+
+Phase 13 adds probe-based behavior fingerprints for `score_bin` candidates, separates exact code novelty from behavior, feature, and performance novelty, and reports duplicate behavior clusters where different programs rank candidate actions identically.
+
+Evidence references: `novelty_table.csv`, `behavior_fingerprint.json`, `duplicate_behavior_clusters.csv`.
+
 ## Generalization
 
 Generalization evidence combines held-out benchmark slices, external bin-packing transfer gaps, and Pareto frontier rows that expose quality, runtime, complexity, failure, and generalization trade-offs.
@@ -99,4 +105,4 @@ Evidence references: `final_report.md`, `technical_report.md`.
 
 ## Next Phase
 
-Phase 13: Program Semantics and Novelty.
+Phase 14: Failure Taxonomy v2.

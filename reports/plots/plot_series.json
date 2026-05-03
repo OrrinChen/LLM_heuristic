@@ -28,6 +28,1586 @@
     "x": "generation",
     "y": "best_score"
   },
+  "behavior_fingerprint": {
+    "ascii": "seed-017-load_balancer c71fc826: ################################ 0.541709\nseed-021-load_balancer 4d54d594: ################################ 0.541709\nseed-013-load_balancer cb2d27a1: ################################ 0.541688\nseed-002-prefer_used_bins 8de784c9: ####################### 0.395833\nseed-006-prefer_used_bins 8de784c9: ####################### 0.395833\nseed-003-unsafe_probe fe1caa38: ###################### 0.375\nseed-007-unsafe_probe fe1caa38: ###################### 0.375\nseed-011-unsafe_probe fe1caa38: ###################### 0.375",
+    "duplicate_behavior_clusters": [
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "cluster_size": 9,
+        "explanation": "Programs in this cluster produced identical ranking vectors on the fixed bin-packing behavior probes.",
+        "program_ids": [
+          "seed-000-tight_fit",
+          "seed-001-load_balancer",
+          "seed-004-tight_fit",
+          "seed-005-load_balancer",
+          "seed-008-tight_fit",
+          "seed-009-load_balancer",
+          "seed-012-tight_fit",
+          "seed-016-tight_fit",
+          "seed-020-tight_fit"
+        ],
+        "representative_program_id": "seed-000-tight_fit",
+        "shared_ranking": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "cluster_size": 6,
+        "explanation": "Programs in this cluster produced identical ranking vectors on the fixed bin-packing behavior probes.",
+        "program_ids": [
+          "seed-003-unsafe_probe",
+          "seed-007-unsafe_probe",
+          "seed-011-unsafe_probe",
+          "seed-015-unsafe_probe",
+          "seed-019-unsafe_probe",
+          "seed-023-unsafe_probe"
+        ],
+        "representative_program_id": "seed-003-unsafe_probe",
+        "shared_ranking": []
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "cluster_size": 4,
+        "explanation": "Programs in this cluster produced identical ranking vectors on the fixed bin-packing behavior probes.",
+        "program_ids": [
+          "seed-010-prefer_used_bins",
+          "seed-014-prefer_used_bins",
+          "seed-018-prefer_used_bins",
+          "seed-022-prefer_used_bins"
+        ],
+        "representative_program_id": "seed-010-prefer_used_bins",
+        "shared_ranking": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "8de784c91bc5bdb7af46c6b0f59ca1263c97f8a7048fbcd9e871f49b054ca8ee",
+        "cluster_size": 2,
+        "explanation": "Programs in this cluster produced identical ranking vectors on the fixed bin-packing behavior probes.",
+        "program_ids": [
+          "seed-002-prefer_used_bins",
+          "seed-006-prefer_used_bins"
+        ],
+        "representative_program_id": "seed-002-prefer_used_bins",
+        "shared_ranking": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ]
+      }
+    ],
+    "points": [
+      {
+        "behavior_hash": "c71fc82649c28c901a5bbcdebdfcea298ca9b7e0c83f90c55f6fc666f4244539",
+        "behavior_novelty": 1.0,
+        "feature_novelty": 0.166667,
+        "label": "seed-017-load_balancer c71fc826",
+        "program_id": "seed-017-load_balancer",
+        "semantic_novelty_score": 0.541709
+      },
+      {
+        "behavior_hash": "4d54d594c385161c76817c35aba01bec860c79d627dd11da99748928cbe7a07f",
+        "behavior_novelty": 1.0,
+        "feature_novelty": 0.166667,
+        "label": "seed-021-load_balancer 4d54d594",
+        "program_id": "seed-021-load_balancer",
+        "semantic_novelty_score": 0.541709
+      },
+      {
+        "behavior_hash": "cb2d27a188a371ec41d4f840e5fe5d16526f9bd8483306cd9710ee51626a48b2",
+        "behavior_novelty": 1.0,
+        "feature_novelty": 0.166667,
+        "label": "seed-013-load_balancer cb2d27a1",
+        "program_id": "seed-013-load_balancer",
+        "semantic_novelty_score": 0.541688
+      },
+      {
+        "behavior_hash": "8de784c91bc5bdb7af46c6b0f59ca1263c97f8a7048fbcd9e871f49b054ca8ee",
+        "behavior_novelty": 0.5,
+        "feature_novelty": 0.083333,
+        "label": "seed-002-prefer_used_bins 8de784c9",
+        "program_id": "seed-002-prefer_used_bins",
+        "semantic_novelty_score": 0.395833
+      },
+      {
+        "behavior_hash": "8de784c91bc5bdb7af46c6b0f59ca1263c97f8a7048fbcd9e871f49b054ca8ee",
+        "behavior_novelty": 0.5,
+        "feature_novelty": 0.083333,
+        "label": "seed-006-prefer_used_bins 8de784c9",
+        "program_id": "seed-006-prefer_used_bins",
+        "semantic_novelty_score": 0.395833
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-003-unsafe_probe fe1caa38",
+        "program_id": "seed-003-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-007-unsafe_probe fe1caa38",
+        "program_id": "seed-007-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-011-unsafe_probe fe1caa38",
+        "program_id": "seed-011-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-015-unsafe_probe fe1caa38",
+        "program_id": "seed-015-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-019-unsafe_probe fe1caa38",
+        "program_id": "seed-019-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "behavior_novelty": 0.166667,
+        "feature_novelty": 0.166667,
+        "label": "seed-023-unsafe_probe fe1caa38",
+        "program_id": "seed-023-unsafe_probe",
+        "semantic_novelty_score": 0.375
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "behavior_novelty": 0.25,
+        "feature_novelty": 0.083333,
+        "label": "seed-010-prefer_used_bins 9c760c18",
+        "program_id": "seed-010-prefer_used_bins",
+        "semantic_novelty_score": 0.333333
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "behavior_novelty": 0.25,
+        "feature_novelty": 0.083333,
+        "label": "seed-014-prefer_used_bins 9c760c18",
+        "program_id": "seed-014-prefer_used_bins",
+        "semantic_novelty_score": 0.333333
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "behavior_novelty": 0.25,
+        "feature_novelty": 0.083333,
+        "label": "seed-018-prefer_used_bins 9c760c18",
+        "program_id": "seed-018-prefer_used_bins",
+        "semantic_novelty_score": 0.333333
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "behavior_novelty": 0.25,
+        "feature_novelty": 0.083333,
+        "label": "seed-022-prefer_used_bins 9c760c18",
+        "program_id": "seed-022-prefer_used_bins",
+        "semantic_novelty_score": 0.333333
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.166667,
+        "label": "seed-001-load_balancer c77709f6",
+        "program_id": "seed-001-load_balancer",
+        "semantic_novelty_score": 0.319444
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.166667,
+        "label": "seed-005-load_balancer c77709f6",
+        "program_id": "seed-005-load_balancer",
+        "semantic_novelty_score": 0.319444
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.166667,
+        "label": "seed-009-load_balancer c77709f6",
+        "program_id": "seed-009-load_balancer",
+        "semantic_novelty_score": 0.319444
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-000-tight_fit c77709f6",
+        "program_id": "seed-000-tight_fit",
+        "semantic_novelty_score": 0.298611
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-004-tight_fit c77709f6",
+        "program_id": "seed-004-tight_fit",
+        "semantic_novelty_score": 0.298611
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-008-tight_fit c77709f6",
+        "program_id": "seed-008-tight_fit",
+        "semantic_novelty_score": 0.298611
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-012-tight_fit c77709f6",
+        "program_id": "seed-012-tight_fit",
+        "semantic_novelty_score": 0.298611
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-016-tight_fit c77709f6",
+        "program_id": "seed-016-tight_fit",
+        "semantic_novelty_score": 0.298611
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "behavior_novelty": 0.111111,
+        "feature_novelty": 0.083333,
+        "label": "seed-020-tight_fit c77709f6",
+        "program_id": "seed-020-tight_fit",
+        "semantic_novelty_score": 0.298611
+      }
+    ],
+    "probe_schema": [
+      {
+        "bin_options": [
+          {
+            "bin_index": 0.0,
+            "capacity": 1.0,
+            "current_load": 0.69,
+            "items_in_bin": 2.0,
+            "remaining_capacity": 0.31
+          },
+          {
+            "bin_index": 1.0,
+            "capacity": 1.0,
+            "current_load": 0.53,
+            "items_in_bin": 1.0,
+            "remaining_capacity": 0.47
+          },
+          {
+            "bin_index": 2.0,
+            "capacity": 1.0,
+            "current_load": 0.23,
+            "items_in_bin": 4.0,
+            "remaining_capacity": 0.77
+          }
+        ],
+        "item_size": 0.24,
+        "probe_id": "mixed-tight-fit"
+      },
+      {
+        "bin_options": [
+          {
+            "bin_index": 0.0,
+            "capacity": 1.0,
+            "current_load": 0.42,
+            "items_in_bin": 1.0,
+            "remaining_capacity": 0.58
+          },
+          {
+            "bin_index": 1.0,
+            "capacity": 1.0,
+            "current_load": 0.28,
+            "items_in_bin": 3.0,
+            "remaining_capacity": 0.72
+          },
+          {
+            "bin_index": 2.0,
+            "capacity": 1.0,
+            "current_load": 0.51,
+            "items_in_bin": 2.0,
+            "remaining_capacity": 0.49
+          }
+        ],
+        "item_size": 0.52,
+        "probe_id": "large-placement"
+      },
+      {
+        "bin_options": [
+          {
+            "bin_index": 0.0,
+            "capacity": 1.0,
+            "current_load": 0.58,
+            "items_in_bin": 8.0,
+            "remaining_capacity": 0.42
+          },
+          {
+            "bin_index": 1.0,
+            "capacity": 1.0,
+            "current_load": 0.59,
+            "items_in_bin": 1.0,
+            "remaining_capacity": 0.41
+          },
+          {
+            "bin_index": 2.0,
+            "capacity": 1.0,
+            "current_load": 0.65,
+            "items_in_bin": 3.0,
+            "remaining_capacity": 0.35
+          }
+        ],
+        "item_size": 0.18,
+        "probe_id": "many-used-bins"
+      },
+      {
+        "bin_options": [
+          {
+            "bin_index": 0.0,
+            "capacity": 1.0,
+            "current_load": 0.67,
+            "items_in_bin": 4.0,
+            "remaining_capacity": 0.33
+          },
+          {
+            "bin_index": 1.0,
+            "capacity": 1.0,
+            "current_load": 0.64,
+            "items_in_bin": 2.0,
+            "remaining_capacity": 0.36
+          },
+          {
+            "bin_index": 2.0,
+            "capacity": 1.0,
+            "current_load": 0.39,
+            "items_in_bin": 1.0,
+            "remaining_capacity": 0.61
+          }
+        ],
+        "item_size": 0.34,
+        "probe_id": "near-infeasible"
+      },
+      {
+        "bin_options": [
+          {
+            "bin_index": 0.0,
+            "capacity": 1.0,
+            "current_load": 0.48,
+            "items_in_bin": 2.0,
+            "remaining_capacity": 0.52
+          },
+          {
+            "bin_index": 1.0,
+            "capacity": 1.0,
+            "current_load": 0.62,
+            "items_in_bin": 4.0,
+            "remaining_capacity": 0.38
+          },
+          {
+            "bin_index": 2.0,
+            "capacity": 1.0,
+            "current_load": 0.26,
+            "items_in_bin": 1.0,
+            "remaining_capacity": 0.74
+          }
+        ],
+        "item_size": 0.27,
+        "probe_id": "balanced-residual"
+      }
+    ],
+    "program_fingerprints": [
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-000-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.07,
+            0.23,
+            0.53
+          ],
+          [
+            0.06,
+            0.2,
+            1000000.0
+          ],
+          [
+            0.24,
+            0.23,
+            0.17
+          ],
+          [
+            1000000.0,
+            0.02,
+            0.27
+          ],
+          [
+            0.25,
+            0.11,
+            0.47
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-001-load_balancer",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.06,
+            0.22,
+            0.52
+          ],
+          [
+            0.05,
+            0.19,
+            1000000.0
+          ],
+          [
+            0.23,
+            0.22,
+            0.16
+          ],
+          [
+            1000000.0,
+            0.01,
+            0.26
+          ],
+          [
+            0.24,
+            0.1,
+            0.46
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "8de784c91bc5bdb7af46c6b0f59ca1263c97f8a7048fbcd9e871f49b054ca8ee",
+        "failure_reason": null,
+        "program_id": "seed-002-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.062,
+            0.226,
+            0.514
+          ],
+          [
+            0.056,
+            0.188,
+            1000000.0
+          ],
+          [
+            0.208,
+            0.226,
+            0.158
+          ],
+          [
+            1000000.0,
+            0.012,
+            0.266
+          ],
+          [
+            0.242,
+            0.094,
+            0.466
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-003-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-004-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.078,
+            0.234,
+            0.546
+          ],
+          [
+            0.064,
+            0.212,
+            1000000.0
+          ],
+          [
+            0.272,
+            0.234,
+            0.182
+          ],
+          [
+            1000000.0,
+            0.028,
+            0.274
+          ],
+          [
+            0.258,
+            0.126,
+            0.474
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-005-load_balancer",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.02,
+            0.18,
+            0.48
+          ],
+          [
+            0.01,
+            0.15,
+            1000000.0
+          ],
+          [
+            0.19,
+            0.18,
+            0.12
+          ],
+          [
+            1000000.0,
+            0.03,
+            0.22
+          ],
+          [
+            0.2,
+            0.06,
+            0.42
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "8de784c91bc5bdb7af46c6b0f59ca1263c97f8a7048fbcd9e871f49b054ca8ee",
+        "failure_reason": null,
+        "program_id": "seed-006-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            0,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.046,
+            0.218,
+            0.482
+          ],
+          [
+            0.048,
+            0.164,
+            1000000.0
+          ],
+          [
+            0.144,
+            0.218,
+            0.134
+          ],
+          [
+            1000000.0,
+            -0.004,
+            0.258
+          ],
+          [
+            0.226,
+            0.062,
+            0.458
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-007-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-008-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.086,
+            0.238,
+            0.562
+          ],
+          [
+            0.068,
+            0.224,
+            1000000.0
+          ],
+          [
+            0.304,
+            0.238,
+            0.194
+          ],
+          [
+            1000000.0,
+            0.036,
+            0.278
+          ],
+          [
+            0.266,
+            0.142,
+            0.478
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-009-load_balancer",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.02,
+            0.14,
+            0.44
+          ],
+          [
+            0.03,
+            0.11,
+            1000000.0
+          ],
+          [
+            0.15,
+            0.14,
+            0.08
+          ],
+          [
+            1000000.0,
+            0.07,
+            0.18
+          ],
+          [
+            0.16,
+            0.02,
+            0.38
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "failure_reason": null,
+        "program_id": "seed-010-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.03,
+            0.21,
+            0.45
+          ],
+          [
+            0.04,
+            0.14,
+            1000000.0
+          ],
+          [
+            0.08,
+            0.21,
+            0.11
+          ],
+          [
+            1000000.0,
+            -0.02,
+            0.25
+          ],
+          [
+            0.21,
+            0.03,
+            0.45
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-011-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-012-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.094,
+            0.242,
+            0.578
+          ],
+          [
+            0.072,
+            0.236,
+            1000000.0
+          ],
+          [
+            0.336,
+            0.242,
+            0.206
+          ],
+          [
+            1000000.0,
+            0.044,
+            0.282
+          ],
+          [
+            0.274,
+            0.158,
+            0.482
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "cb2d27a188a371ec41d4f840e5fe5d16526f9bd8483306cd9710ee51626a48b2",
+        "failure_reason": null,
+        "program_id": "seed-013-load_balancer",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.06,
+            0.1,
+            0.4
+          ],
+          [
+            0.07,
+            0.07,
+            1000000.0
+          ],
+          [
+            0.11,
+            0.1,
+            0.04
+          ],
+          [
+            1000000.0,
+            0.11,
+            0.14
+          ],
+          [
+            0.12,
+            0.02,
+            0.34
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "failure_reason": null,
+        "program_id": "seed-014-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.014,
+            0.202,
+            0.418
+          ],
+          [
+            0.032,
+            0.116,
+            1000000.0
+          ],
+          [
+            0.016,
+            0.202,
+            0.086
+          ],
+          [
+            1000000.0,
+            -0.036,
+            0.242
+          ],
+          [
+            0.194,
+            -0.002,
+            0.442
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-015-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-016-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.102,
+            0.246,
+            0.594
+          ],
+          [
+            0.076,
+            0.248,
+            1000000.0
+          ],
+          [
+            0.368,
+            0.246,
+            0.218
+          ],
+          [
+            1000000.0,
+            0.052,
+            0.286
+          ],
+          [
+            0.282,
+            0.174,
+            0.486
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "c71fc82649c28c901a5bbcdebdfcea298ca9b7e0c83f90c55f6fc666f4244539",
+        "failure_reason": null,
+        "program_id": "seed-017-load_balancer",
+        "rankings": [
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.1,
+            0.06,
+            0.36
+          ],
+          [
+            0.11,
+            0.03,
+            1000000.0
+          ],
+          [
+            0.07,
+            0.06,
+            0.0
+          ],
+          [
+            1000000.0,
+            0.15,
+            0.1
+          ],
+          [
+            0.08,
+            0.06,
+            0.3
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "failure_reason": null,
+        "program_id": "seed-018-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            -0.002,
+            0.194,
+            0.386
+          ],
+          [
+            0.024,
+            0.092,
+            1000000.0
+          ],
+          [
+            -0.048,
+            0.194,
+            0.062
+          ],
+          [
+            1000000.0,
+            -0.052,
+            0.234
+          ],
+          [
+            0.178,
+            -0.034,
+            0.434
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-019-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      },
+      {
+        "behavior_hash": "c77709f61a253fb57393ac2c6513398248bc7b11146695af1ac68417d43deae0",
+        "failure_reason": null,
+        "program_id": "seed-020-tight_fit",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.11,
+            0.25,
+            0.61
+          ],
+          [
+            0.08,
+            0.26,
+            1000000.0
+          ],
+          [
+            0.4,
+            0.25,
+            0.23
+          ],
+          [
+            1000000.0,
+            0.06,
+            0.29
+          ],
+          [
+            0.29,
+            0.19,
+            0.49
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "4d54d594c385161c76817c35aba01bec860c79d627dd11da99748928cbe7a07f",
+        "failure_reason": null,
+        "program_id": "seed-021-load_balancer",
+        "rankings": [
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            1,
+            0,
+            2
+          ],
+          [
+            2,
+            1,
+            0
+          ],
+          [
+            0,
+            1,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            0.14,
+            0.02,
+            0.32
+          ],
+          [
+            0.15,
+            0.01,
+            1000000.0
+          ],
+          [
+            0.03,
+            0.02,
+            0.04
+          ],
+          [
+            1000000.0,
+            0.19,
+            0.06
+          ],
+          [
+            0.04,
+            0.1,
+            0.26
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "9c760c1828b4e10a57a76c9343fd5f12550dab620f8bb23b2ddaebedbc0805a0",
+        "failure_reason": null,
+        "program_id": "seed-022-prefer_used_bins",
+        "rankings": [
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            1,
+            2
+          ],
+          [
+            0,
+            2,
+            1
+          ],
+          [
+            1,
+            2,
+            0
+          ],
+          [
+            1,
+            0,
+            2
+          ]
+        ],
+        "score_vectors": [
+          [
+            -0.018,
+            0.186,
+            0.354
+          ],
+          [
+            0.016,
+            0.068,
+            1000000.0
+          ],
+          [
+            -0.112,
+            0.186,
+            0.038
+          ],
+          [
+            1000000.0,
+            -0.068,
+            0.226
+          ],
+          [
+            0.162,
+            -0.066,
+            0.426
+          ]
+        ]
+      },
+      {
+        "behavior_hash": "fe1caa38078608f2de42b62c66d9c14570215d3cecc3a98b38ed39554fbeb102",
+        "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+        "program_id": "seed-023-unsafe_probe",
+        "rankings": [],
+        "score_vectors": []
+      }
+    ],
+    "title": "Behavior Fingerprint",
+    "x": "program_id",
+    "y": "semantic_novelty_score"
+  },
   "bin_packing_evolution_best_score": {
     "ascii": "generation=0 seed-001-load_balancer: ################################ 7.547333\ngeneration=1 seed-001-load_balancer: ################################ 7.547333\ngeneration=2 seed-001-load_balancer: ################################ 7.547333\ngeneration=3 seed-001-load_balancer: ################################ 7.547333",
     "points": [
@@ -699,6 +2279,7 @@
     "amazon_discovery_best_score",
     "robustness_generalization_gaps",
     "generation_curve_by_method",
+    "behavior_fingerprint",
     "frontier_plot_series",
     "failure_rate_by_generation"
   ],

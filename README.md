@@ -59,6 +59,7 @@ flowchart LR
 | Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
 | Search Ablation | Fixed local candidate budget | seed, mutation, crossover, LLM-proxy, repair operators | mechanism evidence without live LLM superiority claims |
 | LLM Live Mutation v1 | Hash-only candidate audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
+| Program Semantics | Probe-based behavior fingerprints | `novelty_table.csv` | behavior novelty evidence, not human-level semantic proof |
 | Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
 
 ## Safety Boundary
@@ -73,6 +74,8 @@ platform memory limits.
 
 - Live Gemini mutation is controlled and environment-gated; default runs use
   deterministic fallback providers.
+- Semantic novelty is based on fixed probe behavior fingerprints; it does not
+  prove human-level semantic understanding.
 - External bin packing fixtures are intentionally small and parser-backed.
 - External routing fixtures are intentionally small TSPLIB-style EUC_2D examples.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
@@ -134,6 +137,10 @@ Current status:
   token / latency / cost tracking, static-check and sandbox outcomes,
   `llm_operator_comparison.csv`, `llm_candidate_audit.csv`, and `live_llm` CLI
   support.
+- Phase 13 complete: probe-based behavior fingerprinting, semantic novelty
+  scoring, feature usage summaries, complexity decomposition, duplicate
+  behavior clusters, `novelty_table.csv`, `behavior_fingerprint.json`, and
+  `duplicate_behavior_clusters.csv`.
 - Phase 15 complete: Pareto frontier reporting across objective quality,
   runtime, program complexity, failure rate, generalization gap, and
   Amazon-style driver-likeness / operational realism.
@@ -144,8 +151,8 @@ Current status:
   architecture diagram, benchmark evidence table, safety boundary,
   limitations, resume bullets, and portfolio brief artifact.
 - Current phase: the job-search portfolio track, Phase 10A routing evidence,
-  and Phase 12 live LLM mutation v1 are complete; optional Phase 13 program
-  semantics and novelty is the next research extension.
+  Phase 12 live LLM mutation v1, and Phase 13 semantic novelty are complete;
+  optional Phase 14 failure taxonomy v2 is the next research extension.
 
 ## Setup
 
@@ -253,6 +260,12 @@ Live LLM mutation validation:
 python3 -m pytest tests/test_live_llm_phase12.py -v
 ```
 
+Semantic novelty validation:
+
+```bash
+python3 -m pytest tests/test_semantic_novelty_phase13.py -v
+```
+
 Pareto frontier validation:
 
 ```bash
@@ -281,6 +294,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_extern
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 32 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -733,6 +747,7 @@ print(report["recommended_next_steps"][0]["step"])
 print("External Benchmark Evidence" in markdown)
 print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
+print("Program Semantics And Novelty" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
@@ -749,7 +764,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-semantic_novelty
+failure_taxonomy_v2
+True
 True
 True
 True
@@ -777,14 +793,17 @@ print(len(tables["invalid_code_rate_by_method"]["rows"]))
 print(len(tables["best_score_by_budget"]["rows"]))
 print(len(tables["llm_operator_comparison"]["rows"]))
 print(len(tables["llm_candidate_audit"]["rows"]))
+print(len(tables["novelty_table"]["rows"]))
+print(len(tables["duplicate_behavior_clusters"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
+print(len(plots["behavior_fingerprint"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("semantic_novelty" in render_report_tables_markdown(tables))
+print("failure_taxonomy_v2" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -795,7 +814,7 @@ PY
 Expected output without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
 16
 5
 5
@@ -804,11 +823,14 @@ Expected output without a live key exported:
 8
 3
 8
+24
+4
 17
 9
-('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'frontier_plot_series', 'failure_rate_by_generation')
+('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'behavior_fingerprint', 'frontier_plot_series', 'failure_rate_by_generation')
 15
 32
+24
 17
 True
 True
@@ -867,8 +889,11 @@ reports/tables/external_generalization.csv
 reports/tables/routing_external_generalization.csv
 reports/tables/llm_operator_comparison.csv
 reports/tables/llm_candidate_audit.csv
+reports/tables/novelty_table.csv
+reports/tables/duplicate_behavior_clusters.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
+reports/plots/behavior_fingerprint.json
 reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
