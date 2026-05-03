@@ -64,6 +64,16 @@ Best validation score: `7.1`.
 Methods compared: `seed_only`, `random_mutation`, `deterministic_template_mutation`, `crossover_only`, `mutation_plus_crossover`, `llm_mutation`, `llm_repair`, `llm_mutation_plus_repair`.
 Claim boundary: ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed.
 
+## LLM Live Mutation v1
+
+Phase 12 turns Gemini/live LLM mutation into a controlled experiment path. Deterministic fallback and repair providers run by default; optional live Gemini runs are gated behind environment variables and every generated program is logged by hashes, then checked by static validation and sandboxed scoring. The framing is that LLM is one mutation operator inside a constrained program-search system.
+
+Benchmark: `live_llm_mutation`.
+Best method: `deterministic_fallback`.
+Best validation score: `5.8`.
+Live provider configured by default run: `False`.
+Claim boundary: LLM is one mutation operator inside a constrained program-search system; live LLM superiority is not claimed.
+
 ## Pareto Frontier Report
 
 Phase 15 reports nondominated quality-runtime-complexity-failure-generalization trade-offs per benchmark, with driver-likeness included for Amazon-style routing where that operational metric is available.
@@ -96,5 +106,4 @@ Amazon trade-off callouts: 4.
 
 ## Recommended Next Steps
 
-- `live_llm_mutation_v1`: Optionally convert Gemini mutation from smoke-tested provider support into a controlled live-operator experiment.
 - `semantic_novelty`: Optionally add behavioral fingerprints to distinguish code novelty from behavior novelty.

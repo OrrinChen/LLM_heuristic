@@ -29,6 +29,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "ablation_summary",
         "invalid_code_rate_by_method",
         "best_score_by_budget",
+        "llm_operator_comparison",
+        "llm_candidate_audit",
         "pareto_frontier",
         "failure_taxonomy",
         "recommended_next_steps",
@@ -41,6 +43,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["ablation_summary"]["rows"]) == 8
     assert len(tables["invalid_code_rate_by_method"]["rows"]) == 8
     assert len(tables["best_score_by_budget"]["rows"]) == 8
+    assert len(tables["llm_operator_comparison"]["rows"]) == 3
+    assert len(tables["llm_candidate_audit"]["rows"]) == 8
     assert len(tables["pareto_frontier"]["rows"]) >= 3
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert tables["benchmark_comparison"]["rows"][0] == {
@@ -62,8 +66,10 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## External Generalization" in markdown
     assert "## Routing External Generalization" in markdown
     assert "## Ablation Summary" in markdown
+    assert "## LLM Operator Comparison" in markdown
+    assert "## LLM Candidate Audit" in markdown
     assert "## Pareto Frontier" in markdown
-    assert "live_llm_mutation_v1" in markdown
+    assert "semantic_novelty" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:

@@ -119,6 +119,48 @@ def build_report_tables(
             ),
             "rows": _best_score_by_budget_rows(final),
         },
+        "llm_operator_comparison": {
+            "title": "LLM Operator Comparison",
+            "columns": (
+                "method",
+                "provider_status",
+                "model_name",
+                "evaluated_candidates",
+                "best_validation_score",
+                "invalid_code_rate",
+                "average_latency_seconds",
+                "total_tokens",
+                "estimated_cost_usd",
+                "live_llm_required",
+            ),
+            "rows": _llm_operator_rows(final),
+        },
+        "llm_candidate_audit": {
+            "title": "LLM Candidate Audit",
+            "columns": (
+                "candidate_id",
+                "method",
+                "model_name",
+                "prompt_version",
+                "temperature",
+                "parent_ids",
+                "raw_response_hash",
+                "cleaned_code_hash",
+                "static_check_result",
+                "sandbox_result",
+                "score",
+                "test_score",
+                "failure_reason",
+                "runtime_seconds",
+                "latency_seconds",
+                "input_tokens",
+                "output_tokens",
+                "total_tokens",
+                "estimated_cost_usd",
+                "repair_of_failure_reason",
+            ),
+            "rows": _llm_candidate_audit_rows(final),
+        },
         "pareto_frontier": {
             "title": "Pareto Frontier",
             "columns": (
@@ -378,6 +420,52 @@ def _best_score_by_budget_rows(final_report: Mapping[str, object]) -> TableRows:
             "best_program_id": row["best_program_id"],
         }
         for row in final_report["search_ablation"]["best_score_by_budget"]
+    ]
+
+
+def _llm_operator_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "method": row["method"],
+            "provider_status": row["provider_status"],
+            "model_name": row["model_name"],
+            "evaluated_candidates": row["evaluated_candidates"],
+            "best_validation_score": _format_number(row["best_validation_score"]),
+            "invalid_code_rate": _format_number(row["invalid_code_rate"]),
+            "average_latency_seconds": _format_number(row["average_latency_seconds"]),
+            "total_tokens": row["total_tokens"],
+            "estimated_cost_usd": _format_number(row["estimated_cost_usd"]),
+            "live_llm_required": row["live_llm_required"],
+        }
+        for row in final_report["live_llm"]["operator_comparison"]
+    ]
+
+
+def _llm_candidate_audit_rows(final_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "candidate_id": row["candidate_id"],
+            "method": row["method"],
+            "model_name": row["model_name"],
+            "prompt_version": row["prompt_version"],
+            "temperature": _format_number(row["temperature"]),
+            "parent_ids": ";".join(str(parent) for parent in row["parent_ids"]),
+            "raw_response_hash": row["raw_response_hash"],
+            "cleaned_code_hash": row["cleaned_code_hash"],
+            "static_check_result": row["static_check_result"],
+            "sandbox_result": row["sandbox_result"],
+            "score": _format_number(row["score"]),
+            "test_score": _format_number(row["test_score"]),
+            "failure_reason": row["failure_reason"] or "",
+            "runtime_seconds": _format_number(row["runtime_seconds"]),
+            "latency_seconds": _format_number(row["latency_seconds"]),
+            "input_tokens": row["input_tokens"],
+            "output_tokens": row["output_tokens"],
+            "total_tokens": row["total_tokens"],
+            "estimated_cost_usd": _format_number(row["estimated_cost_usd"]),
+            "repair_of_failure_reason": row["repair_of_failure_reason"],
+        }
+        for row in final_report["live_llm"]["candidate_audit"]
     ]
 
 

@@ -33,6 +33,7 @@ seed heuristic library
 | Simple Routing | held-out route sizes with local-search comparison | route-seed-003-slack_aware | 18.407699375000004 | score_next_stop heuristic plus 2-opt comparison |
 | Amazon-Style Routing | deterministic Amazon-shaped route fixtures | phase6-seed-000-travel_fast | 10.833333333333332 | travel-time and driver-likeness frontier trade-off |
 | Search Ablation | fixed local candidate budget | crossover_only-000 | 7.1 | operator comparison without live LLM superiority claim |
+| LLM Live Mutation v1 | hash-only candidate audit with deterministic fallback | deterministic_fallback | 5.8 | LLM as one sandboxed mutation operator, not a solver |
 | Pareto Frontier | quality-runtime-complexity-generalization rows | 8 frontier rows | 17 | selected trade-offs, not universal dominance |
 
 ## Safety Boundary
@@ -47,7 +48,7 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 
 ## Limitations
 
-- Live LLM mutation is optional and requires environment variables.
+- Live Gemini mutation is controlled and environment-gated; default runs use deterministic fallback providers.
 - External bin packing fixtures are small and committed only as parser-backed benchmark-style examples.
 - External routing fixtures are small TSPLIB-style examples, not large TSPLIB benchmark corpora.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or public Amazon route data.
@@ -55,4 +56,4 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 
 ## Recommended Next Phase
 
-Optional Phase 12: Live LLM Mutation v1
+Optional Phase 13: Program Semantics and Novelty

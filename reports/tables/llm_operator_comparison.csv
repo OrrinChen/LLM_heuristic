@@ -1,0 +1,4 @@
+method,provider_status,model_name,evaluated_candidates,best_validation_score,invalid_code_rate,average_latency_seconds,total_tokens,estimated_cost_usd,live_llm_required
+deterministic_fallback,configured,deterministic-fallback,4,5.800000,0.000000,0.000000,336,0.000000,False
+llm_repair,configured,deterministic-fallback,4,5.800000,0.000000,0.000000,248,0.000000,False
+live_gemini,not_configured,,0,,,0.000000,0,0,True

@@ -51,6 +51,7 @@ def build_phase19_package(
     benchmarks = final["killer_experiment"]["benchmarks"]
     external = final["external_benchmark"]
     ablation = final["search_ablation"]
+    live_llm = final["live_llm"]
     frontier = final["pareto_frontier"]
     evidence = final["evidence"]
 
@@ -98,6 +99,13 @@ def build_phase19_package(
             "claim": "operator comparison without live LLM superiority claim",
         },
         {
+            "benchmark": "LLM Live Mutation v1",
+            "evidence": "hash-only candidate audit with deterministic fallback",
+            "top_program": live_llm["best_method"],
+            "reported_metric": live_llm["best_validation_score"],
+            "claim": "LLM as one sandboxed mutation operator, not a solver",
+        },
+        {
             "benchmark": "Pareto Frontier",
             "evidence": "quality-runtime-complexity-generalization rows",
             "top_program": f"{frontier['frontier_count']} frontier rows",
@@ -120,7 +128,8 @@ def build_phase19_package(
             "subprocess sandbox execution with wall-clock timeout handling."
         ),
         "limitations": (
-            "Live LLM mutation is optional and requires environment variables.",
+            "Live Gemini mutation is controlled and environment-gated; default "
+            "runs use deterministic fallback providers.",
             "External bin packing fixtures are small and committed only as "
             "parser-backed benchmark-style examples.",
             "External routing fixtures are small TSPLIB-style examples, not "
@@ -144,7 +153,7 @@ def build_phase19_package(
             ],
             "pareto_frontier_rows": frontier["frontier_count"],
         },
-        "recommended_next_phase": "Optional Phase 12: Live LLM Mutation v1",
+        "recommended_next_phase": "Optional Phase 13: Program Semantics and Novelty",
     }
 
 

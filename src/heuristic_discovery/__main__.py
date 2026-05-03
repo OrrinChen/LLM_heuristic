@@ -13,6 +13,7 @@ from benchmarks.routing.external import (
     build_phase10_report,
     load_external_routing_instances,
 )
+from llm.live_experiment import LLMExperimentConfig, build_phase12_report
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from program_search.rerun_manifest import (
@@ -52,6 +53,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "bin_packing_external",
             "routing_external",
             "search_ablation",
+            "live_llm",
         ),
         default="bin_packing",
     )
@@ -68,6 +70,7 @@ def _build_parser() -> argparse.ArgumentParser:
         choices=("auto", "or_library", "bpplib", "tsplib"),
         default="auto",
     )
+    run.add_argument("--use-live-llm", action="store_true")
     run.add_argument("--output-dir", default=".")
 
     report = subcommands.add_parser("report", help="Export report artifacts.")
@@ -128,6 +131,14 @@ def _run(args: argparse.Namespace) -> int:
             item_count=args.item_count,
             random_seed=args.random_seed,
         )
+    elif args.benchmark == "live_llm":
+        report = build_phase12_report(
+            config=LLMExperimentConfig(
+                candidate_budget=args.candidate_count,
+                item_count=args.item_count,
+                use_env_live_provider=args.use_live_llm,
+            )
+        )
     else:
         report = build_phase3_report(
             config=EvolutionConfig(
@@ -157,6 +168,13 @@ def _run(args: argparse.Namespace) -> int:
         payload = {
             "benchmark": args.benchmark,
             "best_method": report["best_method"],
+            "path": str(output_path),
+        }
+    elif args.benchmark == "live_llm":
+        payload = {
+            "benchmark": args.benchmark,
+            "best_method": report["best_method"],
+            "live_provider_configured": report["live_provider_configured"],
             "path": str(output_path),
         }
     else:

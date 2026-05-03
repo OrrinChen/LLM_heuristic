@@ -48,6 +48,10 @@ Completed:
   deterministic template mutation, crossover, mutation+crossover,
   deterministic LLM-proxy mutation, deterministic LLM-proxy repair, and
   mutation+repair under one fixed local budget.
+- Phase 12: Controlled live LLM mutation experiment with provider metadata,
+  deterministic fallback, repair provider, prompt versioning, hash-only
+  response audit, token / latency / cost tracking, sandboxed evaluation, report
+  tables, and CLI support.
 - Phase 15: Pareto frontier reporting across objective quality, runtime,
   program complexity, failure rate, generalization gap, and Amazon-style
   driver-likeness / operational realism.
@@ -65,11 +69,13 @@ Current phase:
 - Phase 10 external routing benchmark evidence is complete for the TSPLIB-style
   TSP slice.
 - Phase 11 search mechanism ablation is complete.
+- Phase 12 live LLM mutation v1 is complete as a controlled, environment-gated
+  experiment module with deterministic fallback.
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
 - The job-search evidence track is complete; the next optional implementation
-  phase is Phase 12: LLM Live Mutation v1.
+  phase is Phase 13: Program Semantics and Novelty.
 
 Deferred:
 
@@ -77,13 +83,13 @@ Deferred:
 - Crossover beyond simple mutation.
 - Cloud execution.
 - Paid API usage.
-- Production live-LLM experiment runs beyond optional local smoke checks.
+- Production live-LLM experiment campaigns beyond controlled local smoke checks.
 
 Next autonomous action:
 
 ```text
 The required job-search packaging track is complete. If continuing, execute
-optional Phase 12 only: make live LLM mutation a controlled experiment module.
+optional Phase 13 only: add program semantics and behavioral novelty evidence.
 ```
 
 ## Project Positioning
@@ -733,14 +739,14 @@ deterministic local providers as the default.
 
 Required components:
 
-- [ ] Provider abstraction polish.
-- [ ] Gemini mutation provider.
-- [ ] LLM repair provider.
-- [ ] Prompt template versioning.
-- [ ] LLM response logging without secrets.
-- [ ] Cost / token / latency tracking.
-- [ ] Invalid-code-rate tracking.
-- [ ] Deterministic provider fallback.
+- [x] Provider abstraction polish.
+- [x] Gemini mutation provider.
+- [x] LLM repair provider.
+- [x] Prompt template versioning.
+- [x] LLM response logging without secrets.
+- [x] Cost / token / latency tracking.
+- [x] Invalid-code-rate tracking.
+- [x] Deterministic provider fallback.
 
 Each LLM candidate should record:
 
@@ -759,11 +765,11 @@ failure reason
 
 Acceptance criteria:
 
-- [ ] Tests pass without `GEMINI_API_KEY`.
-- [ ] Optional live smoke runs with `GEMINI_API_KEY`.
-- [ ] LLM output never bypasses sandboxing.
-- [ ] Reports can compare deterministic and live LLM search.
-- [ ] No API key or raw secret is committed.
+- [x] Tests pass without `GEMINI_API_KEY`.
+- [x] Optional live smoke can run with `GEMINI_API_KEY`.
+- [x] LLM output never bypasses sandboxing.
+- [x] Reports can compare deterministic and live LLM search.
+- [x] No API key or raw secret is committed.
 
 Core framing:
 
@@ -1017,6 +1023,7 @@ Completed foundation:
 9. External bin packing benchmark evidence.
 10. External routing benchmark evidence.
 11. Search mechanism ablation.
+12. Live LLM mutation v1.
 15. Pareto frontier report.
 18. Research-style technical report.
 19. Resume / portfolio packaging.
@@ -1025,11 +1032,11 @@ Completed foundation:
 Next recommended order:
 
 ```text
-12. Live LLM mutation v1.
 13. Program semantics and novelty.
+14. Failure taxonomy v2.
 ```
 
-Phase 10B, Phase 10C, Phase 12, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
+Phase 10B, Phase 10C, Phase 13, Phase 14, Phase 16, and Phase 17 remain optional
 extensions unless the target audience requires deeper routing evidence, live LLM
 experiments, semantic novelty, failure repair, reproduction profiles, or scale
 infrastructure.

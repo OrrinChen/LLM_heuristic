@@ -15,6 +15,7 @@ TECHNICAL_REPORT_SECTIONS = (
     "search_loop",
     "external_benchmark_evidence",
     "ablation",
+    "llm_as_operator",
     "generalization",
     "failure_analysis",
     "limitations",
@@ -43,6 +44,7 @@ def build_phase18_report(
     external = source["external_benchmark"]
     routing_external = source["routing_external"]
     ablation = source["search_ablation"]
+    live_llm = source["live_llm"]
     frontier = source["pareto_frontier"]
 
     sections = (
@@ -148,6 +150,19 @@ def build_phase18_report(
             ("ablation_summary.csv", "generation_curve_by_method.json"),
         ),
         _section(
+            "llm_as_operator",
+            "LLM As Operator",
+            (
+                "Phase 12 treats live Gemini as one mutation operator inside "
+                "the constrained search loop. Candidate audit rows record "
+                "model, prompt version, temperature, parent ids, response "
+                "hashes, static-check outcome, sandbox outcome, score, tokens, "
+                "latency, and cost proxy without storing raw responses or "
+                "secrets."
+            ),
+            ("llm_operator_comparison.csv", "llm_candidate_audit.csv"),
+        ),
+        _section(
             "generalization",
             "Generalization",
             (
@@ -178,10 +193,10 @@ def build_phase18_report(
             "Limitations",
             (
                 "The evidence package is deterministic and local by default. "
-                "Live LLM mutation remains optional, external fixtures are "
-                "intentionally small, CVRPLIB and time-window routing are "
-                "deferred, and runtime frontier values use a deterministic "
-                "proxy."
+                "Live Gemini mutation remains environment-gated, external "
+                "fixtures are intentionally small, CVRPLIB and time-window "
+                "routing are deferred, and runtime frontier values use a "
+                "deterministic proxy."
             ),
             ("README.md", "TASK_MEMORY.md", "ROADMAP.md"),
         ),
@@ -217,9 +232,10 @@ def build_phase18_report(
             ),
             "external_benchmark": external["benchmark"],
             "ablation_best_method": ablation["best_method"],
+            "live_llm_best_method": live_llm["best_method"],
             "pareto_frontier_count": frontier["frontier_count"],
         },
-        "recommended_next_phase": "Phase 19: Resume / Portfolio Packaging",
+        "recommended_next_phase": "Phase 13: Program Semantics and Novelty",
     }
 
 

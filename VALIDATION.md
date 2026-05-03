@@ -521,7 +521,7 @@ Markdown rendering states selected trade-offs without universal dominance claims
 external benchmark evidence is included without SOTA claims
 search mechanism ablation evidence is included under a fixed local budget
 Pareto frontier evidence is included without universal dominance claims
-recommended next steps prioritize live LLM mutation after Phase 10
+recommended next steps prioritize semantic novelty after Phase 12
 ```
 
 ## Final Report Smoke Validation
@@ -544,6 +544,7 @@ print(benchmarks["amazon_routing"]["top_program_id"])
 print(report["pareto_frontier"]["frontier_count"])
 print(report["recommended_next_steps"][0]["step"])
 print("External Benchmark Evidence" in markdown)
+print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
@@ -561,7 +562,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-live_llm_mutation_v1
+semantic_novelty
+True
 True
 True
 True
@@ -585,7 +587,7 @@ generalization gap, and operational realism axes are reported
 Pareto frontier rows are nondominated within each benchmark
 pareto_frontier.csv, frontier_plot_series.json, and frontier program files
 are exported
-final report includes Pareto frontier evidence and now advances to Phase 19
+final report includes Pareto frontier evidence without universal dominance claims
 ```
 
 ## Research-Style Technical Report Validation
@@ -656,8 +658,8 @@ Expected result:
 
 ```text
 19
-7
-Optional Phase 12: Live LLM Mutation v1
+8
+Optional Phase 13: Program Semantics and Novelty
 True
 True
 True
@@ -692,10 +694,10 @@ Expected result:
 
 ```text
 18
-12
+13
 3
 8
-Phase 19: Resume / Portfolio Packaging
+Phase 13: Program Semantics and Novelty
 True
 True
 True
@@ -779,6 +781,59 @@ llm_mutation
 ablation compares deterministic operators under a fixed local budget; live LLM behavior is not claimed
 ```
 
+## Live LLM Mutation Validation
+
+Run these once Phase 12 live LLM mutation v1 exists:
+
+```bash
+python3 -m pytest tests/test_live_llm_phase12.py -v
+```
+
+Expected result:
+
+```text
+deterministic fallback runs without GEMINI_API_KEY
+fake live provider rows record model, prompt, hashes, tokens, latency, and score
+repair provider rows record prompt version and original failure reason
+unsafe generated programs fail before sandbox execution
+final report, artifact export, and CLI expose live_llm evidence
+```
+
+## Phase 12 Smoke Validation
+
+Run this after Phase 12 modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from llm.live_experiment import LLMExperimentConfig, build_phase12_report
+
+report = build_phase12_report(
+    config=LLMExperimentConfig(candidate_budget=3, item_count=12)
+)
+print(report["phase"])
+print(report["benchmark"])
+print(report["live_provider_configured"])
+print(len(report["operator_comparison"]))
+print(len(report["candidate_audit"]))
+print(report["operator_comparison"][0]["method"])
+print(report["candidate_audit"][0]["prompt_version"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected result:
+
+```text
+12
+live_llm_mutation
+False
+3
+6
+deterministic_fallback
+score-bin-mutation-v1
+LLM is one mutation operator inside a constrained program-search system; live LLM superiority is not claimed
+```
+
 ## Report Tables, Plots, and Live-LLM Client Validation
 
 Run these after report artifact and optional live-LLM modules exist:
@@ -816,6 +871,8 @@ print(len(tables["routing_external_generalization"]["rows"]))
 print(len(tables["ablation_summary"]["rows"]))
 print(len(tables["invalid_code_rate_by_method"]["rows"]))
 print(len(tables["best_score_by_budget"]["rows"]))
+print(len(tables["llm_operator_comparison"]["rows"]))
+print(len(tables["llm_candidate_audit"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
 print(tuple(plots["plots"]))
@@ -823,7 +880,7 @@ print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("live_llm_mutation_v1" in render_report_tables_markdown(tables))
+print("semantic_novelty" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -834,12 +891,14 @@ PY
 Expected result without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
 16
 5
 5
 8
 8
+8
+3
 8
 17
 9
@@ -917,6 +976,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing --gene
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark bin_packing_external --output-dir /tmp/o2-cli-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external --output-dir /tmp/o2-cli-routing-external
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-cli-ablation
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-cli-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir /tmp/o2-cli-rerun --top-k 2
@@ -929,7 +989,8 @@ run prints generation_count and writes run_summary.json
 bin_packing_external run prints best_external_program_id and writes run_summary.json
 routing_external run prints best_external_program_id and writes run_summary.json
 search_ablation run prints best_method and writes run_summary.json
-report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/plots/plot_series.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
+live_llm run prints best_method and writes run_summary.json
+report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/tables/llm_operator_comparison.csv, reports/tables/llm_candidate_audit.csv, reports/plots/plot_series.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
 inspect prints candidate_id rows
 rerun-manifest prints code_hash_matches true rows
 ```

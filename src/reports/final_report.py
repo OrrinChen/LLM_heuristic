@@ -10,6 +10,7 @@ from benchmarks.bin_packing.evaluator import build_phase2_report
 from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
 from benchmarks.routing.external import build_phase10_report
+from llm.live_experiment import build_phase12_report
 from program_search.ablation import build_phase11_report
 from reports.failure_analysis import build_phase8_report
 from reports.pareto import build_phase15_report
@@ -23,6 +24,7 @@ FINAL_REPORT_SECTIONS = (
     "external_benchmark_evidence",
     "routing_external_benchmark_evidence",
     "search_mechanism_ablation",
+    "llm_live_mutation_v1",
     "pareto_frontier_report",
     "generalization_and_robustness",
     "failure_analysis",
@@ -60,6 +62,7 @@ def build_final_report() -> Dict[str, object]:
         item_count=20,
         random_seed=23,
     )
+    phase12 = build_phase12_report()
     phase15 = build_phase15_report()
 
     report: Dict[str, object] = {
@@ -101,6 +104,7 @@ def build_final_report() -> Dict[str, object]:
         "external_benchmark": _external_bin_packing_summary(phase9),
         "routing_external": _external_routing_summary(phase10),
         "search_ablation": _search_ablation_summary(phase11),
+        "live_llm": _live_llm_summary(phase12),
         "pareto_frontier": _pareto_frontier_summary(phase15),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
@@ -126,14 +130,6 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "live_llm_mutation_v1",
-                "reason": (
-                    "Optionally convert Gemini mutation from smoke-tested "
-                    "provider support into a controlled live-operator "
-                    "experiment."
-                ),
-            },
-            {
                 "step": "semantic_novelty",
                 "reason": (
                     "Optionally add behavioral fingerprints to distinguish "
@@ -152,6 +148,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     external = report["external_benchmark"]
     routing_external = report["routing_external"]
     ablation = report["search_ablation"]
+    live_llm = report["live_llm"]
     frontier = report["pareto_frontier"]
     evidence = report["evidence"]
 
@@ -259,6 +256,23 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 + "."
             ),
             f"Claim boundary: {ablation['claim_boundary']}.",
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## LLM Live Mutation v1",
+            "",
+            live_llm["summary"],
+            "",
+            f"Benchmark: `{live_llm['benchmark']}`.",
+            f"Best method: `{live_llm['best_method']}`.",
+            f"Best validation score: `{live_llm['best_validation_score']}`.",
+            (
+                "Live provider configured by default run: "
+                f"`{live_llm['live_provider_configured']}`."
+            ),
+            f"Claim boundary: {live_llm['claim_boundary']}.",
             "",
         ]
     )
@@ -469,6 +483,28 @@ def _search_ablation_summary(phase11: Mapping[str, object]) -> Mapping[str, obje
             "LLM-proxy, and repair operators under the same candidate budget, "
             "split, timeout, and random seed. This is a fixed local budget "
             "ablation, not evidence about live LLM behavior."
+        ),
+    }
+
+
+def _live_llm_summary(phase12: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmark": phase12["benchmark"],
+        "methods": phase12["methods"],
+        "operator_comparison": phase12["operator_comparison"],
+        "candidate_audit": phase12["candidate_audit"],
+        "best_method": phase12["best_method"],
+        "best_validation_score": phase12["best_validation_score"],
+        "live_provider_configured": phase12["live_provider_configured"],
+        "claim_boundary": phase12["claim_boundary"],
+        "summary": (
+            "Phase 12 turns Gemini/live LLM mutation into a controlled "
+            "experiment path. Deterministic fallback and repair providers run "
+            "by default; optional live Gemini runs are gated behind environment "
+            "variables and every generated program is logged by hashes, then "
+            "checked by static validation and sandboxed scoring. The framing is "
+            "that LLM is one mutation operator inside a constrained "
+            "program-search system."
         ),
     }
 

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class PromptBuilder:
     allowed_function: str = "score_candidate"
+    prompt_version: str = "score-candidate-mutation-v1"
 
     def build_mutation_prompt(
         self, *, parent_code: str, benchmark_feedback: str
@@ -14,6 +15,7 @@ class PromptBuilder:
         return "\n".join(
             [
                 "You are mutating one heuristic scoring function.",
+                f"Prompt version: {self.prompt_version}.",
                 "Return only Python code.",
                 f"The returned code must define exactly this function: {signature}",
                 "Do not define helper functions.",
