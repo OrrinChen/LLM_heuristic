@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `feat: add semantic novelty evidence`
-Current phase: Phase 13 program semantics and novelty complete as probe-based behavior evidence
-Main blocker: None for Phase 13; failure taxonomy v2, CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
-Next recommended action: optional Phase 14 failure taxonomy v2
+Latest commit: `feat: add failure taxonomy v2 evidence`
+Current phase: Phase 14 failure taxonomy v2 complete
+Main blocker: None for Phase 14; CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
+Next recommended action: optional Phase 16 reproducibility package v2
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -158,6 +158,26 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated final report, report tables, plot series, technical report,
   portfolio brief, README, RUNBOOK, ROADMAP, VALIDATION, and task memory so
   optional Phase 14 failure taxonomy v2 is now the next research extension.
+
+2026-05-04 Phase 14 completion:
+
+- Completed failure taxonomy v2 only; no CVRPLIB/time-window routing,
+  reproduction profile, cloud execution, or live LLM campaign was added.
+- Added deterministic failure cards covering invalid syntax, unsafe code,
+  timeout, over-complex code, overfit small instances, poor external transfer,
+  baseline domination, runtime too slow, behavior duplicates, LLM hallucinated
+  features, and objective gaming.
+- Each failure card records an example program, trigger condition,
+  validator/evaluator source, score impact, and possible repair strategy.
+- Added deterministic repair success rows for syntax, unsafe-code, timeout,
+  and LLM hallucinated-feature routes while keeping the claim boundary below
+  arbitrary automated repair.
+- Added report exports for `reports/failure_cards.md`,
+  `reports/tables/failure_taxonomy_v2.csv`, and
+  `reports/tables/repair_success_rate.csv`.
+- Updated final report, report tables, technical report, portfolio brief,
+  README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 16
+  reproducibility package v2 is now the next research extension.
 
 ## Completed Phases
 
@@ -1152,6 +1172,84 @@ Known limitations:
   infer latent mathematical intent.
 - Performance novelty is a deterministic local score-distance signal, not a
   claim of universal performance improvement.
+
+### Phase 14: Failure Taxonomy v2
+
+Commit: `feat: add failure taxonomy v2 evidence`
+
+What changed:
+
+- Added `src/reports/failure_taxonomy_v2.py` with deterministic failure cards
+  for invalid syntax, unsafe code, timeout, over-complex code, overfit small
+  instances, poor external transfer, baseline domination, runtime too slow,
+  behavior duplicate, LLM hallucinated feature, and objective gaming.
+- Each failure card includes an example program, trigger condition,
+  validator/evaluator source, score impact, and repair strategy.
+- Added repair success rows for deterministic syntax, unsafe-code, timeout,
+  and LLM hallucinated-feature repair routes.
+- Added generated artifacts:
+  `reports/failure_cards.md`,
+  `reports/tables/failure_taxonomy_v2.csv`, and
+  `reports/tables/repair_success_rate.csv`.
+- Updated final-report, table export, artifact export, technical-report, and
+  portfolio integration so the next optional phase is Phase 16 reproducibility
+  package v2.
+- Updated `README.md`, `ROADMAP.md`, `RUNBOOK.md`, `VALIDATION.md`, this task
+  memory, and the Phase 14 implementation plan.
+
+Validation:
+
+- 2026-05-04:
+  `python3 -m pytest tests/test_failure_taxonomy_v2_phase14.py -q` failed as
+  expected before implementation because `reports.failure_taxonomy_v2` did not
+  exist.
+- 2026-05-04:
+  `python3 -m pytest tests/test_failure_taxonomy_v2_phase14.py -q` passed, 6
+  tests.
+- 2026-05-04:
+  `python3 -m pytest tests/test_failure_taxonomy_v2_phase14.py tests/test_final_report.py tests/test_report_tables_plots_and_live_llm.py -q`
+  passed, 20 tests.
+- 2026-05-04:
+  `python3 -m pytest tests/test_technical_report_phase18.py tests/test_portfolio_packaging_phase19.py tests/test_search_ablation_phase11.py tests/test_live_llm_phase12.py tests/test_semantic_novelty_phase13.py tests/test_pareto_frontier_phase15.py -q`
+  passed, 29 tests.
+- 2026-05-04: `python3 -m pytest -q` passed, 149 tests.
+- 2026-05-04: `python3 -m ruff check .` passed.
+- 2026-05-04: `python3 -m ruff format --check .` passed, 86 files already
+  formatted.
+- 2026-05-04: `git diff --check -- .` passed.
+- 2026-05-04: Phase 14 direct smoke returned phase 14,
+  `failure_taxonomy_v2`, 11 failure cards, 11 repair success rows,
+  first category `invalid_syntax`, first repair category
+  `llm_hallucinated_feature`, next phase
+  `Phase 16: Reproducibility Package v2`, and the conservative claim boundary.
+- 2026-05-04: report table/plot smoke confirmed 17 tables, 7 plot series, 11
+  failure taxonomy v2 rows, 11 repair success rows, 24 behavior-fingerprint
+  points, and missing live key check returned `GEMINI_API_KEY` as expected.
+- 2026-05-04: final-report smoke confirmed 11 failure cards, next step
+  `reproducibility_package_v2`, Failure Taxonomy v2 section, and repair
+  success wording.
+- 2026-05-04: portfolio and technical-report smoke confirmed Phase 19 has 10
+  benchmark rows, Phase 18 has 15 sections, and both recommend Phase 16
+  reproducibility package v2.
+- 2026-05-04: CLI report smoke wrote `/tmp/o2-cli-phase14`, including
+  `reports/failure_cards.md`, 11 `failure_taxonomy_v2.csv` rows, 11
+  `repair_success_rate.csv` rows, final report, technical report, and
+  portfolio brief.
+- 2026-05-04: docs non-empty check confirmed `AGENTS.md`, `ROADMAP.md`,
+  `README.md`, `TASK_MEMORY.md`, `VALIDATION.md`, and `RUNBOOK.md` are present
+  and non-empty.
+- 2026-05-04: strict secret scan found zero committed API keys or long token
+  patterns; large-file scan found no files larger than 1 MB.
+
+Known limitations:
+
+- Phase 14 repair rows are deterministic local evidence records; they do not
+  prove arbitrary LLM-generated failures can be repaired automatically.
+- Failure cards explain representative failure modes from existing report
+  evidence and diagnostic probes, not an exhaustive taxonomy for every OR
+  benchmark family.
+- CVRPLIB/time-window routing, one-command reproduction profiles, and cloud
+  execution remain deferred.
 
 ## Latest Strategic Decision
 

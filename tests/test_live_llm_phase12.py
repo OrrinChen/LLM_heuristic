@@ -133,7 +133,7 @@ def test_final_report_tables_and_artifacts_include_phase12(tmp_path: Path) -> No
     assert (
         "one mutation operator inside a constrained program-search system" in markdown
     )
-    assert final["recommended_next_steps"][0]["step"] == "failure_taxonomy_v2"
+    assert final["recommended_next_steps"][0]["step"] == "reproducibility_package_v2"
     assert "llm_operator_comparison" in tables["tables"]
     assert "llm_candidate_audit" in tables["tables"]
 

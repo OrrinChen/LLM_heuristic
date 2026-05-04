@@ -1,0 +1,12 @@
+category,attempted_repairs,successful_repairs,repair_success_rate,repair_provider,repair_strategy,repaired_example_id
+llm_hallucinated_feature,4,4,1.000000,deterministic_llm_repair_proxy,prompt with static failure reason and feature contract,llm_repair-000
+invalid_syntax,1,1,1.000000,static_regeneration_template,return a complete parseable Python function,phase14-repair-invalid-syntax
+unsafe_code,1,1,1.000000,static_safety_filter,remove unsafe file/global access,phase14-repair-unsafe-code
+timeout,1,1,1.000000,bounded_loop_rewrite,replace unbounded loop with straight-line scoring,phase14-repair-timeout
+over_complex_code,0,0,0.000000,not_attempted_in_deterministic_package,Collapse repeated terms into compact residual-capacity scoring.,
+overfit_small_instances,0,0,0.000000,not_attempted_in_deterministic_package,Select candidates on larger and denser validation slices.,
+poor_external_transfer,0,0,0.000000,not_attempted_in_deterministic_package,Use external validation splits and report transfer gaps.,
+baseline_dominated,0,0,0.000000,not_attempted_in_deterministic_package,Report baseline dominance and avoid solver-superiority claims.,
+runtime_too_slow,0,0,0.000000,not_attempted_in_deterministic_package,Use cheaper score terms when quality is similar.,
+behavior_duplicate,0,0,0.000000,not_attempted_in_deterministic_package,Bias mutation toward feature or behavior changes.,
+objective_gaming,0,0,0.000000,not_attempted_in_deterministic_package,Select against Pareto axes including realism and generalization.,

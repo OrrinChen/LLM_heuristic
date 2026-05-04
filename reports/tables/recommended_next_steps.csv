@@ -1,2 +1,2 @@
 step,reason
-failure_taxonomy_v2,"Optionally expand failure cards with trigger conditions, validator sources, score impact, and repair strategies."
+reproducibility_package_v2,"Optionally add one-command reproduction profiles now that external evidence, ablation, novelty, Pareto, and failure cards are exported."

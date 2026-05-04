@@ -14,6 +14,7 @@ from llm.live_experiment import build_phase12_report
 from program_search.ablation import build_phase11_report
 from program_search.semantic_novelty import build_phase13_report
 from reports.failure_analysis import build_phase8_report
+from reports.failure_taxonomy_v2 import build_phase14_report
 from reports.pareto import build_phase15_report
 from reports.robustness import build_phase7_report
 
@@ -30,6 +31,7 @@ FINAL_REPORT_SECTIONS = (
     "pareto_frontier_report",
     "generalization_and_robustness",
     "failure_analysis",
+    "failure_taxonomy_v2",
     "limitations",
     "recommended_next_steps",
 )
@@ -67,6 +69,15 @@ def build_final_report() -> Dict[str, object]:
     phase12 = build_phase12_report()
     phase13 = build_phase13_report()
     phase15 = build_phase15_report()
+    phase14 = build_phase14_report(
+        phase8_report=phase8,
+        phase9_report=phase9,
+        phase10_report=phase10,
+        phase12_report=phase12,
+        phase13_report=phase13,
+        phase15_report=phase15,
+        robustness_report=phase7,
+    )
 
     report: Dict[str, object] = {
         "phase": "final_report",
@@ -110,6 +121,7 @@ def build_final_report() -> Dict[str, object]:
         "live_llm": _live_llm_summary(phase12),
         "semantic_novelty": _semantic_novelty_summary(phase13),
         "pareto_frontier": _pareto_frontier_summary(phase15),
+        "failure_taxonomy_v2": _failure_taxonomy_v2_summary(phase14),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
             "Live LLM mutation is optional and remains gated behind "
@@ -134,13 +146,16 @@ def build_final_report() -> Dict[str, object]:
             "Semantic novelty is probe-based and detects behavior equivalence on "
             "fixed probe states; it does not prove human-level semantic "
             "understanding.",
+            "Failure taxonomy v2 repair rows are deterministic evidence records, "
+            "not proof that arbitrary LLM failures can be repaired automatically.",
         ),
         "recommended_next_steps": (
             {
-                "step": "failure_taxonomy_v2",
+                "step": "reproducibility_package_v2",
                 "reason": (
-                    "Optionally expand failure cards with trigger conditions, "
-                    "validator sources, score impact, and repair strategies."
+                    "Optionally add one-command reproduction profiles now that "
+                    "external evidence, ablation, novelty, Pareto, and failure "
+                    "cards are exported."
                 ),
             },
         ),
@@ -158,6 +173,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     live_llm = report["live_llm"]
     semantic = report["semantic_novelty"]
     frontier = report["pareto_frontier"]
+    failure_v2 = report["failure_taxonomy_v2"]
     evidence = report["evidence"]
 
     lines = [
@@ -344,6 +360,19 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
             (
                 f"Amazon trade-off callouts: "
                 f"{evidence['amazon_tradeoffs']['tradeoff_count']}."
+            ),
+            "",
+            "## Failure Taxonomy v2",
+            "",
+            failure_v2["summary"],
+            "",
+            f"Failure cards: `{failure_v2['failure_card_count']}`.",
+            f"Repair success rows: `{failure_v2['repair_strategy_count']}`.",
+            f"Claim boundary: {failure_v2['claim_boundary']}.",
+            (
+                "The report includes repair success evidence for deterministic "
+                "syntax, unsafe-code, timeout, and LLM hallucinated-feature "
+                "failure routes."
             ),
             "",
             "## Limitations",
@@ -573,6 +602,25 @@ def _pareto_frontier_summary(phase15: Mapping[str, object]) -> Mapping[str, obje
             "generalization trade-offs per benchmark, with driver-likeness "
             "included for Amazon-style routing where that operational metric "
             "is available."
+        ),
+    }
+
+
+def _failure_taxonomy_v2_summary(
+    phase14: Mapping[str, object],
+) -> Mapping[str, object]:
+    return {
+        "failure_categories": phase14["failure_categories"],
+        "failure_cards": phase14["failure_cards"],
+        "failure_card_count": phase14["failure_card_count"],
+        "repair_success_rows": phase14["repair_success_rows"],
+        "repair_strategy_count": phase14["repair_strategy_count"],
+        "claim_boundary": phase14["claim_boundary"],
+        "summary": (
+            "Phase 14 upgrades failure analysis into cards with concrete "
+            "example programs, trigger conditions, validator or evaluator "
+            "sources, score impact, and possible repair strategies. Repair "
+            "success rows remain deterministic evidence records."
         ),
     }
 

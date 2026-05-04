@@ -35,6 +35,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "duplicate_behavior_clusters",
         "pareto_frontier",
         "failure_taxonomy",
+        "failure_taxonomy_v2",
+        "repair_success_rate",
         "recommended_next_steps",
     )
     assert len(tables["benchmark_comparison"]["rows"]) == 16
@@ -51,6 +53,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["duplicate_behavior_clusters"]["rows"]) == 4
     assert len(tables["pareto_frontier"]["rows"]) >= 3
     assert len(tables["failure_taxonomy"]["rows"]) == 9
+    assert len(tables["failure_taxonomy_v2"]["rows"]) == 11
+    assert len(tables["repair_success_rate"]["rows"]) == 11
     assert tables["benchmark_comparison"]["rows"][0] == {
         "benchmark": "Online Bin Packing",
         "method": "first_fit",
@@ -75,7 +79,8 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## Novelty Table" in markdown
     assert "## Duplicate Behavior Clusters" in markdown
     assert "## Pareto Frontier" in markdown
-    assert "failure_taxonomy_v2" in markdown
+    assert "## Failure Taxonomy v2" in markdown
+    assert "## Repair Success Rate" in markdown
 
 
 def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:

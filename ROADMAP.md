@@ -55,6 +55,9 @@ Completed:
 - Phase 13: Probe-based behavior fingerprints, semantic novelty scoring,
   feature usage summaries, complexity decomposition, equivalence detection,
   novelty tables, behavior fingerprint JSON, and duplicate behavior clusters.
+- Phase 14: Failure taxonomy v2 cards with example programs, trigger
+  conditions, detector sources, score impact, repair strategies, and repair
+  success rows.
 - Phase 15: Pareto frontier reporting across objective quality, runtime,
   program complexity, failure rate, generalization gap, and Amazon-style
   driver-likeness / operational realism.
@@ -76,11 +79,13 @@ Current phase:
   experiment module with deterministic fallback.
 - Phase 13 program semantics and novelty is complete as probe-based behavioral
   fingerprint evidence for bin-packing `score_bin` programs.
+- Phase 14 failure taxonomy v2 is complete as deterministic failure cards and
+  repair evidence.
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
 - The job-search evidence track is complete; the next optional implementation
-  phase is Phase 14: Failure Taxonomy v2.
+  phase is Phase 16: Reproducibility Package v2.
 
 Deferred:
 
@@ -94,7 +99,7 @@ Next autonomous action:
 
 ```text
 The required job-search packaging track is complete. If continuing, execute
-optional Phase 14 only: add failure taxonomy v2 cards and repair evidence.
+optional Phase 16 only: add deterministic reproduction profiles and artifacts.
 ```
 
 ## Project Positioning
@@ -807,35 +812,37 @@ Required outputs:
 
 ## Phase 14: Failure Taxonomy v2
 
+Status: complete.
+
 Goal: explain why failures occur, not just count them.
 
 Failure categories to cover:
 
-- [ ] Invalid syntax.
-- [ ] Unsafe code.
-- [ ] Timeout.
-- [ ] Over-complex code.
-- [ ] Overfit small instances.
-- [ ] Poor external transfer.
-- [ ] Baseline-dominated.
-- [ ] Runtime too slow.
-- [ ] Behavior duplicate.
-- [ ] LLM hallucinated feature.
-- [ ] Objective gaming.
+- [x] Invalid syntax.
+- [x] Unsafe code.
+- [x] Timeout.
+- [x] Over-complex code.
+- [x] Overfit small instances.
+- [x] Poor external transfer.
+- [x] Baseline-dominated.
+- [x] Runtime too slow.
+- [x] Behavior duplicate.
+- [x] LLM hallucinated feature.
+- [x] Objective gaming.
 
 Each failure type should include:
 
-- [ ] Example program.
-- [ ] Trigger condition.
-- [ ] Validator or evaluator that detected it.
-- [ ] Score impact.
-- [ ] Possible repair strategy.
+- [x] Example program.
+- [x] Trigger condition.
+- [x] Validator or evaluator that detected it.
+- [x] Score impact.
+- [x] Possible repair strategy.
 
 Required outputs:
 
-- [ ] `reports/failure_cards.md`.
-- [ ] `reports/tables/failure_taxonomy_v2.csv`.
-- [ ] `reports/tables/repair_success_rate.csv`.
+- [x] `reports/failure_cards.md`.
+- [x] `reports/tables/failure_taxonomy_v2.csv`.
+- [x] `reports/tables/repair_success_rate.csv`.
 
 ## Phase 15: Pareto Frontier Report
 
@@ -1038,10 +1045,10 @@ Completed foundation:
 Next recommended order:
 
 ```text
-14. Failure taxonomy v2.
+16. Reproducibility package v2.
 ```
 
-Phase 10B, Phase 10C, Phase 14, Phase 16, and Phase 17 remain optional
+Phase 10B, Phase 10C, Phase 16, and Phase 17 remain optional
 extensions unless the target audience requires deeper routing evidence, failure
 repair, reproduction profiles, or scale infrastructure.
 

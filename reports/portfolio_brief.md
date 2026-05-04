@@ -36,6 +36,7 @@ seed heuristic library
 | LLM Live Mutation v1 | hash-only candidate audit with deterministic fallback | deterministic_fallback | 5.8 | LLM as one sandboxed mutation operator, not a solver |
 | Program Semantics | behavior fingerprints and duplicate behavior clusters | 7 behavior clusters | 21 | semantic novelty is probe-based, not human-level meaning |
 | Pareto Frontier | quality-runtime-complexity-generalization rows | 8 frontier rows | 17 | selected trade-offs, not universal dominance |
+| Failure Taxonomy v2 | failure cards and deterministic repair rows | 11 failure cards | 11 | explains failure modes, not arbitrary auto-repair |
 
 ## Safety Boundary
 
@@ -55,7 +56,8 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 - External routing fixtures are small TSPLIB-style examples, not large TSPLIB benchmark corpora.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or public Amazon route data.
 - The project reports selected trade-offs and does not claim universal dominance or SOTA solver performance.
+- Failure repair evidence is deterministic and local; it does not prove arbitrary LLM-generated failures can be repaired.
 
 ## Recommended Next Phase
 
-Optional Phase 14: Failure Taxonomy v2
+Optional Phase 16: Reproducibility Package v2

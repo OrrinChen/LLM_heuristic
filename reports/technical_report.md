@@ -80,7 +80,13 @@ Evidence references: `robustness_summary.csv`, `worst_generalization_gaps.csv`, 
 
 Failure analysis reports invalid code, unsafe code, timeout, overfitting, poor transfer, complexity, feasibility boundary, and routing trade-off patterns instead of hiding rejected or weak candidates.
 
-Evidence references: `failure_taxonomy.csv`, `failure_cards`.
+Evidence references: `failure_taxonomy.csv`, `failure_taxonomy_v2.csv`.
+
+## Failure Taxonomy v2
+
+Phase 14 converts failure categories into auditable cards. Each card records an example program, trigger condition, validator or evaluator source, score impact, and possible repair strategy, plus deterministic repair success rows where repair was attempted.
+
+Evidence references: `failure_cards.md`, `failure_taxonomy_v2.csv`, `repair_success_rate.csv`.
 
 ## Limitations
 
@@ -102,7 +108,8 @@ Evidence references: `final_report.md`, `technical_report.md`.
 - External benchmark: `bin_packing_external`.
 - Ablation best method: `crossover_only`.
 - Pareto frontier rows: `8`.
+- Failure cards: `11`.
 
 ## Next Phase
 
-Phase 14: Failure Taxonomy v2.
+Phase 16: Reproducibility Package v2.

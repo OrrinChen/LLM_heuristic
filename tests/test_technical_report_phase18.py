@@ -23,7 +23,7 @@ def test_phase18_report_has_paper_sections_and_conservative_claims() -> None:
     assert "compact heuristic scoring programs" in report["abstract"]
     assert "subprocess sandboxing" in report["abstract"]
     assert "universal dominance" in report["claim_boundaries"]["does_not_claim"]
-    assert report["recommended_next_phase"] == ("Phase 14: Failure Taxonomy v2")
+    assert report["recommended_next_phase"] == ("Phase 16: Reproducibility Package v2")
 
 
 def test_phase18_report_sections_map_to_existing_evidence() -> None:
@@ -48,7 +48,12 @@ def test_phase18_report_sections_map_to_existing_evidence() -> None:
     )
     assert section_by_id["failure_analysis"]["evidence_refs"] == (
         "failure_taxonomy.csv",
-        "failure_cards",
+        "failure_taxonomy_v2.csv",
+    )
+    assert section_by_id["failure_taxonomy_v2"]["evidence_refs"] == (
+        "failure_cards.md",
+        "failure_taxonomy_v2.csv",
+        "repair_success_rate.csv",
     )
 
 
@@ -72,12 +77,13 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
         "Program Semantics And Novelty",
         "Generalization",
         "Failure Analysis",
+        "Failure Taxonomy v2",
         "Limitations",
         "Conclusion",
     ):
         assert f"## {heading}" in markdown
     assert "The system does not claim universal dominance" in markdown
-    assert "Phase 14: Failure Taxonomy v2" in markdown
+    assert "Phase 16: Reproducibility Package v2" in markdown
 
 
 def test_phase18_technical_report_is_exported_with_artifact_package(

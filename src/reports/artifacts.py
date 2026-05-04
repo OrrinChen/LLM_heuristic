@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Dict, Mapping, Sequence, Union
 
 from program_search.rerun_manifest import build_bin_packing_rerun_manifest
+from reports.failure_taxonomy_v2 import render_failure_cards_markdown
 from reports.final_report import build_final_report, render_final_report_markdown
 from reports.plots import build_report_plots
 from reports.portfolio import build_phase19_package, render_portfolio_brief_markdown
@@ -44,6 +45,11 @@ def export_report_artifacts(
     final_report_path = reports_dir / "final_report.md"
     final_report_path.write_text(
         render_final_report_markdown(final_report),
+        encoding="utf-8",
+    )
+    failure_cards_path = reports_dir / "failure_cards.md"
+    failure_cards_path.write_text(
+        render_failure_cards_markdown(final_report["failure_taxonomy_v2"]),
         encoding="utf-8",
     )
     technical_report = build_phase18_report(final_report=final_report)
@@ -89,6 +95,7 @@ def export_report_artifacts(
     return {
         "output_dir": str(root),
         "final_report": str(final_report_path),
+        "failure_cards": str(failure_cards_path),
         "technical_report": str(technical_report_path),
         "portfolio_brief": str(portfolio_brief_path),
         "tables": [str(path) for path in table_paths],

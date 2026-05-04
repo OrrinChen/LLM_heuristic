@@ -33,8 +33,9 @@ PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-demo -
 ```
 
 This writes a local evidence package with `reports/final_report.md`,
-`reports/technical_report.md`, `reports/portfolio_brief.md`, CSV tables,
-plot-ready JSON, top programs, frontier programs, and a rerun manifest.
+`reports/technical_report.md`, `reports/portfolio_brief.md`,
+`reports/failure_cards.md`, CSV tables, plot-ready JSON, top programs,
+frontier programs, and a rerun manifest.
 
 ## Core Architecture
 
@@ -60,6 +61,7 @@ flowchart LR
 | Search Ablation | Fixed local candidate budget | seed, mutation, crossover, LLM-proxy, repair operators | mechanism evidence without live LLM superiority claims |
 | LLM Live Mutation v1 | Hash-only candidate audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
 | Program Semantics | Probe-based behavior fingerprints | `novelty_table.csv` | behavior novelty evidence, not human-level semantic proof |
+| Failure Taxonomy v2 | Failure cards and repair rows | `failure_taxonomy_v2.csv` | explains deterministic failure modes, not arbitrary auto-repair |
 | Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
 
 ## Safety Boundary
@@ -76,6 +78,8 @@ platform memory limits.
   deterministic fallback providers.
 - Semantic novelty is based on fixed probe behavior fingerprints; it does not
   prove human-level semantic understanding.
+- Failure repair evidence is deterministic and local; it does not prove
+  arbitrary LLM-generated failures can be repaired automatically.
 - External bin packing fixtures are intentionally small and parser-backed.
 - External routing fixtures are intentionally small TSPLIB-style EUC_2D examples.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
@@ -141,6 +145,9 @@ Current status:
   scoring, feature usage summaries, complexity decomposition, duplicate
   behavior clusters, `novelty_table.csv`, `behavior_fingerprint.json`, and
   `duplicate_behavior_clusters.csv`.
+- Phase 14 complete: failure taxonomy v2 cards with example programs, trigger
+  conditions, validator/evaluator sources, score impact, repair strategies,
+  `failure_cards.md`, `failure_taxonomy_v2.csv`, and `repair_success_rate.csv`.
 - Phase 15 complete: Pareto frontier reporting across objective quality,
   runtime, program complexity, failure rate, generalization gap, and
   Amazon-style driver-likeness / operational realism.
@@ -151,8 +158,9 @@ Current status:
   architecture diagram, benchmark evidence table, safety boundary,
   limitations, resume bullets, and portfolio brief artifact.
 - Current phase: the job-search portfolio track, Phase 10A routing evidence,
-  Phase 12 live LLM mutation v1, and Phase 13 semantic novelty are complete;
-  optional Phase 14 failure taxonomy v2 is the next research extension.
+  Phase 12 live LLM mutation v1, Phase 13 semantic novelty, and Phase 14
+  failure taxonomy v2 are complete; optional Phase 16 reproducibility package
+  v2 is the next research extension.
 
 ## Setup
 
@@ -264,6 +272,12 @@ Semantic novelty validation:
 
 ```bash
 python3 -m pytest tests/test_semantic_novelty_phase13.py -v
+```
+
+Failure taxonomy v2 validation:
+
+```bash
+python3 -m pytest tests/test_failure_taxonomy_v2_phase14.py -v
 ```
 
 Pareto frontier validation:
@@ -748,6 +762,7 @@ print("External Benchmark Evidence" in markdown)
 print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
 print("Program Semantics And Novelty" in markdown)
+print("Failure Taxonomy v2" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
@@ -764,7 +779,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-failure_taxonomy_v2
+reproducibility_package_v2
+True
 True
 True
 True
@@ -797,13 +813,15 @@ print(len(tables["novelty_table"]["rows"]))
 print(len(tables["duplicate_behavior_clusters"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
+print(len(tables["failure_taxonomy_v2"]["rows"]))
+print(len(tables["repair_success_rate"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["behavior_fingerprint"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("failure_taxonomy_v2" in render_report_tables_markdown(tables))
+print("Failure Taxonomy v2" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -814,7 +832,7 @@ PY
 Expected output without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'failure_taxonomy_v2', 'repair_success_rate', 'recommended_next_steps')
 16
 5
 5
@@ -827,6 +845,8 @@ Expected output without a live key exported:
 4
 17
 9
+11
+11
 ('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'behavior_fingerprint', 'frontier_plot_series', 'failure_rate_by_generation')
 15
 32

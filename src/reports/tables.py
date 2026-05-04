@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Dict, List, Mapping, Optional, Sequence
 
 from reports.failure_analysis import build_phase8_report
+from reports.failure_taxonomy_v2 import build_phase14_report
 from reports.final_report import build_final_report
 from reports.robustness import build_phase7_report
 
@@ -14,10 +15,14 @@ def build_report_tables(
     final_report: Optional[Mapping[str, object]] = None,
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
+    phase14_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
     final = final_report or build_final_report()
     robustness = robustness_report or build_phase7_report()
     failures = failure_report or build_phase8_report()
+    phase14 = (
+        phase14_report or final.get("failure_taxonomy_v2") or build_phase14_report()
+    )
 
     tables = {
         "benchmark_comparison": {
@@ -224,6 +229,32 @@ def build_report_tables(
                 "evidence_count",
             ),
             "rows": _failure_taxonomy_rows(failures),
+        },
+        "failure_taxonomy_v2": {
+            "title": "Failure Taxonomy v2",
+            "columns": (
+                "category",
+                "display_name",
+                "example_program_id",
+                "trigger_condition",
+                "detected_by",
+                "score_impact",
+                "repair_strategy",
+            ),
+            "rows": _failure_taxonomy_v2_rows(phase14),
+        },
+        "repair_success_rate": {
+            "title": "Repair Success Rate",
+            "columns": (
+                "category",
+                "attempted_repairs",
+                "successful_repairs",
+                "repair_success_rate",
+                "repair_provider",
+                "repair_strategy",
+                "repaired_example_id",
+            ),
+            "rows": _repair_success_rows(phase14),
         },
         "recommended_next_steps": {
             "title": "Recommended Next Steps",
@@ -579,6 +610,36 @@ def _failure_taxonomy_rows(failure_report: Mapping[str, object]) -> TableRows:
             "evidence_count": len(row["evidence"]),
         }
         for category, row in taxonomy.items()
+    ]
+
+
+def _failure_taxonomy_v2_rows(phase14_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "category": card["category"],
+            "display_name": card["display_name"],
+            "example_program_id": card["example_program"]["program_id"],
+            "trigger_condition": card["trigger_condition"],
+            "detected_by": card["detected_by"],
+            "score_impact": card["score_impact"]["claim"],
+            "repair_strategy": card["repair_strategy"]["strategy"],
+        }
+        for card in phase14_report["failure_cards"]
+    ]
+
+
+def _repair_success_rows(phase14_report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "category": row["category"],
+            "attempted_repairs": row["attempted_repairs"],
+            "successful_repairs": row["successful_repairs"],
+            "repair_success_rate": _format_number(row["repair_success_rate"]),
+            "repair_provider": row["repair_provider"],
+            "repair_strategy": row["repair_strategy"],
+            "repaired_example_id": row["repaired_example_id"],
+        }
+        for row in phase14_report["repair_success_rows"]
     ]
 
 
