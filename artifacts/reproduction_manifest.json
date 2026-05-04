@@ -23,6 +23,7 @@
     "artifacts/frontier_programs/simple_routing-route-seed-002-window_guard.py",
     "artifacts/frontier_programs/simple_routing-route-seed-005-nearest.py",
     "artifacts/frontier_programs/simple_routing-route-seed-007-window_guard.py",
+    "artifacts/phase17_checkpoint.json",
     "artifacts/reproduction_manifest.json",
     "artifacts/reproduction_summary.md",
     "artifacts/rerun_manifest.json",
@@ -42,6 +43,7 @@
     "reports/tables/ablation_summary.csv",
     "reports/tables/benchmark_comparison.csv",
     "reports/tables/best_score_by_budget.csv",
+    "reports/tables/checkpoint_resume.csv",
     "reports/tables/duplicate_behavior_clusters.csv",
     "reports/tables/external_generalization.csv",
     "reports/tables/failure_taxonomy.csv",
@@ -50,6 +52,7 @@
     "reports/tables/llm_candidate_audit.csv",
     "reports/tables/llm_operator_comparison.csv",
     "reports/tables/novelty_table.csv",
+    "reports/tables/parallel_runner_summary.csv",
     "reports/tables/pareto_frontier.csv",
     "reports/tables/recommended_next_steps.csv",
     "reports/tables/repair_success_rate.csv",
@@ -69,7 +72,7 @@
     "fixture_source": "built_in_small_deterministic",
     "live_llm_fallback": 23
   },
-  "recommended_next_phase": "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search",
+  "recommended_next_phase": "No required phase remains; optional CVRPLIB/time-window routing or release polish",
   "required_outputs": [
     "reports/final_report.md",
     "reports/tables/benchmark_comparison.csv",

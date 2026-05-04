@@ -59,12 +59,13 @@ flowchart LR
 | External Routing | TSPLIB-style EUC_2D fixtures | `routing_external_generalization.csv` | external routing-style evidence, not LKH/CVRP/SOTA |
 | Simple Routing | Held-out route sizes plus 2-opt | `route-seed-003-slack_aware` | `score_next_stop` heuristic comparison |
 | Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
-| Search Ablation | Fixed local candidate budget | seed, mutation, crossover, LLM-proxy, repair operators | mechanism evidence without live LLM superiority claims |
-| LLM Live Mutation v1 | Hash-only candidate audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
-| Program Semantics | Probe-based behavior fingerprints | `novelty_table.csv` | behavior novelty evidence, not human-level semantic proof |
-| Failure Taxonomy v2 | Failure cards and repair rows | `failure_taxonomy_v2.csv` | explains deterministic failure modes, not arbitrary auto-repair |
-| Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
-| Reproducibility Package v2 | Local deterministic profiles | `reproduction_manifest.json` | fresh-clone reproduction without API key or large data |
+| Search Ablation | Fixed local budget | seed, mutation, crossover, LLM-proxy, repair | mechanism evidence, not live LLM superiority |
+| LLM Live Mutation v1 | Hash-only audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
+| Program Semantics | Behavior fingerprints | `novelty_table.csv` | probe-based behavior novelty |
+| Failure Taxonomy v2 | Cards and repair rows | `failure_taxonomy_v2.csv` | failure modes, not arbitrary auto-repair |
+| Pareto Frontier | Quality-runtime frontier | 8 frontier rows | selected trade-offs, not universal dominance |
+| Reproducibility Package v2 | Deterministic profiles | `reproduction_manifest.json` | fresh-clone reproduction without API key |
+| Local Parallel Runner | Parallel + checkpoint | `parallel_runner_summary.csv` | local scale evidence, not paid cloud |
 
 ## Safety Boundary
 
@@ -90,6 +91,8 @@ platform memory limits.
 - Reproduction profiles are local and deterministic by default; the
   `llm_optional` profile uses fallback providers unless live Gemini is
   explicitly configured.
+- Phase 17 scale evidence is local process parallelism with a dry-run cloud
+  adapter boundary; it does not execute paid cloud jobs.
 - O2 reports selected trade-offs and does not claim universal dominance.
 
 Current status:
@@ -165,11 +168,13 @@ Current status:
 - Phase 16 complete: deterministic reproduction profiles for `local_demo`,
   `external_small`, and `llm_optional`, one-command `reproduce` CLI export,
   reproduction manifest, reproduction summary, and Make targets.
+- Phase 17 complete: local process-parallel candidate evaluation,
+  checkpoint/resume, worker-failure isolation, cost-budget stop, dry-run cloud
+  adapter boundary, and Phase17 report artifacts.
 - Current phase: the job-search portfolio track, Phase 10A routing evidence,
   Phase 12 live LLM mutation v1, Phase 13 semantic novelty, Phase 14 failure
-  taxonomy v2, and Phase 16 reproducibility package v2 are complete; optional
-  Phase 17 local parallel runner / cloud-scale search is the next research
-  extension.
+  taxonomy v2, Phase 16 reproducibility package v2, and Phase 17 local
+  parallel runner are complete; no required roadmap phase remains.
 
 ## Setup
 
@@ -313,6 +318,12 @@ Reproducibility package validation:
 python3 -m pytest tests/test_reproducibility_package_phase16.py -v
 ```
 
+Local parallel runner validation:
+
+```bash
+python3 -m pytest tests/test_local_parallel_runner_phase17.py -v
+```
+
 ## CLI
 
 The deterministic local CLI is available through the package module:
@@ -324,6 +335,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external -
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 32 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark parallel_runner --candidate-count 12 --max-workers 2 --output-dir /tmp/o2-parallel
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -936,6 +948,8 @@ reports/tables/llm_operator_comparison.csv
 reports/tables/llm_candidate_audit.csv
 reports/tables/novelty_table.csv
 reports/tables/duplicate_behavior_clusters.csv
+reports/tables/parallel_runner_summary.csv
+reports/tables/checkpoint_resume.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
 reports/plots/behavior_fingerprint.json
@@ -943,6 +957,7 @@ reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
+artifacts/phase17_checkpoint.json
 artifacts/reproduction_manifest.json
 artifacts/reproduction_summary.md
 ```

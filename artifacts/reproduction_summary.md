@@ -57,6 +57,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `artifacts/frontier_programs/simple_routing-route-seed-002-window_guard.py`
 - `artifacts/frontier_programs/simple_routing-route-seed-005-nearest.py`
 - `artifacts/frontier_programs/simple_routing-route-seed-007-window_guard.py`
+- `artifacts/phase17_checkpoint.json`
 - `artifacts/reproduction_manifest.json`
 - `artifacts/reproduction_summary.md`
 - `artifacts/rerun_manifest.json`
@@ -76,6 +77,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/tables/ablation_summary.csv`
 - `reports/tables/benchmark_comparison.csv`
 - `reports/tables/best_score_by_budget.csv`
+- `reports/tables/checkpoint_resume.csv`
 - `reports/tables/duplicate_behavior_clusters.csv`
 - `reports/tables/external_generalization.csv`
 - `reports/tables/failure_taxonomy.csv`
@@ -84,6 +86,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/tables/llm_candidate_audit.csv`
 - `reports/tables/llm_operator_comparison.csv`
 - `reports/tables/novelty_table.csv`
+- `reports/tables/parallel_runner_summary.csv`
 - `reports/tables/pareto_frontier.csv`
 - `reports/tables/recommended_next_steps.csv`
 - `reports/tables/repair_success_rate.csv`
@@ -98,4 +101,4 @@ deterministic local reproduction package only; no API key, paid service, large e
 
 ## Recommended Next Phase
 
-Optional Phase 17: Local Parallel Runner / Cloud-Scale Search
+No required phase remains; optional CVRPLIB/time-window routing or release polish

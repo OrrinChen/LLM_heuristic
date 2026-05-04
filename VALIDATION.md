@@ -1068,6 +1068,26 @@ rerun checks confirm stable scores and matching code hashes
 Make targets exist for reproduce, test, report, and demo
 ```
 
+## Local Parallel Runner Validation
+
+Run this once Phase 17 exists:
+
+```bash
+python3 -m pytest tests/test_local_parallel_runner_phase17.py -v
+```
+
+Expected result:
+
+```text
+parallel process evaluation matches sequential top programs and scores
+checkpoint/resume reconstructs the full sequential result
+worker exceptions are recorded without losing successful candidates
+cost budget stops evaluation and preserves checkpoint state
+report export writes parallel_runner_summary.csv, checkpoint_resume.csv, and phase17_checkpoint.json
+CLI parallel_runner smoke prints parallel_matches_sequential true
+cloud adapter status remains dry_run_only and does not execute paid cloud jobs
+```
+
 ## Reproducibility Smoke Validation
 
 Run these from the repository root:
@@ -1136,6 +1156,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external -
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-cli-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-cli-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-cli-semantic
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark parallel_runner --candidate-count 12 --max-workers 2 --output-dir /tmp/o2-cli-parallel
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir /tmp/o2-cli-rerun --top-k 2
@@ -1151,6 +1172,7 @@ routing_external run prints best_external_program_id and writes run_summary.json
 search_ablation run prints best_method and writes run_summary.json
 live_llm run prints best_method and writes run_summary.json
 semantic_novelty run prints behavior_cluster_count and writes run_summary.json
+parallel_runner run prints parallel_matches_sequential and writes run_summary.json
 report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/tables/llm_operator_comparison.csv, reports/tables/llm_candidate_audit.csv, reports/tables/novelty_table.csv, reports/tables/duplicate_behavior_clusters.csv, reports/plots/plot_series.json, reports/plots/behavior_fingerprint.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
 inspect prints candidate_id rows
 rerun-manifest prints code_hash_matches true rows

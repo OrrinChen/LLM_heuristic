@@ -85,7 +85,8 @@ def build_phase16_package(
         },
         "claim_boundary": PHASE16_CLAIM_BOUNDARY,
         "recommended_next_phase": (
-            "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+            "No required phase remains; optional CVRPLIB/time-window routing "
+            "or release polish"
         ),
     }
 

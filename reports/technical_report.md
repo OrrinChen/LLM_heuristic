@@ -112,4 +112,4 @@ Evidence references: `final_report.md`, `technical_report.md`.
 
 ## Next Phase
 
-Optional Phase 17: Local Parallel Runner / Cloud-Scale Search.
+No required phase remains; optional CVRPLIB/time-window routing or release polish.

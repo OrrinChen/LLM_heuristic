@@ -64,6 +64,9 @@ Completed:
 - Phase 16: Reproducibility package v2 with deterministic local profiles,
   one-command reproduction CLI, Make targets, reproduction manifest, and
   reproduction summary.
+- Phase 17: Local parallel runner, checkpoint/resume, worker failure isolation,
+  cost budget guardrail, dry-run cloud adapter boundary, and scale evidence
+  tables.
 - Phase 18: Research-style technical report with problem framing, system
   design, sandbox boundary, benchmarks, search loop, external evidence,
   ablation, generalization, failure analysis, limitations, and conclusion.
@@ -87,26 +90,28 @@ Current phase:
 - Phase 15 Pareto frontier reporting is complete.
 - Phase 16 reproducibility package v2 is complete with local deterministic
   profiles for `local_demo`, `external_small`, and `llm_optional`.
+- Phase 17 local parallel runner is complete with process-parallel evaluation,
+  checkpoint/resume, failure isolation, cost-budget stopping, and a dry-run
+  cloud adapter boundary.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
-- The job-search evidence track and reproducibility package are complete; the
-  next optional implementation phase is Phase 17: Local Parallel Runner /
-  Cloud-Scale Search.
+- The job-search evidence, reproducibility, and local scale tracks are
+  complete; no required roadmap phase remains.
 
 Deferred:
 
 - CVRPLIB-style capacitated routing and optional time-window routing evidence.
 - Crossover beyond simple mutation.
-- Cloud execution beyond a future local parallel/checkpoint runner.
+- Paid cloud execution beyond the dry-run adapter boundary.
 - Paid API usage.
 - Production live-LLM experiment campaigns beyond controlled local smoke checks.
 
 Next autonomous action:
 
 ```text
-The required job-search packaging and reproduction tracks are complete. If
-continuing, execute optional Phase 17 only, starting with a local parallel
-runner and checkpoint/resume before any cloud adapter.
+No required roadmap phase remains. If continuing, choose an optional extension
+explicitly: CVRPLIB/time-window routing depth, broader crossover, or release
+polish.
 ```
 
 ## Project Positioning
@@ -917,22 +922,25 @@ Acceptance criteria:
 
 ## Phase 17: Optional Cloud-Scale Search
 
+Status: complete as local parallel / checkpoint / dry-run cloud-adapter
+evidence. Paid cloud execution remains intentionally deferred.
+
 Goal: scale candidate evaluation only after evidence and reproducibility are
 strong.
 
 Priority order:
 
-- [ ] 17A: Local parallel runner.
-- [ ] 17B: Checkpoint / resume.
-- [ ] 17C: Cloud adapter abstraction.
-- [ ] 17D: Optional cloud execution.
+- [x] 17A: Local parallel runner.
+- [x] 17B: Checkpoint / resume.
+- [x] 17C: Cloud adapter abstraction.
+- [x] 17D: Optional cloud execution boundary as dry-run only.
 
 Acceptance criteria:
 
-- [ ] Same seed gives the same selected top programs.
-- [ ] Parallel results equal sequential results.
-- [ ] Failed workers do not corrupt the archive.
-- [ ] Cost budget can stop an experiment.
+- [x] Same seed gives the same selected top programs.
+- [x] Parallel results equal sequential results.
+- [x] Failed workers do not corrupt the archive.
+- [x] Cost budget can stop an experiment.
 
 ## Phase 18: Research-Style Technical Report
 
@@ -1054,12 +1062,12 @@ Completed foundation:
 Next recommended order:
 
 ```text
-17A. Local parallel runner.
+No required phase remains.
 ```
 
-Phase 10B, Phase 10C, and Phase 17 remain optional
+Phase 10B and Phase 10C remain optional
 extensions unless the target audience requires deeper routing evidence, failure
-repair, or scale infrastructure.
+repair, or more routing depth.
 
 MVP cut line:
 

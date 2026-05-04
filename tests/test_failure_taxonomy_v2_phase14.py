@@ -109,14 +109,19 @@ def test_phase14_updates_report_narrative_and_next_phase() -> None:
     portfolio = build_phase19_package(final_report=final)
 
     assert final["failure_taxonomy_v2"]["failure_card_count"] == 11
-    assert final["recommended_next_steps"][0]["step"] == "optional_cloud_scale_search"
+    assert (
+        final["recommended_next_steps"][0]["step"]
+        == "optional_routing_depth_or_release_polish"
+    )
     assert "Failure Taxonomy v2" in markdown
     assert "repair success" in markdown
     assert technical["recommended_next_phase"] == (
-        "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        "No required phase remains; optional CVRPLIB/time-window routing "
+        "or release polish"
     )
     assert portfolio["recommended_next_phase"] == (
-        "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        "No required phase remains; optional CVRPLIB/time-window routing "
+        "or release polish"
     )
 
 

@@ -151,11 +151,11 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "optional_cloud_scale_search",
+                "step": "optional_routing_depth_or_release_polish",
                 "reason": (
-                    "If extending the platform, start Phase 17 with a local "
-                    "parallel runner and checkpoint/resume path after the "
-                    "deterministic reproduction profiles are in place."
+                    "No required job-search roadmap phase remains. Optional "
+                    "extensions are CVRPLIB/time-window routing depth or "
+                    "release polish around the existing evidence package."
                 ),
             },
         ),

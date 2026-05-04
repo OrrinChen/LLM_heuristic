@@ -93,6 +93,8 @@ reports/tables/duplicate_behavior_clusters.csv
 reports/tables/failure_taxonomy_v2.csv
 reports/tables/repair_success_rate.csv
 reports/tables/pareto_frontier.csv
+reports/tables/parallel_runner_summary.csv
+reports/tables/checkpoint_resume.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
 reports/plots/behavior_fingerprint.json
@@ -100,6 +102,7 @@ reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
+artifacts/phase17_checkpoint.json
 artifacts/reproduction_manifest.json
 artifacts/reproduction_summary.md
 ```
@@ -113,6 +116,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external -
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark parallel_runner --candidate-count 12 --max-workers 2 --output-dir /tmp/o2-parallel
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5

@@ -1,0 +1,6 @@
+metric,value,claim
+parallel_matches_sequential,True,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+sequential_top_program_ids,seed-000-tight_fit;seed-001-load_balancer;seed-002-prefer_used_bins;seed-004-tight_fit;seed-005-load_balancer,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+parallel_top_program_ids,seed-000-tight_fit;seed-001-load_balancer;seed-002-prefer_used_bins;seed-004-tight_fit;seed-005-load_balancer,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+failed_worker_recorded,True,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+cloud_adapter_status,dry_run_only,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"

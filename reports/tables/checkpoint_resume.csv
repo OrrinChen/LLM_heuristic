@@ -1,0 +1,5 @@
+evidence,value,claim
+checkpoint_resume_matches_full,True,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+cost_budget_stop_reason,cost_budget_exhausted,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+cost_budget_evaluated_candidates,3,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"
+estimated_cost,3.000000,"local parallel and checkpoint evidence only; no paid cloud execution, cloud-provider binding, or scale-performance superiority claim"

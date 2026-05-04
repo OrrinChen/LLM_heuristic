@@ -274,7 +274,8 @@ def build_phase18_report(
             "failure_card_count": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+            "No required phase remains; optional CVRPLIB/time-window routing "
+            "or release polish"
         ),
     }
 
