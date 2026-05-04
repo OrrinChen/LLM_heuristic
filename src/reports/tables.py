@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Mapping, Optional, Sequence
 
+from program_search.parallel_runner import build_phase17_report
 from reports.failure_analysis import build_phase8_report
 from reports.failure_taxonomy_v2 import build_phase14_report
 from reports.final_report import build_final_report
@@ -16,6 +17,7 @@ def build_report_tables(
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
     phase14_report: Optional[Mapping[str, object]] = None,
+    phase17_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
     final = final_report or build_final_report()
     robustness = robustness_report or build_phase7_report()
@@ -23,6 +25,7 @@ def build_report_tables(
     phase14 = (
         phase14_report or final.get("failure_taxonomy_v2") or build_phase14_report()
     )
+    phase17 = phase17_report or build_phase17_report()
 
     tables = {
         "benchmark_comparison": {
@@ -255,6 +258,16 @@ def build_report_tables(
                 "repaired_example_id",
             ),
             "rows": _repair_success_rows(phase14),
+        },
+        "parallel_runner_summary": {
+            "title": "Parallel Runner Summary",
+            "columns": ("metric", "value", "claim"),
+            "rows": _parallel_runner_rows(phase17),
+        },
+        "checkpoint_resume": {
+            "title": "Checkpoint Resume",
+            "columns": ("evidence", "value", "claim"),
+            "rows": _checkpoint_resume_rows(phase17),
         },
         "recommended_next_steps": {
             "title": "Recommended Next Steps",
@@ -640,6 +653,69 @@ def _repair_success_rows(phase14_report: Mapping[str, object]) -> TableRows:
             "repaired_example_id": row["repaired_example_id"],
         }
         for row in phase14_report["repair_success_rows"]
+    ]
+
+
+def _parallel_runner_rows(phase17_report: Mapping[str, object]) -> TableRows:
+    claim = phase17_report["claim_boundary"]
+    return [
+        {
+            "metric": "parallel_matches_sequential",
+            "value": phase17_report["parallel_matches_sequential"],
+            "claim": claim,
+        },
+        {
+            "metric": "sequential_top_program_ids",
+            "value": ";".join(
+                str(program_id)
+                for program_id in phase17_report["sequential_top_program_ids"]
+            ),
+            "claim": claim,
+        },
+        {
+            "metric": "parallel_top_program_ids",
+            "value": ";".join(
+                str(program_id)
+                for program_id in phase17_report["parallel_top_program_ids"]
+            ),
+            "claim": claim,
+        },
+        {
+            "metric": "failed_worker_recorded",
+            "value": phase17_report["failed_worker_recorded"],
+            "claim": claim,
+        },
+        {
+            "metric": "cloud_adapter_status",
+            "value": phase17_report["cloud_adapter_status"],
+            "claim": claim,
+        },
+    ]
+
+
+def _checkpoint_resume_rows(phase17_report: Mapping[str, object]) -> TableRows:
+    claim = phase17_report["claim_boundary"]
+    return [
+        {
+            "evidence": "checkpoint_resume_matches_full",
+            "value": phase17_report["checkpoint_resume_matches_full"],
+            "claim": claim,
+        },
+        {
+            "evidence": "cost_budget_stop_reason",
+            "value": phase17_report["cost_budget_stop_reason"],
+            "claim": claim,
+        },
+        {
+            "evidence": "cost_budget_evaluated_candidates",
+            "value": phase17_report["cost_budget_evaluated_candidates"],
+            "claim": claim,
+        },
+        {
+            "evidence": "estimated_cost",
+            "value": _format_number(phase17_report["estimated_cost"]),
+            "claim": claim,
+        },
     ]
 
 

@@ -1,0 +1,106 @@
+{
+  "benchmark": "parallel_runner",
+  "parallelism": "process",
+  "phase": 17,
+  "results": [
+    {
+      "candidate_id": "seed-000-tight_fit",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-001-load_balancer",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-002-prefer_used_bins",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-003-unsafe_probe",
+      "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+      "ok": false,
+      "test_score": null,
+      "train_score": null,
+      "validation_score": null
+    },
+    {
+      "candidate_id": "seed-004-tight_fit",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-005-load_balancer",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-006-prefer_used_bins",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-007-unsafe_probe",
+      "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+      "ok": false,
+      "test_score": null,
+      "train_score": null,
+      "validation_score": null
+    },
+    {
+      "candidate_id": "seed-008-tight_fit",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.333333333333333,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-009-load_balancer",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.416666666666667,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-010-prefer_used_bins",
+      "failure_reason": "",
+      "ok": true,
+      "test_score": 5.416666666666667,
+      "train_score": 5.333333333333333,
+      "validation_score": 5.2
+    },
+    {
+      "candidate_id": "seed-011-unsafe_probe",
+      "failure_reason": "dangerous_call: call to 'open' is blocked at line 2",
+      "ok": false,
+      "test_score": null,
+      "train_score": null,
+      "validation_score": null
+    }
+  ],
+  "schema_version": 1,
+  "stop_reason": "complete",
+  "worker_count": 2
+}

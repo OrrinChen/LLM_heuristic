@@ -24,7 +24,8 @@ def test_phase18_report_has_paper_sections_and_conservative_claims() -> None:
     assert "subprocess sandboxing" in report["abstract"]
     assert "universal dominance" in report["claim_boundaries"]["does_not_claim"]
     assert report["recommended_next_phase"] == (
-        "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        "No required phase remains; optional CVRPLIB/time-window routing "
+        "or release polish"
     )
 
 
@@ -85,7 +86,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
     ):
         assert f"## {heading}" in markdown
     assert "The system does not claim universal dominance" in markdown
-    assert "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search" in markdown
+    assert "No required phase remains" in markdown
 
 
 def test_phase18_technical_report_is_exported_with_artifact_package(

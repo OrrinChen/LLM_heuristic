@@ -16,6 +16,7 @@ from benchmarks.routing.external import (
 from llm.live_experiment import LLMExperimentConfig, build_phase12_report
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
+from program_search.parallel_runner import build_phase17_report
 from program_search.rerun_manifest import (
     build_bin_packing_rerun_manifest,
     rerun_manifest_entries,
@@ -62,6 +63,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "search_ablation",
             "live_llm",
             "semantic_novelty",
+            "parallel_runner",
         ),
         default="bin_packing",
     )
@@ -72,6 +74,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--candidate-budget", type=int, default=32)
     run.add_argument("--item-count", type=int, default=20)
     run.add_argument("--random-seed", type=int, default=23)
+    run.add_argument("--max-workers", type=int, default=2)
     run.add_argument("--external-path")
     run.add_argument(
         "--external-format",
@@ -162,6 +165,12 @@ def _run(args: argparse.Namespace) -> int:
         )
     elif args.benchmark == "semantic_novelty":
         report = build_phase13_report(candidate_count=args.candidate_count)
+    elif args.benchmark == "parallel_runner":
+        report = build_phase17_report(
+            candidate_count=args.candidate_count,
+            item_count=args.item_count,
+            max_workers=args.max_workers,
+        )
     else:
         report = build_phase3_report(
             config=EvolutionConfig(
@@ -207,6 +216,14 @@ def _run(args: argparse.Namespace) -> int:
             "duplicate_behavior_cluster_count": len(
                 report["duplicate_behavior_clusters"]
             ),
+            "path": str(output_path),
+        }
+    elif args.benchmark == "parallel_runner":
+        payload = {
+            "benchmark": args.benchmark,
+            "parallel_matches_sequential": report["parallel_matches_sequential"],
+            "checkpoint_resume_matches_full": report["checkpoint_resume_matches_full"],
+            "cloud_adapter_status": report["cloud_adapter_status"],
             "path": str(output_path),
         }
     else:

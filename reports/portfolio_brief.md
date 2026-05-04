@@ -60,4 +60,4 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 
 ## Recommended Next Phase
 
-Optional Phase 17: Local Parallel Runner / Cloud-Scale Search
+No required phase remains; optional CVRPLIB/time-window routing or release polish

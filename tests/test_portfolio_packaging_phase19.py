@@ -28,7 +28,8 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
     assert package["recommended_next_phase"] == (
-        "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        "No required phase remains; optional CVRPLIB/time-window routing "
+        "or release polish"
     )
 
 

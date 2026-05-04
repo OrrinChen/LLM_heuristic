@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Dict, Mapping, Sequence, Union
 
+from program_search.parallel_runner import build_phase17_report
 from program_search.rerun_manifest import build_bin_packing_rerun_manifest
 from reports.failure_taxonomy_v2 import render_failure_cards_markdown
 from reports.final_report import build_final_report, render_final_report_markdown
@@ -65,7 +66,10 @@ def export_report_artifacts(
         encoding="utf-8",
     )
 
-    tables = build_report_tables(final_report=final_report)
+    phase17_report = build_phase17_report()
+    tables = build_report_tables(
+        final_report=final_report, phase17_report=phase17_report
+    )
     table_paths = _write_tables(tables, tables_dir)
 
     plots = build_report_plots()
@@ -87,6 +91,15 @@ def export_report_artifacts(
         final_report,
         frontier_programs_dir,
     )
+    phase17_checkpoint_path = artifacts_dir / "phase17_checkpoint.json"
+    phase17_checkpoint_path.write_text(
+        json.dumps(
+            phase17_report["checkpoint_artifact"],
+            indent=2,
+            sort_keys=True,
+        ),
+        encoding="utf-8",
+    )
 
     png_paths: Sequence[Path] = ()
     if render_png:
@@ -103,6 +116,7 @@ def export_report_artifacts(
         "extra_plot_series": [str(path) for path in extra_plot_paths],
         "top_programs": [str(path) for path in top_program_paths],
         "frontier_programs": [str(path) for path in frontier_program_paths],
+        "phase17_checkpoint": str(phase17_checkpoint_path),
         "rerun_manifest": str(manifest_path),
         "png_rendered": bool(png_paths),
         "png_paths": [str(path) for path in png_paths],
