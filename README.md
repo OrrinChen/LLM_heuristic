@@ -29,13 +29,14 @@ the project does not claim universal dominance or SOTA solver performance.
 ## One-Command Demo
 
 ```bash
-PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-demo --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
 ```
 
 This writes a local evidence package with `reports/final_report.md`,
 `reports/technical_report.md`, `reports/portfolio_brief.md`,
 `reports/failure_cards.md`, CSV tables, plot-ready JSON, top programs,
-frontier programs, and a rerun manifest.
+frontier programs, a rerun manifest, `artifacts/reproduction_manifest.json`,
+and `artifacts/reproduction_summary.md`.
 
 ## Core Architecture
 
@@ -63,6 +64,7 @@ flowchart LR
 | Program Semantics | Probe-based behavior fingerprints | `novelty_table.csv` | behavior novelty evidence, not human-level semantic proof |
 | Failure Taxonomy v2 | Failure cards and repair rows | `failure_taxonomy_v2.csv` | explains deterministic failure modes, not arbitrary auto-repair |
 | Pareto Frontier | Quality, runtime, complexity, failures, gaps | 8 frontier rows | selected trade-offs, not universal dominance |
+| Reproducibility Package v2 | Local deterministic profiles | `reproduction_manifest.json` | fresh-clone reproduction without API key or large data |
 
 ## Safety Boundary
 
@@ -85,6 +87,9 @@ platform memory limits.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
   public Amazon route data.
 - Runtime frontier values use a deterministic proxy.
+- Reproduction profiles are local and deterministic by default; the
+  `llm_optional` profile uses fallback providers unless live Gemini is
+  explicitly configured.
 - O2 reports selected trade-offs and does not claim universal dominance.
 
 Current status:
@@ -157,10 +162,14 @@ Current status:
 - Phase 19 complete: README-first portfolio narrative, one-command demo,
   architecture diagram, benchmark evidence table, safety boundary,
   limitations, resume bullets, and portfolio brief artifact.
+- Phase 16 complete: deterministic reproduction profiles for `local_demo`,
+  `external_small`, and `llm_optional`, one-command `reproduce` CLI export,
+  reproduction manifest, reproduction summary, and Make targets.
 - Current phase: the job-search portfolio track, Phase 10A routing evidence,
-  Phase 12 live LLM mutation v1, Phase 13 semantic novelty, and Phase 14
-  failure taxonomy v2 are complete; optional Phase 16 reproducibility package
-  v2 is the next research extension.
+  Phase 12 live LLM mutation v1, Phase 13 semantic novelty, Phase 14 failure
+  taxonomy v2, and Phase 16 reproducibility package v2 are complete; optional
+  Phase 17 local parallel runner / cloud-scale search is the next research
+  extension.
 
 ## Setup
 
@@ -298,6 +307,12 @@ Portfolio packaging validation:
 python3 -m pytest tests/test_portfolio_packaging_phase19.py -v
 ```
 
+Reproducibility package validation:
+
+```bash
+python3 -m pytest tests/test_reproducibility_package_phase16.py -v
+```
+
 ## CLI
 
 The deterministic local CLI is available through the package module:
@@ -312,6 +327,9 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty -
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir .
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-reproduce-local
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-reproduce-external
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile llm_optional --output-dir /tmp/o2-reproduce-llm
 ```
 
 After installation, the console script is also available:
@@ -328,6 +346,13 @@ User-provided OR-Library-style or BPPLIB-style files can be passed with
 The external routing command uses tiny TSPLIB-style EUC_2D fixtures by default.
 User-provided `.tsp` or `.txt` files can be passed with `--external-path` and
 `--external-format tsplib`. Do not commit large public benchmark corpora.
+
+The reproduction command regenerates the deterministic evidence package and
+writes `artifacts/reproduction_manifest.json` plus
+`artifacts/reproduction_summary.md`. The `local_demo` and `external_small`
+profiles require no API key or large external data. The `llm_optional` profile
+uses deterministic fallback providers unless live Gemini is explicitly enabled
+through the separate `live_llm` command.
 
 ## Smoke Check
 
@@ -918,12 +943,14 @@ reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
+artifacts/reproduction_manifest.json
+artifacts/reproduction_summary.md
 ```
 
 Regenerate it with:
 
 ```bash
-PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir . --top-k 5
 ```
 
 ## Bin Packing Benchmark

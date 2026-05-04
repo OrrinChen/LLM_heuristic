@@ -15,8 +15,8 @@ PORTFOLIO_README_REQUIRED_HEADINGS = (
 )
 
 PORTFOLIO_DEMO_COMMAND = (
-    "PYTHONPATH=src python3 -m heuristic_discovery report --output-dir "
-    "/tmp/o2-demo --top-k 3"
+    "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
+    "local_demo --output-dir /tmp/o2-demo --top-k 3"
 )
 
 PRIMARY_RESUME_BULLET = (
@@ -175,7 +175,9 @@ def build_phase19_package(
             "semantic_behavior_clusters": semantic["behavior_cluster_count"],
             "failure_cards": failure_v2["failure_card_count"],
         },
-        "recommended_next_phase": "Optional Phase 16: Reproducibility Package v2",
+        "recommended_next_phase": (
+            "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        ),
     }
 
 

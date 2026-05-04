@@ -139,7 +139,7 @@ def test_phase13_integrates_with_reports_tables_plots_and_artifacts(
     assert "program_semantics_and_novelty" in final["sections"]
     assert final["semantic_novelty"]["behavior_cluster_count"] >= 1
     assert "Program Semantics And Novelty" in markdown
-    assert final["recommended_next_steps"][0]["step"] == "reproducibility_package_v2"
+    assert final["recommended_next_steps"][0]["step"] == "optional_cloud_scale_search"
     assert "novelty_table" in tables["tables"]
     assert "duplicate_behavior_clusters" in tables["tables"]
     assert "behavior_fingerprint" in plots["plots"]

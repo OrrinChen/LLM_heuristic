@@ -8,7 +8,7 @@
 ## Interview Demo
 
 ```bash
-PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-demo --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
 ```
 
 ## Core Architecture
@@ -60,4 +60,4 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 
 ## Recommended Next Phase
 
-Optional Phase 16: Reproducibility Package v2
+Optional Phase 17: Local Parallel Runner / Cloud-Scale Search

@@ -21,14 +21,14 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         in (package["resume_bullets"][0])
     )
     assert package["demo_command"] == (
-        "PYTHONPATH=src python3 -m heuristic_discovery report --output-dir "
-        "/tmp/o2-demo --top-k 3"
+        "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
+        "local_demo --output-dir /tmp/o2-demo --top-k 3"
     )
     assert package["claim_boundaries"]["does_not_claim"] == (
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
     assert package["recommended_next_phase"] == (
-        "Optional Phase 16: Reproducibility Package v2"
+        "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
     )
 
 
@@ -73,8 +73,8 @@ def test_readme_first_screen_contains_required_portfolio_sections() -> None:
     for heading in PORTFOLIO_README_REQUIRED_HEADINGS:
         assert heading in first_screen
     assert (
-        "PYTHONPATH=src python3 -m heuristic_discovery report --output-dir "
-        "/tmp/o2-demo --top-k 3"
+        "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
+        "local_demo --output-dir /tmp/o2-demo --top-k 3"
     ) in first_screen
     assert "seed heuristic library" in first_screen
     assert "Online Bin Packing" in first_screen

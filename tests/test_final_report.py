@@ -79,7 +79,7 @@ def test_final_report_links_robustness_and_failure_evidence(
     assert final_report["limitations"]
     assert (
         final_report["recommended_next_steps"][0]["step"]
-        == "reproducibility_package_v2"
+        == "optional_cloud_scale_search"
     )
 
 
@@ -112,7 +112,7 @@ def test_final_report_smoke_signature_is_stable(
         "seed-000-tight_fit",
         "route-seed-003-slack_aware",
         "phase6-seed-000-travel_fast",
-        "reproducibility_package_v2",
+        "optional_cloud_scale_search",
     )
 
 
