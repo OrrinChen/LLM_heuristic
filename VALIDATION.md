@@ -1050,6 +1050,46 @@ report artifacts export final markdown, CSV tables, JSON plot series, top progra
 CLI run, report, inspect, and rerun-manifest commands work with deterministic defaults
 ```
 
+## Reproducibility Package Validation
+
+Run this once Phase 16 exists:
+
+```bash
+python3 -m pytest tests/test_reproducibility_package_phase16.py -v
+```
+
+Expected result:
+
+```text
+local_demo, external_small, and llm_optional profiles are deterministic
+no profile requires GEMINI_API_KEY, paid services, or large external data
+reproduce CLI writes reports/final_report.md, reports/tables/*.csv, reports/plots/*.json, artifacts/rerun_manifest.json, artifacts/reproduction_manifest.json, and artifacts/reproduction_summary.md
+rerun checks confirm stable scores and matching code hashes
+Make targets exist for reproduce, test, report, and demo
+```
+
+## Reproducibility Smoke Validation
+
+Run these from the repository root:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-reproduce-local --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-reproduce-external --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile llm_optional --output-dir /tmp/o2-reproduce-llm --top-k 3
+```
+
+Expected result:
+
+```text
+each command prints deterministic true
+each command prints requires_api_key false
+each output directory contains artifacts/reproduction_manifest.json
+each output directory contains artifacts/reproduction_summary.md
+local_demo generates the full deterministic local evidence package
+external_small highlights external_generalization.csv and routing_external_generalization.csv
+llm_optional highlights llm_operator_comparison.csv and llm_candidate_audit.csv while using deterministic fallback
+```
+
 ## Hardening Smoke Validation
 
 Run this from the repository root:
@@ -1099,6 +1139,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty -
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-cli-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 2
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir /tmp/o2-cli-rerun --top-k 2
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-cli-reproduce --top-k 2
 ```
 
 Expected result:
@@ -1113,6 +1154,7 @@ semantic_novelty run prints behavior_cluster_count and writes run_summary.json
 report writes reports/final_report.md, reports/tables/*.csv, reports/tables/routing_external_generalization.csv, reports/tables/llm_operator_comparison.csv, reports/tables/llm_candidate_audit.csv, reports/tables/novelty_table.csv, reports/tables/duplicate_behavior_clusters.csv, reports/plots/plot_series.json, reports/plots/behavior_fingerprint.json, reports/plots/frontier_plot_series.json, artifacts/top_programs/*.py, artifacts/frontier_programs/*.py, and artifacts/rerun_manifest.json
 inspect prints candidate_id rows
 rerun-manifest prints code_hash_matches true rows
+reproduce prints deterministic true and writes reproduction_manifest.json plus reproduction_summary.md
 ```
 
 ## Optional Gemini Live Smoke Validation

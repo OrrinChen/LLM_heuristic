@@ -70,7 +70,7 @@ Before executing generated code, verify:
 Generate the local evidence package:
 
 ```bash
-PYTHONPATH=src python3 -m heuristic_discovery report --output-dir . --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir . --top-k 5
 ```
 
 Expected generated files:
@@ -100,6 +100,8 @@ reports/plots/frontier_plot_series.json
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
+artifacts/reproduction_manifest.json
+artifacts/reproduction_summary.md
 ```
 
 Run deterministic CLI checks:
@@ -114,6 +116,21 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty -
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-reproduce-local --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-reproduce-external --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile llm_optional --output-dir /tmp/o2-reproduce-llm --top-k 3
+```
+
+The reproduction profiles are deterministic and local. They do not require
+`GEMINI_API_KEY`, paid services, or large external benchmark files.
+
+Make targets are available for the fresh-clone path:
+
+```bash
+make reproduce
+make test
+make report
+make demo
 ```
 
 ## External Bin Packing Evidence

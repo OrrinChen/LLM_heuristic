@@ -128,4 +128,4 @@ The report includes repair success evidence for deterministic syntax, unsafe-cod
 
 ## Recommended Next Steps
 
-- `reproducibility_package_v2`: Optionally add one-command reproduction profiles now that external evidence, ablation, novelty, Pareto, and failure cards are exported.
+- `optional_cloud_scale_search`: If extending the platform, start Phase 17 with a local parallel runner and checkpoint/resume path after the deterministic reproduction profiles are in place.

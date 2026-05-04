@@ -273,7 +273,9 @@ def build_phase18_report(
             "pareto_frontier_count": frontier["frontier_count"],
             "failure_card_count": failure_v2["failure_card_count"],
         },
-        "recommended_next_phase": "Phase 16: Reproducibility Package v2",
+        "recommended_next_phase": (
+            "Optional Phase 17: Local Parallel Runner / Cloud-Scale Search"
+        ),
     }
 
 

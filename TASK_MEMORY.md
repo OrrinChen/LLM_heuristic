@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `feat: add failure taxonomy v2 evidence`
-Current phase: Phase 14 failure taxonomy v2 complete
-Main blocker: None for Phase 14; CVRPLIB/time-window routing, reproduction profiles, and cloud execution remain deferred
-Next recommended action: optional Phase 16 reproducibility package v2
+Latest commit: `feat: add reproducibility package v2`
+Current phase: Phase 16 reproducibility package v2 complete
+Main blocker: None for Phase 16; CVRPLIB/time-window routing and cloud execution remain deferred
+Next recommended action: optional Phase 17 local parallel runner / cloud-scale search
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -178,6 +178,21 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated final report, report tables, technical report, portfolio brief,
   README, RUNBOOK, ROADMAP, VALIDATION, and task memory so optional Phase 16
   reproducibility package v2 is now the next research extension.
+
+2026-05-04 Phase 16 completion:
+
+- Completed reproducibility package v2 only; no CVRPLIB/time-window routing,
+  cloud execution, or live LLM campaign was added.
+- Added deterministic local reproduction profiles for `local_demo`,
+  `external_small`, and `llm_optional`.
+- Added `python3 -m heuristic_discovery reproduce` CLI support that regenerates
+  report artifacts, reruns the top-candidate manifest, writes
+  `artifacts/reproduction_manifest.json`, and writes
+  `artifacts/reproduction_summary.md`.
+- Added `make reproduce`, `make test`, `make report`, and `make demo` targets.
+- Updated README, RUNBOOK, ROADMAP, VALIDATION, technical report, portfolio
+  brief, final-report next steps, and tests so optional Phase 17 local parallel
+  runner / cloud-scale search is now the next research extension.
 
 ## Completed Phases
 

@@ -61,6 +61,9 @@ Completed:
 - Phase 15: Pareto frontier reporting across objective quality, runtime,
   program complexity, failure rate, generalization gap, and Amazon-style
   driver-likeness / operational realism.
+- Phase 16: Reproducibility package v2 with deterministic local profiles,
+  one-command reproduction CLI, Make targets, reproduction manifest, and
+  reproduction summary.
 - Phase 18: Research-style technical report with problem framing, system
   design, sandbox boundary, benchmarks, search loop, external evidence,
   ablation, generalization, failure analysis, limitations, and conclusion.
@@ -82,24 +85,28 @@ Current phase:
 - Phase 14 failure taxonomy v2 is complete as deterministic failure cards and
   repair evidence.
 - Phase 15 Pareto frontier reporting is complete.
+- Phase 16 reproducibility package v2 is complete with local deterministic
+  profiles for `local_demo`, `external_small`, and `llm_optional`.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
-- The job-search evidence track is complete; the next optional implementation
-  phase is Phase 16: Reproducibility Package v2.
+- The job-search evidence track and reproducibility package are complete; the
+  next optional implementation phase is Phase 17: Local Parallel Runner /
+  Cloud-Scale Search.
 
 Deferred:
 
 - CVRPLIB-style capacitated routing and optional time-window routing evidence.
 - Crossover beyond simple mutation.
-- Cloud execution.
+- Cloud execution beyond a future local parallel/checkpoint runner.
 - Paid API usage.
 - Production live-LLM experiment campaigns beyond controlled local smoke checks.
 
 Next autonomous action:
 
 ```text
-The required job-search packaging track is complete. If continuing, execute
-optional Phase 16 only: add deterministic reproduction profiles and artifacts.
+The required job-search packaging and reproduction tracks are complete. If
+continuing, execute optional Phase 17 only, starting with a local parallel
+runner and checkpoint/resume before any cloud adapter.
 ```
 
 ## Project Positioning
@@ -871,6 +878,8 @@ Conservative upgraded claim:
 
 ## Phase 16: Reproducibility Package v2
 
+Status: complete.
+
 Goal: make core results reproducible from a fresh clone without paid services
 or large external files.
 
@@ -893,18 +902,18 @@ python -m heuristic_discovery reproduce --profile llm_optional
 
 Required outputs:
 
-- [ ] `artifacts/reproduction_manifest.json`.
-- [ ] `artifacts/reproduction_summary.md`.
-- [ ] `reports/final_report.md`.
-- [ ] `reports/tables/*.csv`.
-- [ ] `reports/plots/*.json`.
+- [x] `artifacts/reproduction_manifest.json`.
+- [x] `artifacts/reproduction_summary.md`.
+- [x] `reports/final_report.md`.
+- [x] `reports/tables/*.csv`.
+- [x] `reports/plots/*.json`.
 
 Acceptance criteria:
 
-- [ ] Fresh clone can run `local_demo`.
-- [ ] API key is not required.
-- [ ] Large external data is not required.
-- [ ] Results are deterministic.
+- [x] Fresh clone can run `local_demo`.
+- [x] API key is not required.
+- [x] Large external data is not required.
+- [x] Results are deterministic.
 
 ## Phase 17: Optional Cloud-Scale Search
 
@@ -1045,12 +1054,12 @@ Completed foundation:
 Next recommended order:
 
 ```text
-16. Reproducibility package v2.
+17A. Local parallel runner.
 ```
 
-Phase 10B, Phase 10C, Phase 16, and Phase 17 remain optional
+Phase 10B, Phase 10C, and Phase 17 remain optional
 extensions unless the target audience requires deeper routing evidence, failure
-repair, reproduction profiles, or scale infrastructure.
+repair, or scale infrastructure.
 
 MVP cut line:
 

@@ -22,6 +22,10 @@ from program_search.rerun_manifest import (
 )
 from program_search.semantic_novelty import build_phase13_report
 from reports.artifacts import export_report_artifacts
+from reports.reproducibility import (
+    REPRODUCTION_PROFILE_NAMES,
+    export_reproduction_package,
+)
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
@@ -35,6 +39,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         return _inspect(args)
     if args.command == "rerun-manifest":
         return _rerun_manifest(args)
+    if args.command == "reproduce":
+        return _reproduce(args)
     parser.print_help()
     return 1
 
@@ -90,6 +96,19 @@ def _build_parser() -> argparse.ArgumentParser:
     manifest.add_argument("--output-dir", default=".")
     manifest.add_argument("--top-k", type=int, default=5)
     manifest.add_argument("--manifest")
+
+    reproduce = subcommands.add_parser(
+        "reproduce",
+        help="Generate deterministic reproduction artifacts for a local profile.",
+    )
+    reproduce.add_argument(
+        "--profile",
+        choices=REPRODUCTION_PROFILE_NAMES,
+        default="local_demo",
+    )
+    reproduce.add_argument("--output-dir", default=".")
+    reproduce.add_argument("--top-k", type=int, default=5)
+    reproduce.add_argument("--render-png", action="store_true")
 
     return parser
 
@@ -240,6 +259,17 @@ def _rerun_manifest(args: argparse.Namespace) -> int:
     )
     rerun = rerun_manifest_entries(manifest)
     print(json.dumps(rerun, indent=2, sort_keys=True))
+    return 0
+
+
+def _reproduce(args: argparse.Namespace) -> int:
+    summary = export_reproduction_package(
+        args.output_dir,
+        profile=args.profile,
+        top_k=args.top_k,
+        render_png=args.render_png,
+    )
+    print(json.dumps(summary, indent=2, sort_keys=True))
     return 0
 
 

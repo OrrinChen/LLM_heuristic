@@ -112,4 +112,4 @@ Evidence references: `final_report.md`, `technical_report.md`.
 
 ## Next Phase
 
-Phase 16: Reproducibility Package v2.
+Optional Phase 17: Local Parallel Runner / Cloud-Scale Search.
