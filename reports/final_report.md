@@ -104,6 +104,15 @@ Worst observed gap slice: `routing-large-routes`.
 The failure report tracks 9 failure categories, rejected programs, surviving programs, and worked/failed patterns.
 Amazon trade-off callouts: 4.
 
+## Failure Taxonomy v2
+
+Phase 14 upgrades failure analysis into cards with concrete example programs, trigger conditions, validator or evaluator sources, score impact, and possible repair strategies. Repair success rows remain deterministic evidence records.
+
+Failure cards: `11`.
+Repair success rows: `11`.
+Claim boundary: failure taxonomy v2 explains deterministic failure modes and repair routes; it does not prove automated repair success on arbitrary LLM code.
+The report includes repair success evidence for deterministic syntax, unsafe-code, timeout, and LLM hallucinated-feature failure routes.
+
 ## Limitations
 
 - Live LLM mutation is optional and remains gated behind environment-variable configuration.
@@ -115,7 +124,8 @@ Amazon trade-off callouts: 4.
 - The current routing generated-program interface ranks next stops rather than emitting full routes.
 - Subprocess memory limits are applied only on platforms that expose compatible resource limits.
 - Semantic novelty is probe-based and detects behavior equivalence on fixed probe states; it does not prove human-level semantic understanding.
+- Failure taxonomy v2 repair rows are deterministic evidence records, not proof that arbitrary LLM failures can be repaired automatically.
 
 ## Recommended Next Steps
 
-- `failure_taxonomy_v2`: Optionally expand failure cards with trigger conditions, validator sources, score impact, and repair strategies.
+- `reproducibility_package_v2`: Optionally add one-command reproduction profiles now that external evidence, ablation, novelty, Pareto, and failure cards are exported.

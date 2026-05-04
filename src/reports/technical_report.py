@@ -19,6 +19,7 @@ TECHNICAL_REPORT_SECTIONS = (
     "program_semantics_and_novelty",
     "generalization",
     "failure_analysis",
+    "failure_taxonomy_v2",
     "limitations",
     "conclusion",
 )
@@ -48,6 +49,7 @@ def build_phase18_report(
     live_llm = source["live_llm"]
     semantic = source["semantic_novelty"]
     frontier = source["pareto_frontier"]
+    failure_v2 = source["failure_taxonomy_v2"]
 
     sections = (
         _section(
@@ -204,7 +206,23 @@ def build_phase18_report(
                 "and routing trade-off patterns instead of hiding rejected or "
                 "weak candidates."
             ),
-            ("failure_taxonomy.csv", "failure_cards"),
+            ("failure_taxonomy.csv", "failure_taxonomy_v2.csv"),
+        ),
+        _section(
+            "failure_taxonomy_v2",
+            "Failure Taxonomy v2",
+            (
+                "Phase 14 converts failure categories into auditable cards. "
+                "Each card records an example program, trigger condition, "
+                "validator or evaluator source, score impact, and possible "
+                "repair strategy, plus deterministic repair success rows where "
+                "repair was attempted."
+            ),
+            (
+                "failure_cards.md",
+                "failure_taxonomy_v2.csv",
+                "repair_success_rate.csv",
+            ),
         ),
         _section(
             "limitations",
@@ -253,8 +271,9 @@ def build_phase18_report(
             "live_llm_best_method": live_llm["best_method"],
             "semantic_behavior_clusters": semantic["behavior_cluster_count"],
             "pareto_frontier_count": frontier["frontier_count"],
+            "failure_card_count": failure_v2["failure_card_count"],
         },
-        "recommended_next_phase": "Phase 14: Failure Taxonomy v2",
+        "recommended_next_phase": "Phase 16: Reproducibility Package v2",
     }
 
 
@@ -300,6 +319,7 @@ def render_technical_report_markdown(report: Mapping[str, object]) -> str:
             f"- External benchmark: `{snapshot['external_benchmark']}`.",
             f"- Ablation best method: `{snapshot['ablation_best_method']}`.",
             f"- Pareto frontier rows: `{snapshot['pareto_frontier_count']}`.",
+            f"- Failure cards: `{snapshot['failure_card_count']}`.",
             "",
             "## Next Phase",
             "",

@@ -522,7 +522,8 @@ external benchmark evidence is included without SOTA claims
 search mechanism ablation evidence is included under a fixed local budget
 Pareto frontier evidence is included without universal dominance claims
 program semantics and novelty evidence is included without human-level semantic claims
-recommended next steps prioritize failure taxonomy v2 after Phase 13
+failure taxonomy v2 evidence explains deterministic failure modes and repairs
+recommended next steps prioritize reproducibility package v2 after Phase 14
 ```
 
 ## Final Report Smoke Validation
@@ -548,6 +549,7 @@ print("External Benchmark Evidence" in markdown)
 print("LLM Live Mutation v1" in markdown)
 print("Search Mechanism Ablation" in markdown)
 print("Program Semantics And Novelty" in markdown)
+print("Failure Taxonomy v2" in markdown)
 print("Pareto Frontier Report" in markdown)
 print("do not universally dominate" in markdown)
 print("selected trade-offs" in markdown)
@@ -564,7 +566,8 @@ seed-000-tight_fit
 route-seed-003-slack_aware
 phase6-seed-000-travel_fast
 8
-failure_taxonomy_v2
+reproducibility_package_v2
+True
 True
 True
 True
@@ -661,8 +664,8 @@ Expected result:
 
 ```text
 19
-9
-Optional Phase 14: Failure Taxonomy v2
+10
+Optional Phase 16: Reproducibility Package v2
 True
 True
 True
@@ -697,10 +700,10 @@ Expected result:
 
 ```text
 18
-14
+15
 3
 8
-Phase 14: Failure Taxonomy v2
+Phase 16: Reproducibility Package v2
 True
 True
 True
@@ -888,6 +891,57 @@ seed-010-prefer_used_bins
 semantic novelty reports probe-based behavior evidence and equivalence clusters; it does not prove human-level semantic understanding or universal performance improvement
 ```
 
+## Failure Taxonomy v2 Validation
+
+Run these once Phase 14 failure cards exist:
+
+```bash
+python3 -m pytest tests/test_failure_taxonomy_v2_phase14.py -v
+```
+
+Expected result:
+
+```text
+all 11 failure cards include examples, triggers, detectors, score impact,
+and repair strategies
+failure_cards.md, failure_taxonomy_v2.csv, and repair_success_rate.csv export
+final report, technical report, portfolio brief, and tables expose Phase 14
+recommended next phase moves to reproducibility package v2
+```
+
+## Phase 14 Smoke Validation
+
+Run this after Phase 14 modules exist:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.failure_taxonomy_v2 import build_phase14_report
+
+report = build_phase14_report()
+print(report["phase"])
+print(report["benchmark"])
+print(len(report["failure_cards"]))
+print(len(report["repair_success_rows"]))
+print(report["failure_cards"][0]["category"])
+print(report["repair_success_rows"][0]["category"])
+print(report["recommended_next_phase"])
+print(report["claim_boundary"])
+PY
+```
+
+Expected result:
+
+```text
+14
+failure_taxonomy_v2
+11
+11
+invalid_syntax
+llm_hallucinated_feature
+Phase 16: Reproducibility Package v2
+failure taxonomy v2 explains deterministic failure modes and repair routes; it does not prove automated repair success on arbitrary LLM code
+```
+
 ## Report Tables, Plots, and Live-LLM Client Validation
 
 Run these after report artifact and optional live-LLM modules exist:
@@ -931,13 +985,15 @@ print(len(tables["novelty_table"]["rows"]))
 print(len(tables["duplicate_behavior_clusters"]["rows"]))
 print(len(tables["pareto_frontier"]["rows"]))
 print(len(tables["failure_taxonomy"]["rows"]))
+print(len(tables["failure_taxonomy_v2"]["rows"]))
+print(len(tables["repair_success_rate"]["rows"]))
 print(tuple(plots["plots"]))
 print(len(plots["robustness_generalization_gaps"]["points"]))
 print(len(plots["generation_curve_by_method"]["points"]))
 print(len(plots["behavior_fingerprint"]["points"]))
 print(len(plots["frontier_plot_series"]["points"]))
 print("routing-large-routes" in render_report_plots_markdown(plots))
-print("failure_taxonomy_v2" in render_report_tables_markdown(tables))
+print("Failure Taxonomy v2" in render_report_tables_markdown(tables))
 try:
     GeminiMutationProvider.from_env()
 except GeminiClientError as exc:
@@ -948,7 +1004,7 @@ PY
 Expected result without a live key exported:
 
 ```text
-('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'recommended_next_steps')
+('benchmark_comparison', 'robustness_summary', 'worst_generalization_gaps', 'external_generalization', 'routing_external_generalization', 'ablation_summary', 'invalid_code_rate_by_method', 'best_score_by_budget', 'llm_operator_comparison', 'llm_candidate_audit', 'novelty_table', 'duplicate_behavior_clusters', 'pareto_frontier', 'failure_taxonomy', 'failure_taxonomy_v2', 'repair_success_rate', 'recommended_next_steps')
 16
 5
 5
@@ -961,6 +1017,8 @@ Expected result without a live key exported:
 4
 17
 9
+11
+11
 ('bin_packing_evolution_best_score', 'amazon_discovery_best_score', 'robustness_generalization_gaps', 'generation_curve_by_method', 'behavior_fingerprint', 'frontier_plot_series', 'failure_rate_by_generation')
 15
 32

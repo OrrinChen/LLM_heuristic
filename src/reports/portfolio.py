@@ -54,6 +54,7 @@ def build_phase19_package(
     live_llm = final["live_llm"]
     semantic = final["semantic_novelty"]
     frontier = final["pareto_frontier"]
+    failure_v2 = final["failure_taxonomy_v2"]
     evidence = final["evidence"]
 
     benchmark_rows = (
@@ -120,6 +121,13 @@ def build_phase19_package(
             "reported_metric": frontier["candidate_count"],
             "claim": "selected trade-offs, not universal dominance",
         },
+        {
+            "benchmark": "Failure Taxonomy v2",
+            "evidence": "failure cards and deterministic repair rows",
+            "top_program": f"{failure_v2['failure_card_count']} failure cards",
+            "reported_metric": failure_v2["repair_strategy_count"],
+            "claim": "explains failure modes, not arbitrary auto-repair",
+        },
     )
 
     return {
@@ -148,6 +156,8 @@ def build_phase19_package(
             "proprietary or public Amazon route data.",
             "The project reports selected trade-offs and does not claim "
             "universal dominance or SOTA solver performance.",
+            "Failure repair evidence is deterministic and local; it does not "
+            "prove arbitrary LLM-generated failures can be repaired.",
         ),
         "claim_boundaries": {
             "supports": final["claims"]["conservative"],
@@ -163,8 +173,9 @@ def build_phase19_package(
             ],
             "pareto_frontier_rows": frontier["frontier_count"],
             "semantic_behavior_clusters": semantic["behavior_cluster_count"],
+            "failure_cards": failure_v2["failure_card_count"],
         },
-        "recommended_next_phase": "Optional Phase 14: Failure Taxonomy v2",
+        "recommended_next_phase": "Optional Phase 16: Reproducibility Package v2",
     }
 
 

@@ -77,6 +77,7 @@ Expected generated files:
 
 ```text
 reports/final_report.md
+reports/failure_cards.md
 reports/technical_report.md
 reports/portfolio_brief.md
 reports/tables/*.csv
@@ -89,6 +90,8 @@ reports/tables/llm_operator_comparison.csv
 reports/tables/llm_candidate_audit.csv
 reports/tables/novelty_table.csv
 reports/tables/duplicate_behavior_clusters.csv
+reports/tables/failure_taxonomy_v2.csv
+reports/tables/repair_success_rate.csv
 reports/tables/pareto_frontier.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
@@ -108,6 +111,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark routing_external -
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --candidate-budget 16 --generations 3 --output-dir /tmp/o2-ablation
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
 ```
@@ -253,6 +257,35 @@ Expected artifacts after a report export:
 reports/tables/pareto_frontier.csv
 reports/plots/frontier_plot_series.json
 artifacts/frontier_programs/*.py
+```
+
+## Failure Taxonomy v2
+
+Phase 14 explains deterministic failure modes as cards:
+
+```bash
+PYTHONPATH=src python3 - <<'PY'
+from reports.failure_taxonomy_v2 import (
+    build_phase14_report,
+    render_failure_cards_markdown,
+)
+
+report = build_phase14_report()
+markdown = render_failure_cards_markdown(report)
+print(report["phase"])
+print(len(report["failure_cards"]))
+print(len(report["repair_success_rows"]))
+print(report["recommended_next_phase"])
+print("Repair Strategy" in markdown)
+PY
+```
+
+Expected artifacts after a report export:
+
+```text
+reports/failure_cards.md
+reports/tables/failure_taxonomy_v2.csv
+reports/tables/repair_success_rate.csv
 ```
 
 ## Research-Style Technical Report
