@@ -35,6 +35,57 @@ If a formatter is configured:
 python3 -m ruff format --check .
 ```
 
+## Release Validation Checklist
+
+Use this checklist for the release-frozen, portfolio-ready O2 package. It is a
+documentation and evidence-package gate only; it does not add new benchmark
+features, broader crossover, live LLM expansion, or paid cloud execution.
+
+```bash
+python3 -m pytest -q
+python3 -m ruff check .
+python3 -m ruff format --check .
+git diff --check -- .
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3
+```
+
+Secret scan:
+
+```bash
+git grep -nE 'AIza[0-9A-Za-z_-]{20,}|(GEMINI_API_KEY|OPENAI_API_KEY|AWS_SECRET_ACCESS_KEY)=[A-Za-z0-9_/\+=-]{12,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY' -- . ':!.git' || true
+```
+
+Expected result: no committed API keys, private keys, credentials, or raw
+secrets. Mentions of environment-variable names without values are acceptable.
+
+Large-file scan:
+
+```bash
+find . -type f -size +5M -not -path './.git/*' -print
+```
+
+Expected result: no large benchmark corpora, raw proprietary data, or accidental
+binary artifacts are committed. Larger public benchmark corpora remain optional
+future work outside the repository.
+
+Release checklist result:
+
+```text
+pytest passes
+ruff check passes
+ruff format check passes
+local_demo reproduction regenerates the evidence package
+external_small reproduction regenerates external evidence tables
+report export writes reports/final_report.md, CSV tables, and plot-ready JSON
+Secret scan returns no committed credentials
+Large-file scan returns no unexpected large files
+Project remains release-frozen and portfolio-ready
+Optional future work is limited to broader crossover, paid cloud execution, and
+larger public benchmark corpora
+```
+
 ## Sandbox Validation
 
 Run these once sandbox modules exist:

@@ -137,6 +137,45 @@ make report
 make demo
 ```
 
+## Release-Frozen Portfolio Package
+
+O2 is release-frozen and portfolio-ready. This means the current repository is a
+defensible evidence package, not an open-ended feature branch. Do not add a new
+roadmap phase, benchmark feature, broader crossover operator, paid cloud
+execution path, or expanded live LLM campaign during release polish.
+
+Release validation command sequence:
+
+```bash
+python3 -m pytest -q
+python3 -m ruff check .
+python3 -m ruff format --check .
+git diff --check -- .
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3
+git grep -nE 'AIza[0-9A-Za-z_-]{20,}|(GEMINI_API_KEY|OPENAI_API_KEY|AWS_SECRET_ACCESS_KEY)=[A-Za-z0-9_/\+=-]{12,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY' -- . ':!.git' || true
+find . -type f -size +5M -not -path './.git/*' -print
+```
+
+Expected release artifacts:
+
+```text
+RELEASE_SUMMARY.md
+README.md
+reports/final_report.md
+reports/technical_report.md
+reports/portfolio_brief.md
+reports/tables/*.csv
+reports/plots/*.json
+artifacts/reproduction_manifest.json
+artifacts/reproduction_summary.md
+```
+
+Optional future work is limited to broader crossover, paid cloud execution, and
+larger public benchmark corpora. Keep those out of the release-frozen package
+unless a new task explicitly asks for them.
+
 ## External Bin Packing Evidence
 
 Phase 9 supports tiny deterministic BPPLIB / OR-Library-style fixtures by
@@ -168,8 +207,8 @@ PYTHONPATH=src python3 -m heuristic_discovery run \
   --output-dir /tmp/o2-routing-external
 ```
 
-Do not claim LKH, CVRP/VRPTW solver, SOTA, or real Amazon superiority from this
-evidence. It is external routing-style transfer evidence for the existing
+Do not claim LKH, CVRP/VRPTW solver, SOTA, or superiority on Amazon data from
+this evidence. It is external routing-style transfer evidence for the existing
 `score_next_stop` evaluator. Do not commit large TSPLIB/CVRPLIB corpora; commit
 only small fixtures, parser tests, and generated summary artifacts.
 

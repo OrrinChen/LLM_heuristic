@@ -95,8 +95,7 @@ def test_phase15_report_tables_plots_and_final_report_are_integrated() -> None:
     assert final["pareto_frontier"]["frontier_count"] >= 3
     assert "Pareto Frontier" in markdown
     assert (
-        final["recommended_next_steps"][0]["step"]
-        == "optional_routing_depth_or_release_polish"
+        final["recommended_next_steps"][0]["step"] == "release_frozen_portfolio_package"
     )
 
 

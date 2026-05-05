@@ -72,7 +72,7 @@
     "fixture_source": "built_in_small_deterministic",
     "live_llm_fallback": 23
   },
-  "recommended_next_phase": "No required phase remains; optional broader crossover or release polish",
+  "recommended_next_phase": "No required phase remains; project is release-frozen and portfolio-ready. Optional future work: broader crossover, paid cloud execution, or larger public benchmark corpora.",
   "required_outputs": [
     "reports/final_report.md",
     "reports/tables/benchmark_comparison.csv",
