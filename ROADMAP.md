@@ -101,7 +101,6 @@ Current phase:
 
 Deferred:
 
-- Optional time-window routing evidence.
 - Crossover beyond simple mutation.
 - Paid cloud execution beyond the dry-run adapter boundary.
 - Paid API usage.
@@ -111,7 +110,7 @@ Next autonomous action:
 
 ```text
 No required roadmap phase remains. If continuing, choose an optional extension
-explicitly: time-window routing depth, broader crossover, or release polish.
+explicitly: broader crossover or release polish.
 ```
 
 ## Project Positioning
@@ -695,12 +694,13 @@ Recommended sequence:
 
 - [x] 10A: TSPLIB-style TSP loader.
 - [x] 10B: CVRPLIB-style capacitated routing loader.
-- [ ] 10C: Optional time-window extension.
+- [x] 10C: Optional time-window extension.
 
 First implementation slice:
 
 - [x] TSPLIB coordinate parser.
 - [x] CVRPLIB coordinate, demand, depot, and capacity parser.
+- [x] CVRPLIB-style time-window and service-time section parser.
 - [x] Distance matrix builder.
 - [x] Nearest neighbor / insertion / 2-opt baseline reuse.
 - [x] `score_next_stop` candidate rerun.
@@ -724,6 +724,7 @@ Acceptance criteria:
 - [x] Final report includes external routing evidence.
 - [x] `reports/tables/routing_external_generalization.csv` is exported.
 - [x] Candidate failure and generalization gaps are reported conservatively.
+- [x] Time-window violation is reported conservatively.
 - [x] Claims remain bounded to external routing-style evidence.
 
 ## Phase 11: Search Mechanism Ablation
@@ -1067,8 +1068,8 @@ Next recommended order:
 No required phase remains.
 ```
 
-Phase 10C remains an optional extension unless the target audience requires
-deeper time-window routing evidence, failure repair, or more routing depth.
+No required routing phase remains. Broader crossover remains an optional
+extension unless the target audience requires deeper search-operator evidence.
 
 MVP cut line:
 

@@ -28,7 +28,7 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
     assert package["recommended_next_phase"] == (
-        "No required phase remains; optional time-window routing or release polish"
+        "No required phase remains; optional broader crossover or release polish"
     )
 
 

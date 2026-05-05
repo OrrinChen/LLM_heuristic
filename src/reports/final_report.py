@@ -130,8 +130,9 @@ def build_final_report() -> Dict[str, object]:
             "benchmark-style local fixtures by default; large public benchmark "
             "files are intentionally not committed.",
             "External routing evidence uses parser-backed, small TSPLIB-style "
-            "and CVRPLIB-style local fixtures by default; large public "
-            "benchmark files are intentionally not committed.",
+            "and CVRPLIB-style local fixtures with time-window fields by "
+            "default; large public benchmark files are intentionally not "
+            "committed.",
             "Amazon routing data is represented by deterministic local "
             "Amazon-shaped fixtures until public or user-provided data is "
             "configured.",
@@ -154,8 +155,8 @@ def build_final_report() -> Dict[str, object]:
                 "step": "optional_routing_depth_or_release_polish",
                 "reason": (
                     "No required job-search roadmap phase remains. Optional "
-                    "extensions are time-window routing depth or release polish "
-                    "around the existing evidence package."
+                    "extensions are broader crossover or release polish around "
+                    "the existing evidence package."
                 ),
             },
         ),
@@ -266,12 +267,19 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 f"`{routing_external['best_external_test_capacity_violation']}`."
             ),
             (
+                "Time-window external instances: "
+                f"`{routing_external['time_window_instance_count']}`; "
+                "top-program held-out time-window violation: "
+                f"`{routing_external['best_external_test_time_window_violation']}`."
+            ),
+            (
                 "Synthetic-selected routing program external test score: "
                 f"`{routing_external['synthetic_top_external_test_score']}`."
             ),
             (
-                "Claim boundary: this section does not claim LKH, CVRP, "
-                "state-of-the-art solver, Amazon, or universal superiority."
+                "Claim boundary: this section does not claim LKH, CVRP/VRPTW "
+                "solver, state-of-the-art solver, Amazon, or universal "
+                "superiority."
             ),
             "",
         ]
@@ -520,21 +528,29 @@ def _external_routing_summary(phase10: Mapping[str, object]) -> Mapping[str, obj
         "external_test_baseline_scores": phase10["external_test_baseline_scores"],
         "external_formats": phase10["external_formats"],
         "capacitated_instance_count": phase10["capacitated_instance_count"],
+        "time_window_instance_count": phase10["time_window_instance_count"],
         "best_external_test_capacity_violation": phase10[
             "best_external_test_capacity_violation"
+        ],
+        "best_external_test_time_window_violation": phase10[
+            "best_external_test_time_window_violation"
         ],
         "best_external_test_vehicle_count": phase10["best_external_test_vehicle_count"],
         "synthetic_top_external_capacity_violation": phase10[
             "synthetic_top_external_capacity_violation"
         ],
+        "synthetic_top_external_time_window_violation": phase10[
+            "synthetic_top_external_time_window_violation"
+        ],
         "claim_boundary": phase10["claim_boundary"],
         "summary": (
             "Phase 10 evaluates `score_next_stop` routing candidates on "
             "TSPLIB-style EUC_2D and CVRPLIB-style capacitated external "
-            "fixtures with separate train, validation, and test splits. It "
-            "reuses nearest-neighbor, cheapest-insertion, 2-opt, and "
-            "candidate rerun machinery while keeping the claim boundary below "
-            "LKH, CVRP solver, SOTA, or Amazon routing superiority."
+            "fixtures, including local time-window sections, with separate "
+            "train, validation, and test splits. It reuses nearest-neighbor, "
+            "cheapest-insertion, 2-opt, and candidate rerun machinery while "
+            "keeping the claim boundary below LKH, CVRP/VRPTW solver, SOTA, or "
+            "Amazon routing superiority."
         ),
     }
 

@@ -10,6 +10,7 @@ from pathlib import Path
 from benchmarks.routing.baselines import (
     nearest_neighbor_plus_2opt,
     route_capacity_violation,
+    route_time_window_violation,
     route_vehicle_count,
 )
 from benchmarks.routing.external import (
@@ -59,6 +60,43 @@ DEMAND_SECTION
 3 5
 4 3
 5 2
+DEPOT_SECTION
+1
+-1
+EOF
+"""
+
+CVRPLIB_TIME_WINDOW_TEXT = """
+NAME : toy_cvrptw
+TYPE : CVRP
+COMMENT : tiny capacitated time-window parser fixture
+DIMENSION : 5
+EDGE_WEIGHT_TYPE : EUC_2D
+CAPACITY : 10
+NODE_COORD_SECTION
+1 0 0
+2 3 0
+3 3 4
+4 0 4
+5 1 2
+DEMAND_SECTION
+1 0
+2 4
+3 5
+4 3
+5 2
+TIME_WINDOW_SECTION
+1 0 100
+2 2 4
+3 4 7
+4 8 11
+5 10 14
+SERVICE_TIME_SECTION
+1 0
+2 0.5
+3 0.5
+4 0.25
+5 0.25
 DEPOT_SECTION
 1
 -1
@@ -119,6 +157,38 @@ def test_cvrplib_parser_loads_capacity_demands_and_depot() -> None:
     )
     assert tuple(stop.demand for stop in instance.stops) == (4.0, 5.0, 3.0, 2.0)
     assert instance.distance_matrix[0][1] == 3.0
+
+
+def test_cvrplib_parser_loads_time_windows_and_service_times() -> None:
+    instance = parse_cvrplib_vrp(CVRPLIB_TIME_WINDOW_TEXT, source="unit-cvrptw")[0]
+
+    assert instance.instance_id == "toy_cvrptw"
+    assert instance.vehicle_capacity == 10.0
+    assert tuple(stop.ready_time for stop in instance.stops) == (
+        2.0,
+        4.0,
+        8.0,
+        10.0,
+    )
+    assert tuple(stop.due_time for stop in instance.stops) == (
+        4.0,
+        7.0,
+        11.0,
+        14.0,
+    )
+    assert tuple(stop.service_time for stop in instance.stops) == (
+        0.5,
+        0.5,
+        0.25,
+        0.25,
+    )
+    assert (
+        route_time_window_violation(
+            instance,
+            ("n004", "n003", "n002", "n005"),
+        )
+        > 0.0
+    )
 
 
 def test_cvrplib_loader_supports_files_and_directories(tmp_path: Path) -> None:
@@ -183,7 +253,9 @@ def test_phase10_report_compares_external_baselines_and_candidates() -> None:
     )
     assert "cvrplib" in report["external_formats"]
     assert report["capacitated_instance_count"] > 0
+    assert report["time_window_instance_count"] > 0
     assert report["best_external_test_capacity_violation"] == 0.0
+    assert report["best_external_test_time_window_violation"] is not None
     assert report["claim_boundary"] == PHASE10_CLAIM_BOUNDARY
 
 
@@ -211,6 +283,9 @@ def test_final_report_and_tables_include_external_routing_evidence() -> None:
     assert "routing_external_generalization" in tables["tables"]
     assert tables["routing_external_generalization"]["rows"]
     assert "capacity_violation" in tables["routing_external_generalization"]["rows"][0]
+    assert (
+        "time_window_violation" in tables["routing_external_generalization"]["rows"][0]
+    )
 
 
 def test_report_artifact_export_writes_routing_external_generalization_csv(

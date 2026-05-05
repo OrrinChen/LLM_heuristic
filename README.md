@@ -56,7 +56,7 @@ flowchart LR
 | --- | --- | --- | --- |
 | Online Bin Packing | Held-out synthetic distributions | `seed-000-tight_fit` top program | compact `score_bin` heuristic under evaluator constraints |
 | External Bin Packing | BPPLIB / OR-Library-style fixtures | `external_generalization.csv` | external transfer evidence, not SOTA |
-| External Routing | TSPLIB/CVRPLIB-style fixtures | `routing_external_generalization.csv` | external routing-style evidence, not LKH/CVRP-solver/SOTA |
+| External Routing | TSPLIB/CVRPLIB-style fixtures | `routing_external_generalization.csv` | external routing-style evidence, not LKH/CVRP/VRPTW solver/SOTA |
 | Simple Routing | Held-out route sizes plus 2-opt | `route-seed-003-slack_aware` | `score_next_stop` heuristic comparison |
 | Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
 | Search Ablation | Fixed local budget | seed, mutation, crossover, LLM-proxy, repair | mechanism evidence, not live LLM superiority |
@@ -85,7 +85,7 @@ platform memory limits.
   arbitrary LLM-generated failures can be repaired automatically.
 - External bin packing fixtures are intentionally small and parser-backed.
 - External routing fixtures are intentionally small TSPLIB-style EUC_2D and
-  CVRPLIB-style capacitated examples.
+  CVRPLIB-style capacitated/time-window examples.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
   public Amazon route data.
 - Runtime frontier values use a deterministic proxy.
@@ -136,11 +136,11 @@ Current status:
   train / validation / test split, external baseline comparison,
   synthetic-to-external transfer gap, final report section,
   `external_generalization.csv`, and `bin_packing_external` CLI support.
-- Phase 10 complete: TSPLIB-style routing parser, CVRPLIB-style capacitated
-  parser, distance matrix builder, external train / validation / test split,
-  nearest-neighbor / insertion / 2-opt baseline reuse, `score_next_stop`
-  candidate reruns, `routing_external_generalization.csv`, final report
-  section, and `routing_external` CLI support.
+- Phase 10 complete: TSPLIB-style routing parser, CVRPLIB-style capacitated and
+  time-window parser, distance matrix builder, external train / validation /
+  test split, nearest-neighbor / insertion / 2-opt baseline reuse,
+  `score_next_stop` candidate reruns, `routing_external_generalization.csv`,
+  final report section, and `routing_external` CLI support.
 - Phase 11 complete: controlled search-mechanism ablation across seed-only,
   mutation, crossover, deterministic LLM-proxy mutation, deterministic
   LLM-proxy repair, and mutation+repair under the same local budget, split,
@@ -172,7 +172,7 @@ Current status:
 - Phase 17 complete: local process-parallel candidate evaluation,
   checkpoint/resume, worker-failure isolation, cost-budget stop, dry-run cloud
   adapter boundary, and Phase17 report artifacts.
-- Current phase: the job-search portfolio track, Phase 10A/10B routing
+- Current phase: the job-search portfolio track, Phase 10A/10B/10C routing
   evidence, Phase 12 live LLM mutation v1, Phase 13 semantic novelty, Phase 14
   failure taxonomy v2, Phase 16 reproducibility package v2, and Phase 17 local
   parallel runner are complete; no required roadmap phase remains.
@@ -357,9 +357,9 @@ User-provided OR-Library-style or BPPLIB-style files can be passed with
 `--external-path` and `--external-format`.
 
 The external routing command uses tiny TSPLIB-style EUC_2D and CVRPLIB-style
-capacitated fixtures by default. User-provided `.tsp`, `.vrp`, or `.txt` files
-can be passed with `--external-path` and `--external-format tsplib` or
-`--external-format cvrplib`. Do not commit large public benchmark corpora.
+capacitated/time-window fixtures by default. User-provided `.tsp`, `.vrp`, or
+`.txt` files can be passed with `--external-path` and `--external-format tsplib`
+or `--external-format cvrplib`. Do not commit large public benchmark corpora.
 
 The reproduction command regenerates the deterministic evidence package and
 writes `artifacts/reproduction_manifest.json` plus
@@ -499,7 +499,9 @@ print(report["best_external_test_score"] is not None)
 print("nearest_neighbor" in report["external_test_baseline_scores"])
 print(report["external_formats"])
 print(report["capacitated_instance_count"])
+print(report["time_window_instance_count"])
 print(report["best_external_test_capacity_violation"])
+print(round(report["best_external_test_time_window_violation"], 6))
 print(report["claim_boundary"])
 PY
 ```
@@ -515,8 +517,10 @@ True
 True
 ['cvrplib', 'tsplib']
 3
+3
 0.0
-external routing-style evidence only; no LKH, CVRP solver, Amazon, SOTA, or universal dominance claim
+15.205163
+external routing-style evidence only; no LKH, CVRP/VRPTW solver, Amazon, SOTA, or universal dominance claim
 ```
 
 ## Search Ablation Smoke Check

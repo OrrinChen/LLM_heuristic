@@ -27,8 +27,8 @@ ExternalRoutingSuites = Tuple[
 ]
 
 PHASE10_CLAIM_BOUNDARY = (
-    "external routing-style evidence only; no LKH, CVRP solver, Amazon, SOTA, or "
-    "universal dominance claim"
+    "external routing-style evidence only; no LKH, CVRP/VRPTW solver, Amazon, "
+    "SOTA, or universal dominance claim"
 )
 
 _DEFAULT_TSPLIB_FIXTURES = (
@@ -145,6 +145,20 @@ DEMAND_SECTION
 4 5
 5 2
 6 4
+TIME_WINDOW_SECTION
+1 0 100
+2 1 8
+3 2 9
+4 5 12
+5 7 14
+6 8 15
+SERVICE_TIME_SECTION
+1 0
+2 0.25
+3 0.25
+4 0.25
+5 0.25
+6 0.25
 DEPOT_SECTION
 1
 -1
@@ -170,6 +184,20 @@ DEMAND_SECTION
 4 4
 5 3
 6 6
+TIME_WINDOW_SECTION
+1 0 100
+2 0 6
+3 3 10
+4 5 13
+5 7 15
+6 8 16
+SERVICE_TIME_SECTION
+1 0
+2 0.2
+3 0.3
+4 0.3
+5 0.2
+6 0.3
 DEPOT_SECTION
 1
 -1
@@ -197,6 +225,22 @@ DEMAND_SECTION
 5 5
 6 2
 7 3
+TIME_WINDOW_SECTION
+1 0 120
+2 0 6
+3 2 9
+4 5 13
+5 8 17
+6 10 20
+7 12 22
+SERVICE_TIME_SECTION
+1 0
+2 0.2
+3 0.3
+4 0.3
+5 0.4
+6 0.2
+7 0.2
 DEPOT_SECTION
 1
 -1
@@ -268,13 +312,21 @@ def parse_cvrplib_vrp(
     edge_weight_type = "EUC_2D"
     coordinates: Dict[str, Tuple[float, float]] = {}
     demands: Dict[str, float] = {}
+    time_windows: Dict[str, Tuple[float, float]] = {}
+    service_times: Dict[str, float] = {}
     depot_ids: List[str] = []
     section: Optional[str] = None
     for line in lines:
         upper = line.upper()
         if upper == "EOF":
             break
-        if upper in {"NODE_COORD_SECTION", "DEMAND_SECTION", "DEPOT_SECTION"}:
+        if upper in {
+            "NODE_COORD_SECTION",
+            "DEMAND_SECTION",
+            "TIME_WINDOW_SECTION",
+            "SERVICE_TIME_SECTION",
+            "DEPOT_SECTION",
+        }:
             section = upper
             continue
         if section == "NODE_COORD_SECTION":
@@ -288,6 +340,18 @@ def parse_cvrplib_vrp(
             if len(parts) < 2:
                 raise ValueError("DEMAND_SECTION rows need id and demand")
             demands[parts[0]] = float(parts[1])
+            continue
+        if section == "TIME_WINDOW_SECTION":
+            parts = line.split()
+            if len(parts) < 3:
+                raise ValueError("TIME_WINDOW_SECTION rows need id, ready, and due")
+            time_windows[parts[0]] = (float(parts[1]), float(parts[2]))
+            continue
+        if section == "SERVICE_TIME_SECTION":
+            parts = line.split()
+            if len(parts) < 2:
+                raise ValueError("SERVICE_TIME_SECTION rows need id and service time")
+            service_times[parts[0]] = float(parts[1])
             continue
         if section == "DEPOT_SECTION":
             depot_id = line.split()[0]
@@ -329,6 +393,8 @@ def parse_cvrplib_vrp(
             source,
             coordinates,
             demands,
+            time_windows,
+            service_times,
             depot_id,
             capacity,
         )
@@ -452,6 +518,9 @@ def build_phase10_report(
         "capacitated_instance_count": sum(
             instance.vehicle_capacity is not None for instance in unique_external
         ),
+        "time_window_instance_count": sum(
+            _has_time_window_constraints(instance) for instance in unique_external
+        ),
         "external_split": {
             "train_count": len(external_train),
             "validation_count": len(external_validation),
@@ -469,11 +538,17 @@ def build_phase10_report(
         "best_external_test_capacity_violation": external_top_test.metrics[
             "average_capacity_violation"
         ],
+        "best_external_test_time_window_violation": external_top_test.metrics[
+            "average_time_window_violation"
+        ],
         "best_external_test_vehicle_count": external_top_test.metrics[
             "average_vehicle_count"
         ],
         "synthetic_top_external_capacity_violation": synthetic_top_external.metrics[
             "average_capacity_violation"
+        ],
+        "synthetic_top_external_time_window_violation": synthetic_top_external.metrics[
+            "average_time_window_violation"
         ],
         "synthetic_to_external_gap": _gap(
             synthetic_summary.best_validation_score,
@@ -517,6 +592,8 @@ def _routing_instance_from_cvrp(
     source: str,
     coordinates: Dict[str, Tuple[float, float]],
     demands: Dict[str, float],
+    time_windows: Dict[str, Tuple[float, float]],
+    service_times: Dict[str, float],
     depot_id: str,
     capacity: float,
 ) -> RoutingInstance:
@@ -527,6 +604,9 @@ def _routing_instance_from_cvrp(
             stop_id=f"n{int(float(node_id)):03d}",
             x=float(x),
             y=float(y),
+            ready_time=float(time_windows.get(node_id, (0.0, 1_000_000.0))[0]),
+            due_time=float(time_windows.get(node_id, (0.0, 1_000_000.0))[1]),
+            service_time=float(service_times.get(node_id, 0.0)),
             demand=float(demands[node_id]),
         )
         for node_id, (x, y) in sorted(
@@ -582,6 +662,13 @@ def _external_formats(instances: Sequence[RoutingInstance]) -> List[str]:
         for instance in instances
     }
     return sorted(formats)
+
+
+def _has_time_window_constraints(instance: RoutingInstance) -> bool:
+    return any(
+        stop.ready_time > 0.0 or stop.due_time < 1_000_000.0 or stop.service_time > 0.0
+        for stop in instance.stops
+    )
 
 
 def _unique_instances(instances: Sequence[RoutingInstance]) -> List[RoutingInstance]:
