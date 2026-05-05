@@ -24,8 +24,7 @@ def test_phase18_report_has_paper_sections_and_conservative_claims() -> None:
     assert "subprocess sandboxing" in report["abstract"]
     assert "universal dominance" in report["claim_boundaries"]["does_not_claim"]
     assert report["recommended_next_phase"] == (
-        "No required phase remains; optional CVRPLIB/time-window routing "
-        "or release polish"
+        "No required phase remains; optional time-window routing or release polish"
     )
 
 

@@ -101,4 +101,4 @@ deterministic local reproduction package only; no API key, paid service, large e
 
 ## Recommended Next Phase
 
-No required phase remains; optional CVRPLIB/time-window routing or release polish
+No required phase remains; optional time-window routing or release polish

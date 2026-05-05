@@ -27,7 +27,7 @@ ExternalRoutingSuites = Tuple[
 ]
 
 PHASE10_CLAIM_BOUNDARY = (
-    "external routing-style evidence only; no LKH, CVRP, Amazon, SOTA, or "
+    "external routing-style evidence only; no LKH, CVRP solver, Amazon, SOTA, or "
     "universal dominance claim"
 )
 
@@ -124,6 +124,86 @@ EOF
 """,
 )
 
+_DEFAULT_CVRPLIB_FIXTURES = (
+    """
+NAME : cvrp_train_a
+TYPE : CVRP
+DIMENSION : 6
+EDGE_WEIGHT_TYPE : EUC_2D
+CAPACITY : 10
+NODE_COORD_SECTION
+1 0 0
+2 2 0
+3 4 1
+4 4 4
+5 1 5
+6 0 3
+DEMAND_SECTION
+1 0
+2 3
+3 4
+4 5
+5 2
+6 4
+DEPOT_SECTION
+1
+-1
+EOF
+""",
+    """
+NAME : cvrp_validation_a
+TYPE : CVRP
+DIMENSION : 6
+EDGE_WEIGHT_TYPE : EUC_2D
+CAPACITY : 12
+NODE_COORD_SECTION
+1 0 0
+2 1 3
+3 3 5
+4 6 4
+5 7 1
+6 3 -1
+DEMAND_SECTION
+1 0
+2 2
+3 5
+4 4
+5 3
+6 6
+DEPOT_SECTION
+1
+-1
+EOF
+""",
+    """
+NAME : cvrp_test_a
+TYPE : CVRP
+DIMENSION : 7
+EDGE_WEIGHT_TYPE : EUC_2D
+CAPACITY : 11
+NODE_COORD_SECTION
+1 0 0
+2 1 2
+3 3 3
+4 6 2
+5 7 5
+6 5 8
+7 2 7
+DEMAND_SECTION
+1 0
+2 3
+3 4
+4 4
+5 5
+6 2
+7 3
+DEPOT_SECTION
+1
+-1
+EOF
+""",
+)
+
 
 def parse_tsplib_tsp(
     text: str,
@@ -173,31 +253,105 @@ def parse_tsplib_tsp(
     return [_routing_instance_from_coordinates(name, source, coordinates)]
 
 
+def parse_cvrplib_vrp(
+    text: str,
+    *,
+    source: str = "cvrplib",
+) -> List[RoutingInstance]:
+    lines = _meaningful_lines(text)
+    if not lines:
+        raise ValueError("CVRPLIB text is empty")
+
+    name = source
+    dimension: Optional[int] = None
+    capacity: Optional[float] = None
+    edge_weight_type = "EUC_2D"
+    coordinates: Dict[str, Tuple[float, float]] = {}
+    demands: Dict[str, float] = {}
+    depot_ids: List[str] = []
+    section: Optional[str] = None
+    for line in lines:
+        upper = line.upper()
+        if upper == "EOF":
+            break
+        if upper in {"NODE_COORD_SECTION", "DEMAND_SECTION", "DEPOT_SECTION"}:
+            section = upper
+            continue
+        if section == "NODE_COORD_SECTION":
+            parts = line.split()
+            if len(parts) < 3:
+                raise ValueError("NODE_COORD_SECTION rows need id, x, and y")
+            coordinates[parts[0]] = (float(parts[1]), float(parts[2]))
+            continue
+        if section == "DEMAND_SECTION":
+            parts = line.split()
+            if len(parts) < 2:
+                raise ValueError("DEMAND_SECTION rows need id and demand")
+            demands[parts[0]] = float(parts[1])
+            continue
+        if section == "DEPOT_SECTION":
+            depot_id = line.split()[0]
+            if depot_id == "-1":
+                section = None
+            else:
+                depot_ids.append(depot_id)
+            continue
+        key, value = _split_tsplib_key_value(line)
+        if key == "NAME":
+            name = value
+        elif key == "TYPE" and value.upper() != "CVRP":
+            raise ValueError("CVRPLIB parser only supports TYPE CVRP")
+        elif key == "DIMENSION":
+            dimension = int(float(value))
+        elif key == "CAPACITY":
+            capacity = float(value)
+        elif key == "EDGE_WEIGHT_TYPE":
+            edge_weight_type = value.upper()
+
+    if edge_weight_type != "EUC_2D":
+        raise ValueError("only EUC_2D CVRPLIB coordinates are supported")
+    if dimension is None:
+        raise ValueError("CVRPLIB DIMENSION is required")
+    if capacity is None or capacity <= 0:
+        raise ValueError("CVRPLIB CAPACITY must be positive")
+    if len(coordinates) != dimension:
+        raise ValueError(
+            f"{name} expected {dimension} coordinates, got {len(coordinates)}"
+        )
+    if len(demands) != dimension:
+        raise ValueError(f"{name} expected {dimension} demands, got {len(demands)}")
+    depot_id = depot_ids[0] if depot_ids else "1"
+    if depot_id not in coordinates:
+        raise ValueError("CVRPLIB depot id is missing from coordinates")
+    return [
+        _routing_instance_from_cvrp(
+            name,
+            source,
+            coordinates,
+            demands,
+            depot_id,
+            capacity,
+        )
+    ]
+
+
 def load_external_routing_instances(
     path: Union[str, Path],
     *,
     parser: str = "tsplib",
 ) -> List[RoutingInstance]:
     data_path = Path(path)
-    if parser != "tsplib":
+    if parser not in {"auto", "tsplib", "cvrplib"}:
         raise ValueError(f"unknown external routing parser: {parser}")
     if data_path.is_dir():
         instances: List[RoutingInstance] = []
         for child in sorted(data_path.iterdir()):
-            if child.is_file() and child.suffix.lower() in {".tsp", ".txt"}:
-                instances.extend(
-                    parse_tsplib_tsp(
-                        child.read_text(encoding="utf-8"),
-                        source=child.name,
-                    )
-                )
+            if child.is_file() and child.suffix.lower() in {".tsp", ".vrp", ".txt"}:
+                instances.extend(_parse_external_routing_text(child, parser))
         if not instances:
-            raise ValueError("directory contains no TSPLIB .tsp or .txt files")
+            raise ValueError("directory contains no routing .tsp, .vrp, or .txt files")
         return instances
-    return parse_tsplib_tsp(
-        data_path.read_text(encoding="utf-8"),
-        source=data_path.name,
-    )
+    return _parse_external_routing_text(data_path, parser)
 
 
 def split_external_routing_instances(
@@ -220,6 +374,8 @@ def default_external_routing_suites() -> ExternalRoutingSuites:
     instances: List[RoutingInstance] = []
     for index, fixture in enumerate(_DEFAULT_TSPLIB_FIXTURES):
         instances.extend(parse_tsplib_tsp(fixture, source=f"tsplib_fixture_{index}"))
+    for index, fixture in enumerate(_DEFAULT_CVRPLIB_FIXTURES):
+        instances.extend(parse_cvrplib_vrp(fixture, source=f"cvrplib_fixture_{index}"))
     return split_external_routing_instances(instances)
 
 
@@ -245,7 +401,7 @@ def build_phase10_report(
         )
     else:
         external_train, external_validation, external_test = (
-            split_external_routing_instances(external_instances)
+            _external_suites_for_report(external_instances)
         )
 
     candidates = build_seed_routing_programs(candidate_count)
@@ -282,11 +438,20 @@ def build_phase10_report(
         program_id=external_top.program_id,
         apply_local_search=True,
     )
+    all_external = [*external_train, *external_validation, *external_test]
+    unique_external = _unique_instances(all_external)
     return {
         "phase": 10,
         "benchmark": "routing_external",
-        "source": "TSPLIB-style EUC_2D parser with small local fixtures",
+        "source": (
+            "TSPLIB-style EUC_2D and CVRPLIB-style CVRP parsers with small "
+            "local fixtures"
+        ),
         "candidate_count": candidate_count,
+        "external_formats": _external_formats(unique_external),
+        "capacitated_instance_count": sum(
+            instance.vehicle_capacity is not None for instance in unique_external
+        ),
         "external_split": {
             "train_count": len(external_train),
             "validation_count": len(external_validation),
@@ -301,6 +466,15 @@ def build_phase10_report(
         "best_external_program_id": external_top.program_id,
         "best_external_validation_score": external_top_validation.score,
         "best_external_test_score": external_top_test.score,
+        "best_external_test_capacity_violation": external_top_test.metrics[
+            "average_capacity_violation"
+        ],
+        "best_external_test_vehicle_count": external_top_test.metrics[
+            "average_vehicle_count"
+        ],
+        "synthetic_top_external_capacity_violation": synthetic_top_external.metrics[
+            "average_capacity_violation"
+        ],
         "synthetic_to_external_gap": _gap(
             synthetic_summary.best_validation_score,
             synthetic_top_external.score,
@@ -336,6 +510,89 @@ def _routing_instance_from_coordinates(
         instance_id=instance_id,
         source=source,
     )
+
+
+def _routing_instance_from_cvrp(
+    instance_id: str,
+    source: str,
+    coordinates: Dict[str, Tuple[float, float]],
+    demands: Dict[str, float],
+    depot_id: str,
+    capacity: float,
+) -> RoutingInstance:
+    depot_x, depot_y = coordinates[depot_id]
+    depot = Point(float(depot_x), float(depot_y))
+    stops = tuple(
+        Stop(
+            stop_id=f"n{int(float(node_id)):03d}",
+            x=float(x),
+            y=float(y),
+            demand=float(demands[node_id]),
+        )
+        for node_id, (x, y) in sorted(
+            coordinates.items(),
+            key=lambda item: int(float(item[0])),
+        )
+        if node_id != depot_id
+    )
+    return RoutingInstance(
+        distribution=RoutingDistribution.EXTERNAL,
+        seed=_stable_seed(f"{source}:{instance_id}:{depot_id}:cvrp"),
+        depot=depot,
+        stops=stops,
+        distance_matrix=_build_distance_matrix(depot, stops),
+        instance_id=instance_id,
+        source=source,
+        vehicle_capacity=capacity,
+    )
+
+
+def _parse_external_routing_text(
+    path: Path,
+    parser: str,
+) -> List[RoutingInstance]:
+    text = path.read_text(encoding="utf-8")
+    selected = _detect_parser(text, path) if parser == "auto" else parser
+    if selected == "cvrplib":
+        return parse_cvrplib_vrp(text, source=path.name)
+    return parse_tsplib_tsp(text, source=path.name)
+
+
+def _detect_parser(text: str, path: Path) -> str:
+    upper = text.upper()
+    if path.suffix.lower() == ".vrp" or "TYPE" in upper and "CVRP" in upper:
+        return "cvrplib"
+    if "DEMAND_SECTION" in upper or "CAPACITY" in upper:
+        return "cvrplib"
+    return "tsplib"
+
+
+def _external_suites_for_report(
+    instances: Sequence[RoutingInstance],
+) -> ExternalRoutingSuites:
+    if len(instances) < 3:
+        reused = list(instances)
+        return reused, reused, reused
+    return split_external_routing_instances(instances)
+
+
+def _external_formats(instances: Sequence[RoutingInstance]) -> List[str]:
+    formats = {
+        "cvrplib" if instance.vehicle_capacity is not None else "tsplib"
+        for instance in instances
+    }
+    return sorted(formats)
+
+
+def _unique_instances(instances: Sequence[RoutingInstance]) -> List[RoutingInstance]:
+    seen = set()
+    unique = []
+    for instance in instances:
+        key = (instance.source, instance.instance_id)
+        if key not in seen:
+            unique.append(instance)
+            seen.add(key)
+    return unique
 
 
 def _build_distance_matrix(

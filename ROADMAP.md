@@ -40,10 +40,11 @@ Completed:
 - Phase 9: BPPLIB / OR-Library-style bin packing loader, external parser,
   train / validation / test split, external baseline comparison,
   synthetic-to-external transfer gap, report table, and CLI support.
-- Phase 10: TSPLIB-style routing loader, coordinate parser, distance matrix
-  builder, external routing train / validation / test split, reused nearest
-  neighbor / insertion / 2-opt baselines, `score_next_stop` candidate reruns,
-  external generalization table, final-report coverage, and CLI support.
+- Phase 10: TSPLIB-style routing loader, CVRPLIB-style capacitated loader,
+  coordinate parser, distance matrix builder, external routing train /
+  validation / test split, reused nearest neighbor / insertion / 2-opt
+  baselines, `score_next_stop` candidate reruns, external generalization table,
+  final-report coverage, and CLI support.
 - Phase 11: Search mechanism ablation across seed-only, random mutation,
   deterministic template mutation, crossover, mutation+crossover,
   deterministic LLM-proxy mutation, deterministic LLM-proxy repair, and
@@ -79,7 +80,7 @@ Current phase:
 - Original roadmap and hardening milestone are complete.
 - Phase 9 external bin packing benchmark evidence is complete.
 - Phase 10 external routing benchmark evidence is complete for the TSPLIB-style
-  TSP slice.
+  TSP slice and CVRPLIB-style capacitated routing slice.
 - Phase 11 search mechanism ablation is complete.
 - Phase 12 live LLM mutation v1 is complete as a controlled, environment-gated
   experiment module with deterministic fallback.
@@ -100,7 +101,7 @@ Current phase:
 
 Deferred:
 
-- CVRPLIB-style capacitated routing and optional time-window routing evidence.
+- Optional time-window routing evidence.
 - Crossover beyond simple mutation.
 - Paid cloud execution beyond the dry-run adapter boundary.
 - Paid API usage.
@@ -110,8 +111,7 @@ Next autonomous action:
 
 ```text
 No required roadmap phase remains. If continuing, choose an optional extension
-explicitly: CVRPLIB/time-window routing depth, broader crossover, or release
-polish.
+explicitly: time-window routing depth, broader crossover, or release polish.
 ```
 
 ## Project Positioning
@@ -694,12 +694,13 @@ without jumping directly to complex CVRPTW.
 Recommended sequence:
 
 - [x] 10A: TSPLIB-style TSP loader.
-- [ ] 10B: CVRPLIB-style capacitated routing loader.
+- [x] 10B: CVRPLIB-style capacitated routing loader.
 - [ ] 10C: Optional time-window extension.
 
 First implementation slice:
 
 - [x] TSPLIB coordinate parser.
+- [x] CVRPLIB coordinate, demand, depot, and capacity parser.
 - [x] Distance matrix builder.
 - [x] Nearest neighbor / insertion / 2-opt baseline reuse.
 - [x] `score_next_stop` candidate rerun.
@@ -717,8 +718,9 @@ real Amazon operations.
 
 Acceptance criteria:
 
-- [x] Small TSPLIB-style fixtures are covered in tests.
+- [x] Small TSPLIB-style and CVRPLIB-style fixtures are covered in tests.
 - [x] CLI can run `routing_external`.
+- [x] CLI can run `routing_external --external-format cvrplib`.
 - [x] Final report includes external routing evidence.
 - [x] `reports/tables/routing_external_generalization.csv` is exported.
 - [x] Candidate failure and generalization gaps are reported conservatively.
@@ -1065,9 +1067,8 @@ Next recommended order:
 No required phase remains.
 ```
 
-Phase 10B and Phase 10C remain optional
-extensions unless the target audience requires deeper routing evidence, failure
-repair, or more routing depth.
+Phase 10C remains an optional extension unless the target audience requires
+deeper time-window routing evidence, failure repair, or more routing depth.
 
 MVP cut line:
 

@@ -26,6 +26,8 @@ class RoutingResult:
     runtime: float
     is_valid: bool
     failure_reason: Optional[str] = None
+    capacity_violation: float = 0.0
+    vehicle_count: int = 1
 
 
 RouteBuilder = Callable[[RoutingInstance], RoutingResult]
@@ -41,6 +43,8 @@ def validate_route(instance: RoutingInstance, route: Sequence[str]) -> RouteVali
         return RouteValidation(False, "unknown_stops")
     if expected - actual:
         return RouteValidation(False, "missing_stops")
+    if route_capacity_violation(instance, route_tuple) > EPSILON:
+        return RouteValidation(False, "capacity_exceeded")
     return RouteValidation(True)
 
 
@@ -48,6 +52,8 @@ def route_distance(instance: RoutingInstance, route: Sequence[str]) -> float:
     validation = validate_route(instance, route)
     if not validation.ok:
         return float("inf")
+    if instance.vehicle_capacity is not None:
+        return _capacity_split_route_distance(instance, route)
     lookup = _stop_index_lookup(instance)
     total = 0.0
     current_index = 0
@@ -57,6 +63,44 @@ def route_distance(instance: RoutingInstance, route: Sequence[str]) -> float:
         current_index = next_index
     total += instance.distance_matrix[current_index][0]
     return total
+
+
+def route_capacity_violation(
+    instance: RoutingInstance,
+    route: Sequence[str],
+) -> float:
+    if instance.vehicle_capacity is None:
+        return 0.0
+    capacity = float(instance.vehicle_capacity)
+    if capacity <= 0:
+        return float("inf")
+    lookup = _stop_lookup(instance)
+    violation = 0.0
+    for stop_id in route:
+        demand = max(0.0, float(lookup[stop_id].demand))
+        if demand > capacity + EPSILON:
+            violation += demand - capacity
+    return violation
+
+
+def route_vehicle_count(instance: RoutingInstance, route: Sequence[str]) -> int:
+    if not route:
+        return 0
+    if instance.vehicle_capacity is None:
+        return 1
+    capacity = float(instance.vehicle_capacity)
+    if capacity <= 0:
+        return 0
+    lookup = _stop_lookup(instance)
+    vehicles = 1
+    load = 0.0
+    for stop_id in route:
+        demand = max(0.0, float(lookup[stop_id].demand))
+        if load > EPSILON and load + demand > capacity + EPSILON:
+            vehicles += 1
+            load = 0.0
+        load += demand
+    return vehicles
 
 
 def route_time_window_violation(
@@ -152,7 +196,14 @@ def two_opt_baseline(instance: RoutingInstance) -> RoutingResult:
 
 def nearest_neighbor_plus_2opt(instance: RoutingInstance) -> RoutingResult:
     started = perf_counter()
-    route = two_opt(instance, nearest_neighbor(instance).route)
+    original = nearest_neighbor(instance).route
+    improved = two_opt(instance, original)
+    route = (
+        improved
+        if _partial_route_distance(instance, improved)
+        <= _partial_route_distance(instance, original) + EPSILON
+        else original
+    )
     return _result(instance, "nearest_neighbor_plus_2opt", route, started)
 
 
@@ -172,6 +223,8 @@ def _result(
         runtime=perf_counter() - started,
         is_valid=validation.ok,
         failure_reason=validation.failure_reason,
+        capacity_violation=route_capacity_violation(instance, route_tuple),
+        vehicle_count=route_vehicle_count(instance, route_tuple),
     )
 
 
@@ -184,6 +237,8 @@ def _stop_index_lookup(instance: RoutingInstance) -> Mapping[str, int]:
 
 
 def _partial_route_distance(instance: RoutingInstance, route: Sequence[str]) -> float:
+    if instance.vehicle_capacity is not None:
+        return _capacity_split_route_distance(instance, route)
     lookup = _stop_index_lookup(instance)
     total = 0.0
     current_index = 0
@@ -191,6 +246,34 @@ def _partial_route_distance(instance: RoutingInstance, route: Sequence[str]) -> 
         next_index = lookup[stop_id]
         total += instance.distance_matrix[current_index][next_index]
         current_index = next_index
+    total += instance.distance_matrix[current_index][0]
+    return total
+
+
+def _capacity_split_route_distance(
+    instance: RoutingInstance,
+    route: Sequence[str],
+) -> float:
+    if not route:
+        return 0.0
+    capacity = float(instance.vehicle_capacity or 0.0)
+    if capacity <= 0:
+        return float("inf")
+    lookup = _stop_index_lookup(instance)
+    stop_lookup = _stop_lookup(instance)
+    total = 0.0
+    current_index = 0
+    load = 0.0
+    for stop_id in route:
+        demand = max(0.0, float(stop_lookup[stop_id].demand))
+        if load > EPSILON and load + demand > capacity + EPSILON:
+            total += instance.distance_matrix[current_index][0]
+            current_index = 0
+            load = 0.0
+        next_index = lookup[stop_id]
+        total += instance.distance_matrix[current_index][next_index]
+        current_index = next_index
+        load += demand
     total += instance.distance_matrix[current_index][0]
     return total
 

@@ -156,21 +156,21 @@ manifests.
 
 ## External Routing Evidence
 
-Phase 10 supports tiny deterministic TSPLIB-style EUC_2D fixtures by default
-and user-provided files through the CLI:
+Phase 10 supports tiny deterministic TSPLIB-style EUC_2D and CVRPLIB-style
+capacitated fixtures by default and user-provided files through the CLI:
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery run \
   --benchmark routing_external \
   --external-path path/to/instances \
-  --external-format tsplib \
+  --external-format auto \
   --output-dir /tmp/o2-routing-external
 ```
 
 Do not claim LKH, CVRP solver, SOTA, or real Amazon superiority from this
 evidence. It is external routing-style transfer evidence for the existing
-`score_next_stop` evaluator. Do not commit large TSPLIB corpora; commit only
-small fixtures, parser tests, and generated summary artifacts.
+`score_next_stop` evaluator. Do not commit large TSPLIB/CVRPLIB corpora; commit
+only small fixtures, parser tests, and generated summary artifacts.
 
 ## Search Mechanism Ablation
 

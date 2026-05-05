@@ -85,8 +85,7 @@ def build_phase16_package(
         },
         "claim_boundary": PHASE16_CLAIM_BOUNDARY,
         "recommended_next_phase": (
-            "No required phase remains; optional CVRPLIB/time-window routing "
-            "or release polish"
+            "No required phase remains; optional time-window routing or release polish"
         ),
     }
 
@@ -211,7 +210,7 @@ def _profile_config(profile: str) -> Mapping[str, object]:
         "external_small": {
             "description": (
                 "External-small profile that highlights parser-backed "
-                "BPPLIB / OR-Library and TSPLIB-style local fixtures."
+                "BPPLIB / OR-Library and TSPLIB/CVRPLIB-style local fixtures."
             ),
             "external_data": "built-in tiny external benchmark-style fixtures",
             "evidence_focus": (

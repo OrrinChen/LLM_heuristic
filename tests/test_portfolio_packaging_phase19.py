@@ -28,8 +28,7 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         "universal dominance, SOTA solver performance, or live LLM superiority"
     )
     assert package["recommended_next_phase"] == (
-        "No required phase remains; optional CVRPLIB/time-window routing "
-        "or release polish"
+        "No required phase remains; optional time-window routing or release polish"
     )
 
 
@@ -51,7 +50,9 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     assert any(
         "Semantic novelty" in limitation for limitation in package["limitations"]
     )
-    assert any("TSPLIB-style" in limitation for limitation in package["limitations"])
+    assert any(
+        "TSPLIB/CVRPLIB-style" in limitation for limitation in package["limitations"]
+    )
     assert any("Failure repair" in limitation for limitation in package["limitations"])
 
 

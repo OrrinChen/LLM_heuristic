@@ -116,12 +116,10 @@ def test_phase14_updates_report_narrative_and_next_phase() -> None:
     assert "Failure Taxonomy v2" in markdown
     assert "repair success" in markdown
     assert technical["recommended_next_phase"] == (
-        "No required phase remains; optional CVRPLIB/time-window routing "
-        "or release polish"
+        "No required phase remains; optional time-window routing or release polish"
     )
     assert portfolio["recommended_next_phase"] == (
-        "No required phase remains; optional CVRPLIB/time-window routing "
-        "or release polish"
+        "No required phase remains; optional time-window routing or release polish"
     )
 
 

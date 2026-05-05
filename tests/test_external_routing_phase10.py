@@ -7,12 +7,17 @@ import subprocess
 import sys
 from pathlib import Path
 
-from benchmarks.routing.baselines import nearest_neighbor_plus_2opt
+from benchmarks.routing.baselines import (
+    nearest_neighbor_plus_2opt,
+    route_capacity_violation,
+    route_vehicle_count,
+)
 from benchmarks.routing.external import (
     PHASE10_CLAIM_BOUNDARY,
     build_phase10_report,
     default_external_routing_suites,
     load_external_routing_instances,
+    parse_cvrplib_vrp,
     parse_tsplib_tsp,
 )
 from benchmarks.routing.instances import RoutingDistribution
@@ -32,6 +37,31 @@ NODE_COORD_SECTION
 3 3 4
 4 0 4
 5 1 2
+EOF
+"""
+
+CVRPLIB_TEXT = """
+NAME : toy_cvrp
+TYPE : CVRP
+COMMENT : tiny capacitated parser fixture
+DIMENSION : 5
+EDGE_WEIGHT_TYPE : EUC_2D
+CAPACITY : 10
+NODE_COORD_SECTION
+1 0 0
+2 3 0
+3 3 4
+4 0 4
+5 1 2
+DEMAND_SECTION
+1 0
+2 4
+3 5
+4 3
+5 2
+DEPOT_SECTION
+1
+-1
 EOF
 """
 
@@ -70,6 +100,51 @@ def test_load_external_routing_instances_supports_directory(tmp_path: Path) -> N
     assert {instance.source for instance in instances} == {"a.tsp", "b.tsp"}
 
 
+def test_cvrplib_parser_loads_capacity_demands_and_depot() -> None:
+    instances = parse_cvrplib_vrp(CVRPLIB_TEXT, source="unit-cvrp")
+
+    assert len(instances) == 1
+    instance = instances[0]
+    assert instance.distribution == RoutingDistribution.EXTERNAL
+    assert instance.instance_id == "toy_cvrp"
+    assert instance.source == "unit-cvrp"
+    assert instance.vehicle_capacity == 10.0
+    assert instance.depot.x == 0.0
+    assert instance.depot.y == 0.0
+    assert tuple(stop.stop_id for stop in instance.stops) == (
+        "n002",
+        "n003",
+        "n004",
+        "n005",
+    )
+    assert tuple(stop.demand for stop in instance.stops) == (4.0, 5.0, 3.0, 2.0)
+    assert instance.distance_matrix[0][1] == 3.0
+
+
+def test_cvrplib_loader_supports_files_and_directories(tmp_path: Path) -> None:
+    first = tmp_path / "a.vrp"
+    second = tmp_path / "b.vrp"
+    first.write_text(CVRPLIB_TEXT, encoding="utf-8")
+    second.write_text(CVRPLIB_TEXT.replace("toy_cvrp", "toy_cvrp_b"), encoding="utf-8")
+
+    instances = load_external_routing_instances(tmp_path, parser="cvrplib")
+
+    assert [instance.instance_id for instance in instances] == [
+        "toy_cvrp",
+        "toy_cvrp_b",
+    ]
+    assert {instance.vehicle_capacity for instance in instances} == {10.0}
+
+
+def test_capacity_aware_route_distance_splits_vehicle_tours() -> None:
+    instance = parse_cvrplib_vrp(CVRPLIB_TEXT)[0]
+    route = tuple(stop.stop_id for stop in instance.stops)
+
+    assert route_capacity_violation(instance, route) == 0.0
+    assert route_vehicle_count(instance, route) == 2
+    assert nearest_neighbor_plus_2opt(instance).is_valid is True
+
+
 def test_external_routing_default_suites_have_disjoint_splits() -> None:
     train, validation, test = default_external_routing_suites()
 
@@ -106,6 +181,9 @@ def test_phase10_report_compares_external_baselines_and_candidates() -> None:
         report["external_test_baseline_scores"]["nearest_neighbor_plus_2opt"]
         <= (report["external_test_baseline_scores"]["nearest_neighbor"])
     )
+    assert "cvrplib" in report["external_formats"]
+    assert report["capacitated_instance_count"] > 0
+    assert report["best_external_test_capacity_violation"] == 0.0
     assert report["claim_boundary"] == PHASE10_CLAIM_BOUNDARY
 
 
@@ -127,10 +205,12 @@ def test_final_report_and_tables_include_external_routing_evidence() -> None:
     assert "routing_external_benchmark_evidence" in final["sections"]
     assert final["routing_external"]["benchmark"] == "routing_external"
     assert "External Routing Evidence" in markdown
+    assert "CVRPLIB-style" in markdown
     assert "routing_external" in markdown
     assert "does not claim LKH" in markdown
     assert "routing_external_generalization" in tables["tables"]
     assert tables["routing_external_generalization"]["rows"]
+    assert "capacity_violation" in tables["routing_external_generalization"]["rows"][0]
 
 
 def test_report_artifact_export_writes_routing_external_generalization_csv(
@@ -170,6 +250,29 @@ def test_cli_can_run_routing_external(tmp_path: Path) -> None:
     summary = json.loads(summary_path.read_text(encoding="utf-8"))
     assert summary["benchmark"] == "routing_external"
     assert summary["phase"] == 10
+
+
+def test_cli_can_run_routing_external_with_cvrplib_file(tmp_path: Path) -> None:
+    fixture = tmp_path / "toy.vrp"
+    fixture.write_text(CVRPLIB_TEXT, encoding="utf-8")
+
+    result = _run_cli(
+        "run",
+        "--benchmark",
+        "routing_external",
+        "--external-path",
+        str(fixture),
+        "--external-format",
+        "cvrplib",
+        "--output-dir",
+        str(tmp_path),
+    )
+
+    assert result.returncode == 0, result.stderr
+    summary = json.loads((tmp_path / "run_summary.json").read_text(encoding="utf-8"))
+    assert summary["benchmark"] == "routing_external"
+    assert summary["external_formats"] == ["cvrplib"]
+    assert summary["capacitated_instance_count"] == 1
 
 
 def _run_cli(*args: str) -> subprocess.CompletedProcess[str]:
