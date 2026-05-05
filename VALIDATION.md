@@ -126,7 +126,8 @@ python3 -m pytest tests/test_external_routing_phase10.py -v
 Expected result:
 
 ```text
-TSPLIB-style EUC_2D fixtures parse into routing instances
+TSPLIB-style EUC_2D and CVRPLIB-style fixtures parse into routing instances
+CVRPLIB demand, depot, and capacity fields are preserved
 external routing train / validation / test splits are disjoint
 nearest-neighbor, insertion, and 2-opt baselines are reused
 score_next_stop candidates rerun on external validation and test splits
@@ -177,6 +178,9 @@ print(report["external_split"]["test_count"])
 print(report["best_external_program_id"])
 print(report["best_external_test_score"] is not None)
 print("nearest_neighbor" in report["external_test_baseline_scores"])
+print(report["external_formats"])
+print(report["capacitated_instance_count"])
+print(report["best_external_test_capacity_violation"])
 print(report["claim_boundary"])
 PY
 ```
@@ -186,11 +190,14 @@ Expected result:
 ```text
 10
 routing_external
-2
+3
 route-seed-000-nearest
 True
 True
-external routing-style evidence only; no LKH, CVRP, Amazon, SOTA, or universal dominance claim
+['cvrplib', 'tsplib']
+3
+0.0
+external routing-style evidence only; no LKH, CVRP solver, Amazon, SOTA, or universal dominance claim
 ```
 
 ## Phase 2 Smoke Validation

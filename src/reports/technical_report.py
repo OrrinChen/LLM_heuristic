@@ -230,8 +230,8 @@ def build_phase18_report(
             (
                 "The evidence package is deterministic and local by default. "
                 "Live Gemini mutation remains environment-gated, external "
-                "fixtures are intentionally small, CVRPLIB and time-window "
-                "routing are deferred, and runtime frontier values use a "
+                "fixtures are intentionally small, time-window routing is "
+                "deferred, and runtime frontier values use a "
                 "deterministic proxy."
             ),
             ("README.md", "TASK_MEMORY.md", "ROADMAP.md"),
@@ -274,8 +274,7 @@ def build_phase18_report(
             "failure_card_count": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "No required phase remains; optional CVRPLIB/time-window routing "
-            "or release polish"
+            "No required phase remains; optional time-window routing or release polish"
         ),
     }
 

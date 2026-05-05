@@ -35,6 +35,7 @@ class Stop:
     ready_time: float = 0.0
     due_time: float = 1_000_000.0
     service_time: float = 0.0
+    demand: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -46,6 +47,7 @@ class RoutingInstance:
     distance_matrix: Tuple[Tuple[float, ...], ...]
     instance_id: Optional[str] = None
     source: Optional[str] = None
+    vehicle_capacity: Optional[float] = None
 
 
 def generate_routing_instance(

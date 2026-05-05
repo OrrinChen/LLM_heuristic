@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `feat: add local parallel runner evidence`
-Current phase: Phase 17 local parallel runner complete
-Main blocker: None for Phase 17; CVRPLIB/time-window routing and paid cloud execution remain deferred
-Next recommended action: no required roadmap phase remains; optional CVRPLIB/time-window routing depth or release polish
+Latest commit: `feat: add cvrplib routing evidence`
+Current phase: Phase 10B CVRPLIB-style capacitated routing evidence complete
+Main blocker: None for Phase 10B; time-window routing and paid cloud execution remain deferred
+Next recommended action: no required roadmap phase remains; optional time-window routing depth or release polish
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 17 local parallel runner evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style and CVRPLIB-style external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 17 local parallel runner evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
 
 ## Roadmap Update
 
@@ -210,6 +210,24 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
 - Updated README, RUNBOOK, ROADMAP, VALIDATION, report tables, technical
   report, portfolio brief, final-report next steps, and tests so no required
   roadmap phase remains.
+
+2026-05-05 Phase 10B completion:
+
+- Completed the optional CVRPLIB-style capacitated routing evidence slice only;
+  no time-window routing, paid cloud execution, live LLM campaign, or CVRP
+  solver comparison was added.
+- Added CVRPLIB-style parsing for `TYPE: CVRP`, EUC_2D coordinates, demands,
+  depot section, and vehicle capacity.
+- Extended routing instances and route scoring with stop demand,
+  `vehicle_capacity`, capacity-aware depot-return splitting, capacity
+  violation metrics, and vehicle-count metrics while preserving the narrow
+  `score_next_stop` program interface.
+- Added `routing_external --external-format cvrplib` CLI support and default
+  tiny CVRPLIB-style local fixtures alongside the existing TSPLIB-style
+  fixtures.
+- Updated `routing_external_generalization.csv`, final report, technical
+  report, portfolio brief, README, RUNBOOK, ROADMAP, VALIDATION, and tests so
+  Phase 10B is complete and only optional time-window routing remains deferred.
 
 ## Completed Phases
 
@@ -883,6 +901,27 @@ Validation:
   returned no matches.
 - 2026-05-02: large-file scan found no files larger than 1 MB in this project
   tree.
+- 2026-05-05: `python3 -m pytest tests/test_external_routing_phase10.py -q`
+  failed as expected before implementation because
+  `route_capacity_violation` was not available.
+- 2026-05-05: `python3 -m pytest tests/test_external_routing_phase10.py -q`
+  passed, 12 tests.
+- 2026-05-05:
+  `python3 -m pytest tests/test_external_routing_phase10.py tests/test_report_tables_plots_and_live_llm.py tests/test_final_report.py tests/test_technical_report_phase18.py tests/test_portfolio_packaging_phase19.py tests/test_failure_taxonomy_v2_phase14.py tests/test_reproducibility_package_phase16.py -q`
+  passed, 47 tests.
+- 2026-05-05: `python3 -m pytest -q` passed, 165 tests.
+- 2026-05-05: `python3 -m ruff check .` passed.
+- 2026-05-05: `python3 -m ruff format --check .` passed, 90 files already
+  formatted after applying formatter.
+- 2026-05-05: direct Phase 10B smoke printed external formats
+  `['cvrplib', 'tsplib']`, capacitated instance count `3`, capacity violation
+  `0.0`, vehicle count `2.0`, and the conservative claim boundary.
+- 2026-05-05: CLI smoke for default `routing_external` and explicit
+  `routing_external --external-format cvrplib` wrote run summaries with
+  capacity violation `0.0`.
+- 2026-05-05: `reproduce --profile external_small` wrote a deterministic
+  evidence package to `/tmp/o2-phase10b-reproduce-external` with score and code
+  hash rerun checks passing.
 
 Known limitations:
 
@@ -1035,10 +1074,10 @@ Validation:
 
 Known limitations:
 
-- Phase 10 covers the TSPLIB-style TSP slice only. CVRPLIB-style capacitated
-  routing and time-window routing remain deferred.
+- Phase 10 now covers TSPLIB-style TSP and CVRPLIB-style capacitated routing
+  slices. Time-window routing remains deferred.
 - The default external routing fixtures are small parser-backed examples for
-  deterministic local validation, not a committed large TSPLIB corpus.
+  deterministic local validation, not a committed large TSPLIB/CVRPLIB corpus.
 - Results compare compact `score_next_stop` programs against reused local
   baselines and do not claim LKH, CVRP solver, SOTA, real Amazon, or universal
   superiority.
@@ -1280,8 +1319,8 @@ Known limitations:
 - Failure cards explain representative failure modes from existing report
   evidence and diagnostic probes, not an exhaustive taxonomy for every OR
   benchmark family.
-- CVRPLIB/time-window routing, one-command reproduction profiles, and cloud
-  execution remain deferred.
+- Time-window routing, one-command reproduction profiles, and cloud execution
+  remain deferred.
 
 ## Latest Strategic Decision
 

@@ -29,7 +29,7 @@ seed heuristic library
 | --- | --- | --- | --- | --- |
 | Online Bin Packing | held-out synthetic distributions | seed-000-tight_fit | 9.333333333333334 | compact score_bin heuristic under evaluator constraints |
 | External Bin Packing | BPPLIB / OR-Library-style local fixtures | seed-000-tight_fit | 5.0 | external transfer evidence without SOTA claim |
-| External Routing | TSPLIB-style local fixtures | route-seed-000-nearest | 27.040973499999996 | routing transfer evidence without LKH or CVRP claim |
+| External Routing | TSPLIB/CVRPLIB-style local fixtures | route-seed-000-nearest | 31.597949666666665 | routing transfer evidence without LKH or CVRP-solver claim |
 | Simple Routing | held-out route sizes with local-search comparison | route-seed-003-slack_aware | 18.407699375000004 | score_next_stop heuristic plus 2-opt comparison |
 | Amazon-Style Routing | deterministic Amazon-shaped route fixtures | phase6-seed-000-travel_fast | 10.833333333333332 | travel-time and driver-likeness frontier trade-off |
 | Search Ablation | fixed local candidate budget | crossover_only-000 | 7.1 | operator comparison without live LLM superiority claim |
@@ -53,11 +53,11 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 - Live Gemini mutation is controlled and environment-gated; default runs use deterministic fallback providers.
 - Semantic novelty is based on fixed probe behavior fingerprints and does not prove human-level semantic understanding.
 - External bin packing fixtures are small and committed only as parser-backed benchmark-style examples.
-- External routing fixtures are small TSPLIB-style examples, not large TSPLIB benchmark corpora.
+- External routing fixtures are small TSPLIB/CVRPLIB-style examples, not large public benchmark corpora.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or public Amazon route data.
 - The project reports selected trade-offs and does not claim universal dominance or SOTA solver performance.
 - Failure repair evidence is deterministic and local; it does not prove arbitrary LLM-generated failures can be repaired.
 
 ## Recommended Next Phase
 
-No required phase remains; optional CVRPLIB/time-window routing or release polish
+No required phase remains; optional time-window routing or release polish

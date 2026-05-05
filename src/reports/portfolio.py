@@ -74,10 +74,10 @@ def build_phase19_package(
         },
         {
             "benchmark": "External Routing",
-            "evidence": "TSPLIB-style local fixtures",
+            "evidence": "TSPLIB/CVRPLIB-style local fixtures",
             "top_program": final["routing_external"]["best_external_program_id"],
             "reported_metric": final["routing_external"]["best_external_test_score"],
-            "claim": "routing transfer evidence without LKH or CVRP claim",
+            "claim": "routing transfer evidence without LKH or CVRP-solver claim",
         },
         {
             "benchmark": "Simple Routing",
@@ -150,8 +150,8 @@ def build_phase19_package(
             "does not prove human-level semantic understanding.",
             "External bin packing fixtures are small and committed only as "
             "parser-backed benchmark-style examples.",
-            "External routing fixtures are small TSPLIB-style examples, not "
-            "large TSPLIB benchmark corpora.",
+            "External routing fixtures are small TSPLIB/CVRPLIB-style examples, "
+            "not large public benchmark corpora.",
             "Amazon-style routing uses deterministic local fixtures, not "
             "proprietary or public Amazon route data.",
             "The project reports selected trade-offs and does not claim "
@@ -176,8 +176,7 @@ def build_phase19_package(
             "failure_cards": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "No required phase remains; optional CVRPLIB/time-window routing "
-            "or release polish"
+            "No required phase remains; optional time-window routing or release polish"
         ),
     }
 

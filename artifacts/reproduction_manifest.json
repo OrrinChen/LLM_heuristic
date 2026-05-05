@@ -72,7 +72,7 @@
     "fixture_source": "built_in_small_deterministic",
     "live_llm_fallback": 23
   },
-  "recommended_next_phase": "No required phase remains; optional CVRPLIB/time-window routing or release polish",
+  "recommended_next_phase": "No required phase remains; optional time-window routing or release polish",
   "required_outputs": [
     "reports/final_report.md",
     "reports/tables/benchmark_comparison.csv",

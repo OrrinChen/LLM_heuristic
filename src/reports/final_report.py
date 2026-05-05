@@ -130,8 +130,8 @@ def build_final_report() -> Dict[str, object]:
             "benchmark-style local fixtures by default; large public benchmark "
             "files are intentionally not committed.",
             "External routing evidence uses parser-backed, small TSPLIB-style "
-            "local fixtures by default; large public benchmark files are "
-            "intentionally not committed.",
+            "and CVRPLIB-style local fixtures by default; large public "
+            "benchmark files are intentionally not committed.",
             "Amazon routing data is represented by deterministic local "
             "Amazon-shaped fixtures until public or user-provided data is "
             "configured.",
@@ -154,8 +154,8 @@ def build_final_report() -> Dict[str, object]:
                 "step": "optional_routing_depth_or_release_polish",
                 "reason": (
                     "No required job-search roadmap phase remains. Optional "
-                    "extensions are CVRPLIB/time-window routing depth or "
-                    "release polish around the existing evidence package."
+                    "extensions are time-window routing depth or release polish "
+                    "around the existing evidence package."
                 ),
             },
         ),
@@ -254,6 +254,16 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
             (
                 "External routing held-out test score: "
                 f"`{routing_external['best_external_test_score']}`."
+            ),
+            (
+                "External routing parser formats: "
+                f"`{', '.join(routing_external['external_formats'])}`."
+            ),
+            (
+                "Capacitated external instances: "
+                f"`{routing_external['capacitated_instance_count']}`; "
+                "top-program held-out capacity violation: "
+                f"`{routing_external['best_external_test_capacity_violation']}`."
             ),
             (
                 "Synthetic-selected routing program external test score: "
@@ -508,14 +518,23 @@ def _external_routing_summary(phase10: Mapping[str, object]) -> Mapping[str, obj
         "synthetic_to_external_gap": phase10["synthetic_to_external_gap"],
         "external_generalization_gap": phase10["external_generalization_gap"],
         "external_test_baseline_scores": phase10["external_test_baseline_scores"],
+        "external_formats": phase10["external_formats"],
+        "capacitated_instance_count": phase10["capacitated_instance_count"],
+        "best_external_test_capacity_violation": phase10[
+            "best_external_test_capacity_violation"
+        ],
+        "best_external_test_vehicle_count": phase10["best_external_test_vehicle_count"],
+        "synthetic_top_external_capacity_violation": phase10[
+            "synthetic_top_external_capacity_violation"
+        ],
         "claim_boundary": phase10["claim_boundary"],
         "summary": (
             "Phase 10 evaluates `score_next_stop` routing candidates on "
-            "TSPLIB-style EUC_2D external fixtures with separate train, "
-            "validation, and test splits. It reuses nearest-neighbor, "
-            "cheapest-insertion, 2-opt, and candidate rerun machinery while "
-            "keeping the claim boundary below LKH, CVRP, SOTA, or Amazon "
-            "routing superiority."
+            "TSPLIB-style EUC_2D and CVRPLIB-style capacitated external "
+            "fixtures with separate train, validation, and test splits. It "
+            "reuses nearest-neighbor, cheapest-insertion, 2-opt, and "
+            "candidate rerun machinery while keeping the claim boundary below "
+            "LKH, CVRP solver, SOTA, or Amazon routing superiority."
         ),
     }
 

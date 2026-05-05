@@ -78,7 +78,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--external-path")
     run.add_argument(
         "--external-format",
-        choices=("auto", "or_library", "bpplib", "tsplib"),
+        choices=("auto", "or_library", "bpplib", "tsplib", "cvrplib"),
         default="auto",
     )
     run.add_argument("--use-live-llm", action="store_true")
@@ -132,12 +132,11 @@ def _run(args: argparse.Namespace) -> int:
     elif args.benchmark == "routing_external":
         external_instances = None
         if args.external_path:
-            parser_name = (
-                "tsplib" if args.external_format == "auto" else args.external_format
-            )
-            if parser_name != "tsplib":
+            parser_name = args.external_format
+            if parser_name not in {"auto", "tsplib", "cvrplib"}:
                 raise SystemExit(
-                    "routing_external supports --external-format auto or tsplib"
+                    "routing_external supports --external-format auto, tsplib, or "
+                    "cvrplib"
                 )
             external_instances = load_external_routing_instances(
                 args.external_path,

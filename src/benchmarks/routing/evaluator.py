@@ -8,8 +8,10 @@ from typing import Dict, List, Mapping, Optional, Sequence, Tuple
 from benchmarks.routing.baselines import (
     BASELINE_ROUTE_BUILDERS,
     RoutingResult,
+    route_capacity_violation,
     route_distance,
     route_time_window_violation,
+    route_vehicle_count,
     validate_route,
 )
 from benchmarks.routing.instances import (
@@ -100,6 +102,8 @@ class RoutingEvaluator:
 
         lengths = []
         violations = []
+        capacity_violations = []
+        vehicle_counts = []
         failures = 0
         first_failure = None
         for instance in instances:
@@ -111,6 +115,8 @@ class RoutingEvaluator:
             if result.is_valid:
                 lengths.append(result.total_distance)
                 violations.append(result.time_window_violation)
+                capacity_violations.append(result.capacity_violation)
+                vehicle_counts.append(float(result.vehicle_count))
             else:
                 failures += 1
                 if first_failure is None:
@@ -120,6 +126,8 @@ class RoutingEvaluator:
         metrics = {
             "average_route_length": _mean(lengths),
             "average_time_window_violation": _mean(violations),
+            "average_capacity_violation": _mean(capacity_violations),
+            "average_vehicle_count": _mean(vehicle_counts),
             "route_validity": 1.0 - failure_rate,
             "failure_rate": failure_rate,
             "instance_count": float(len(instances)),
@@ -179,6 +187,8 @@ class RoutingEvaluator:
         current_index = 0
         elapsed = 0.0
         route_length = 0.0
+        route_load = 0.0
+        vehicle_count = 1
         try:
             with _timeout(self.timeout_seconds):
                 while remaining:
@@ -186,9 +196,16 @@ class RoutingEvaluator:
                     scored = []
                     for stop_id in remaining:
                         stop = stop_lookup[stop_id]
-                        travel_time = instance.distance_matrix[current_index][
+                        direct_travel_time = instance.distance_matrix[current_index][
                             index_lookup[stop_id]
                         ]
+                        travel_time, requires_depot_return = _capacity_adjusted_travel(
+                            instance,
+                            current_index,
+                            index_lookup[stop_id],
+                            route_load,
+                            stop.demand,
+                        )
                         state = {
                             "current_stop_id": current_stop,
                             "current_index": current_index,
@@ -198,12 +215,22 @@ class RoutingEvaluator:
                             "route_length_so_far": route_length,
                             "visited_count": len(route),
                             "remaining_count": len(remaining),
+                            "route_load": route_load,
+                            "vehicle_capacity": instance.vehicle_capacity or 0.0,
+                            "remaining_capacity": _remaining_capacity(
+                                instance,
+                                route_load,
+                            ),
+                            "vehicle_count_so_far": vehicle_count,
                         }
                         candidate = _candidate_features(
                             instance,
                             stop,
                             travel_time,
+                            direct_travel_time,
                             elapsed,
+                            route_load,
+                            requires_depot_return,
                         )
                         score, failure = self._call_score_function(
                             scoring_function,
@@ -222,6 +249,16 @@ class RoutingEvaluator:
                         scored, key=lambda item: (item[0], item[1])
                     )
                     stop = stop_lookup[chosen]
+                    _, requires_depot_return = _capacity_adjusted_travel(
+                        instance,
+                        current_index,
+                        index_lookup[chosen],
+                        route_load,
+                        stop.demand,
+                    )
+                    if requires_depot_return:
+                        vehicle_count += 1
+                        route_load = 0.0
                     route.append(chosen)
                     route_length += travel_time
                     elapsed += travel_time
@@ -229,6 +266,7 @@ class RoutingEvaluator:
                         elapsed = stop.ready_time
                     elapsed += stop.service_time
                     current_index = index_lookup[chosen]
+                    route_load += max(0.0, stop.demand)
                     remaining.remove(chosen)
         except SandboxTimeoutError:
             return _invalid_result(
@@ -254,6 +292,8 @@ class RoutingEvaluator:
             runtime=perf_counter() - started,
             is_valid=validation.ok,
             failure_reason=validation.failure_reason,
+            capacity_violation=route_capacity_violation(instance, route_tuple),
+            vehicle_count=route_vehicle_count(instance, route_tuple),
         )
 
     def _call_score_function(
@@ -471,14 +511,19 @@ def _candidate_features(
     instance: RoutingInstance,
     stop: Stop,
     travel_time: float,
+    direct_travel_time: float,
     elapsed: float,
+    route_load: float,
+    requires_depot_return: bool,
 ) -> Mapping[str, object]:
     projected = elapsed + travel_time
+    capacity = instance.vehicle_capacity or 0.0
     return {
         "stop_id": stop.stop_id,
         "x": stop.x,
         "y": stop.y,
         "travel_time": travel_time,
+        "direct_travel_time": direct_travel_time,
         "distance_to_depot": instance.distance_matrix[
             _stop_index(instance, stop.stop_id)
         ][0],
@@ -486,6 +531,11 @@ def _candidate_features(
         "due_time": stop.due_time,
         "service_time": stop.service_time,
         "time_window_slack": stop.due_time - projected,
+        "demand": stop.demand,
+        "vehicle_capacity": capacity,
+        "route_load": route_load,
+        "remaining_capacity": max(0.0, capacity - route_load) if capacity else 0.0,
+        "requires_depot_return": 1.0 if requires_depot_return else 0.0,
     }
 
 
@@ -509,6 +559,8 @@ def _invalid_result(
         runtime=perf_counter() - started,
         is_valid=False,
         failure_reason=failure_reason,
+        capacity_violation=float("inf"),
+        vehicle_count=0,
     )
 
 
@@ -526,6 +578,32 @@ def _route_score_for_route(instance: RoutingInstance, route: Sequence[str]) -> f
         route_distance(instance, route)
         + route_time_window_violation(instance, route) * TIME_WINDOW_PENALTY
     )
+
+
+def _capacity_adjusted_travel(
+    instance: RoutingInstance,
+    current_index: int,
+    next_index: int,
+    route_load: float,
+    demand: float,
+) -> Tuple[float, bool]:
+    direct = instance.distance_matrix[current_index][next_index]
+    capacity = instance.vehicle_capacity
+    if capacity is None or route_load <= 1e-9:
+        return direct, False
+    if route_load + max(0.0, demand) <= capacity + 1e-9:
+        return direct, False
+    via_depot = (
+        instance.distance_matrix[current_index][0]
+        + instance.distance_matrix[0][next_index]
+    )
+    return via_depot, True
+
+
+def _remaining_capacity(instance: RoutingInstance, route_load: float) -> float:
+    if instance.vehicle_capacity is None:
+        return 0.0
+    return max(0.0, float(instance.vehicle_capacity) - route_load)
 
 
 def _candidate_for(

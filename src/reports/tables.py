@@ -87,6 +87,8 @@ def build_report_tables(
                 "validation_score",
                 "external_test_score",
                 "synthetic_to_external_gap",
+                "capacity_violation",
+                "vehicle_count",
                 "baseline_reference",
                 "claim",
             ),
@@ -428,6 +430,12 @@ def _routing_external_generalization_rows(
             "synthetic_to_external_gap": _format_number(
                 external["external_generalization_gap"]
             ),
+            "capacity_violation": _format_number(
+                external["best_external_test_capacity_violation"]
+            ),
+            "vehicle_count": _format_number(
+                external["best_external_test_vehicle_count"]
+            ),
             "baseline_reference": "",
             "claim": claim,
         },
@@ -442,6 +450,10 @@ def _routing_external_generalization_rows(
             "synthetic_to_external_gap": _format_number(
                 external["synthetic_to_external_gap"]
             ),
+            "capacity_violation": _format_number(
+                external["synthetic_top_external_capacity_violation"]
+            ),
+            "vehicle_count": "",
             "baseline_reference": "",
             "claim": claim,
         },
@@ -455,6 +467,8 @@ def _routing_external_generalization_rows(
                 "validation_score": "",
                 "external_test_score": _format_number(baselines[name]),
                 "synthetic_to_external_gap": "",
+                "capacity_violation": "",
+                "vehicle_count": "",
                 "baseline_reference": name,
                 "claim": claim,
             }
