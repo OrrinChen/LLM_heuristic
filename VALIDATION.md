@@ -128,6 +128,7 @@ Expected result:
 ```text
 TSPLIB-style EUC_2D and CVRPLIB-style fixtures parse into routing instances
 CVRPLIB demand, depot, and capacity fields are preserved
+CVRPLIB time-window and service-time sections are preserved
 external routing train / validation / test splits are disjoint
 nearest-neighbor, insertion, and 2-opt baselines are reused
 score_next_stop candidates rerun on external validation and test splits
@@ -180,7 +181,9 @@ print(report["best_external_test_score"] is not None)
 print("nearest_neighbor" in report["external_test_baseline_scores"])
 print(report["external_formats"])
 print(report["capacitated_instance_count"])
+print(report["time_window_instance_count"])
 print(report["best_external_test_capacity_violation"])
+print(round(report["best_external_test_time_window_violation"], 6))
 print(report["claim_boundary"])
 PY
 ```
@@ -196,8 +199,10 @@ True
 True
 ['cvrplib', 'tsplib']
 3
+3
 0.0
-external routing-style evidence only; no LKH, CVRP solver, Amazon, SOTA, or universal dominance claim
+15.205163
+external routing-style evidence only; no LKH, CVRP/VRPTW solver, Amazon, SOTA, or universal dominance claim
 ```
 
 ## Phase 2 Smoke Validation

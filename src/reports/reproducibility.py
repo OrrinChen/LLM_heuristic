@@ -85,7 +85,7 @@ def build_phase16_package(
         },
         "claim_boundary": PHASE16_CLAIM_BOUNDARY,
         "recommended_next_phase": (
-            "No required phase remains; optional time-window routing or release polish"
+            "No required phase remains; optional broader crossover or release polish"
         ),
     }
 

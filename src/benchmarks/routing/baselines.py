@@ -115,9 +115,18 @@ def route_time_window_violation(
     elapsed = 0.0
     violation = 0.0
     current_index = 0
+    load = 0.0
     for stop_id in route:
         next_index = index_lookup[stop_id]
         stop = lookup[stop_id]
+        if (
+            instance.vehicle_capacity is not None
+            and load > EPSILON
+            and load + max(0.0, stop.demand) > instance.vehicle_capacity + EPSILON
+        ):
+            elapsed += instance.distance_matrix[current_index][0]
+            current_index = 0
+            load = 0.0
         elapsed += instance.distance_matrix[current_index][next_index]
         if elapsed < stop.ready_time:
             elapsed = stop.ready_time
@@ -125,6 +134,7 @@ def route_time_window_violation(
             violation += elapsed - stop.due_time
         elapsed += stop.service_time
         current_index = next_index
+        load += max(0.0, stop.demand)
     return violation
 
 

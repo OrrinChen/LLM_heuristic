@@ -176,7 +176,7 @@ def build_phase19_package(
             "failure_cards": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "No required phase remains; optional time-window routing or release polish"
+            "No required phase remains; optional broader crossover or release polish"
         ),
     }
 

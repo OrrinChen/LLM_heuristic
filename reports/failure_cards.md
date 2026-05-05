@@ -78,7 +78,7 @@ slice=routing-large-routes
 - Example program: `route-seed-000-nearest` on `routing_external`.
 - Trigger condition: Synthetic-selected heuristic loses quality on external fixtures.
 - Detected by: Phase 9 / Phase 10 transfer tables
-- Score impact: Largest deterministic synthetic-to-external gap is 22.971303.
+- Score impact: Largest deterministic synthetic-to-external gap is 175.022937.
 - Repair Strategy: Use external validation splits and report transfer gaps.
 - Expected effect: Keeps transfer claims bounded by held-out evidence.
 
@@ -92,7 +92,7 @@ synthetic-selected routing program rerun on TSPLIB fixtures
 - Example program: `route-seed-000-nearest` on `routing_external`.
 - Trigger condition: Best discovered candidate does not improve over the baseline.
 - Detected by: external baseline comparison table
-- Score impact: Best external score 31.597950; strongest baseline 31.928311.
+- Score impact: Best external score 183.649583; strongest baseline 239.723262.
 - Repair Strategy: Report baseline dominance and avoid solver-superiority claims.
 - Expected effect: Keeps evaluation honest when baselines are strong.
 
