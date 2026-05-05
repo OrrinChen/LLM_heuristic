@@ -113,7 +113,7 @@ def test_final_report_includes_search_ablation_section_and_next_phase() -> None:
     assert "fixed local budget" in markdown
     assert (
         report["recommended_next_steps"][0]["step"]
-        == "optional_routing_depth_or_release_polish"
+        == "release_frozen_portfolio_package"
     )
 
 

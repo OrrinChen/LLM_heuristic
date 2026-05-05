@@ -85,7 +85,9 @@ def build_phase16_package(
         },
         "claim_boundary": PHASE16_CLAIM_BOUNDARY,
         "recommended_next_phase": (
-            "No required phase remains; optional broader crossover or release polish"
+            "No required phase remains; project is release-frozen and "
+            "portfolio-ready. Optional future work: broader crossover, paid "
+            "cloud execution, or larger public benchmark corpora."
         ),
     }
 

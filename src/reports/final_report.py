@@ -152,11 +152,12 @@ def build_final_report() -> Dict[str, object]:
         ),
         "recommended_next_steps": (
             {
-                "step": "optional_routing_depth_or_release_polish",
+                "step": "release_frozen_portfolio_package",
                 "reason": (
-                    "No required job-search roadmap phase remains. Optional "
-                    "extensions are broader crossover or release polish around "
-                    "the existing evidence package."
+                    "No required roadmap phase remains. The project is "
+                    "release-frozen and portfolio-ready; optional future work is "
+                    "broader crossover, paid cloud execution, or larger public "
+                    "benchmark corpora."
                 ),
             },
         ),

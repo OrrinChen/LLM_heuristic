@@ -1,30 +1,32 @@
 # LLM-Driven Program Search for OR Heuristics
 
-O2 is a FunSearch-inspired program-search system for operations research
-heuristics. The project constrains generated Python to compact scoring
-functions, validates the code statically, runs it in a restricted sandbox, and
-records evaluation results with archive and lineage metadata.
+O2 is a release-frozen, portfolio-ready research system for discovering compact
+operations-research heuristic scoring programs under strict evaluator and
+sandbox constraints.
 
-## What It Does
+## What It Is
 
-O2 treats heuristic design as constrained program search. Seed heuristics and
-generated scoring functions are mutated, statically validated, executed in a
-sandbox, scored by OR benchmark evaluators, selected through an archive, and
-exported as reproducible evidence.
+O2 treats heuristic design as constrained program search. It mutates compact
+`score_bin` and `score_next_stop` functions, validates them statically, executes
+them in a subprocess sandbox, scores them on OR benchmark evaluators, archives
+the results, and exports a reproducible evidence package.
 
-The system discovers compact `score_bin` and `score_next_stop` programs for
-bin packing and routing-style tasks. It does not let generated code write a full
-solver or access hidden labels, files, network, credentials, or unrestricted
-imports.
+Generated code fills a narrow scoring-function interface only. It is not allowed
+to write a full solver, access hidden labels, read files, use network calls,
+touch credentials, or import arbitrary packages.
 
 ## Why It Matters
 
-Hand-designed OR heuristics are useful because they are compact, auditable, and
-fast, but they are usually tuned by human iteration. O2 shows how that design
-loop can be automated while preserving a strict safety boundary and reporting
-where candidates fail. The claim is conservative: discovered heuristics improve
-selected quality-runtime-generalization trade-offs under evaluator constraints;
-the project does not claim universal dominance or SOTA solver performance.
+Hand-designed OR heuristics are compact, auditable, and fast, but they are often
+tuned by manual iteration. O2 shows how part of that design loop can be
+automated while preserving a safety boundary, held-out evaluation, failure
+analysis, rerun manifests, and conservative claims.
+
+The supported claim is deliberately narrow: the system discovers compact
+heuristic programs that improve selected quality-runtime-generalization
+trade-offs under strict evaluator constraints. It does not claim universal
+dominance, SOTA solver performance, superiority on Amazon data, or LKH/CVRP/
+VRPTW solver comparison.
 
 ## One-Command Demo
 
@@ -32,11 +34,17 @@ the project does not claim universal dominance or SOTA solver performance.
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
 ```
 
-This writes a local evidence package with `reports/final_report.md`,
+This regenerates a local evidence package: `reports/final_report.md`,
 `reports/technical_report.md`, `reports/portfolio_brief.md`,
 `reports/failure_cards.md`, CSV tables, plot-ready JSON, top programs,
 frontier programs, a rerun manifest, `artifacts/reproduction_manifest.json`,
 and `artifacts/reproduction_summary.md`.
+
+For a report-only export, run:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
+```
 
 ## Core Architecture
 
@@ -50,132 +58,42 @@ flowchart LR
     F --> G["report artifacts and portfolio evidence"]
 ```
 
-## Benchmark Results
+## Benchmark Evidence
 
-| Benchmark | Evidence | Representative result | Claim boundary |
-| --- | --- | --- | --- |
-| Online Bin Packing | Held-out synthetic distributions | `seed-000-tight_fit` top program | compact `score_bin` heuristic under evaluator constraints |
-| External Bin Packing | BPPLIB / OR-Library-style fixtures | `external_generalization.csv` | external transfer evidence, not SOTA |
-| External Routing | TSPLIB/CVRPLIB-style fixtures | `routing_external_generalization.csv` | external routing-style evidence, not LKH/CVRP/VRPTW solver/SOTA |
-| Simple Routing | Held-out route sizes plus 2-opt | `route-seed-003-slack_aware` | `score_next_stop` heuristic comparison |
-| Amazon-Style Routing | Local Amazon-shaped fixtures | `phase6-seed-000-travel_fast` | travel-time / driver-likeness frontier trade-off |
-| Search Ablation | Fixed local budget | seed, mutation, crossover, LLM-proxy, repair | mechanism evidence, not live LLM superiority |
-| LLM Live Mutation v1 | Hash-only audit | `llm_operator_comparison.csv` | LLM as one sandboxed mutation operator |
-| Program Semantics | Behavior fingerprints | `novelty_table.csv` | probe-based behavior novelty |
-| Failure Taxonomy v2 | Cards and repair rows | `failure_taxonomy_v2.csv` | failure modes, not arbitrary auto-repair |
-| Pareto Frontier | Quality-runtime frontier | 8 frontier rows | selected trade-offs, not universal dominance |
-| Reproducibility Package v2 | Deterministic profiles | `reproduction_manifest.json` | fresh-clone reproduction without API key |
-| Local Parallel Runner | Parallel + checkpoint | `parallel_runner_summary.csv` | local scale evidence, not paid cloud |
+| Evidence area | Key artifact | Claim boundary |
+| --- | --- | --- |
+| Online Bin Packing | `benchmark_comparison.csv` | compact `score_bin` evidence |
+| External Bin Packing | `external_generalization.csv` | external transfer, not SOTA |
+| External Routing | `routing_external_generalization.csv` | no LKH/CVRP/VRPTW comparison |
+| Search Ablation | `ablation_summary.csv` | mechanism evidence, not live LLM superiority |
+| Pareto Frontier | `pareto_frontier.csv` | selected trade-offs |
+| Failure Analysis | `failure_cards.md` | transparent limits |
+| Reproducibility | `reproduction_manifest.json` | deterministic local rerun |
 
 ## Safety Boundary
 
-Generated code is limited to narrow scoring functions. Static checks reject
-imports, file access, network/process names, dangerous builtins, disallowed
-globals, and dunder access before sandbox execution. Hardened single-call
-execution runs in a subprocess with wall-clock timeout handling and optional
-platform memory limits.
+Static checks reject imports, file access, network/process names, dangerous
+builtins, disallowed globals, dunder access, and non-approved function
+interfaces before sandbox execution. Hardened scoring calls run in a subprocess
+with wall-clock timeout handling and optional platform memory limits. Failures
+are recorded as structured reasons instead of being hidden.
 
 ## Limitations
 
-- Live Gemini mutation is controlled and environment-gated; default runs use
-  deterministic fallback providers.
-- Semantic novelty is based on fixed probe behavior fingerprints; it does not
-  prove human-level semantic understanding.
-- Failure repair evidence is deterministic and local; it does not prove
-  arbitrary LLM-generated failures can be repaired automatically.
-- External bin packing fixtures are intentionally small and parser-backed.
-- External routing fixtures are intentionally small TSPLIB-style EUC_2D and
-  CVRPLIB-style capacitated/time-window examples.
+- Default runs are deterministic and local; live Gemini mutation is optional,
+  environment-gated, and never bypasses validation or sandboxing.
+- External benchmark fixtures are intentionally small and parser-backed; larger
+  public benchmark corpora remain optional future work.
 - Amazon-style routing uses deterministic local fixtures, not proprietary or
   public Amazon route data.
-- Runtime frontier values use a deterministic proxy.
-- Reproduction profiles are local and deterministic by default; the
-  `llm_optional` profile uses fallback providers unless live Gemini is
-  explicitly configured.
-- Phase 17 scale evidence is local process parallelism with a dry-run cloud
-  adapter boundary; it does not execute paid cloud jobs.
+- Semantic novelty is based on fixed probe behavior fingerprints.
+- Failure repair evidence is deterministic and local.
+- Local parallel evidence uses process parallelism and a dry-run cloud adapter;
+  paid cloud execution is optional future work.
+- Broader crossover remains optional future work.
 - O2 reports selected trade-offs and does not claim universal dominance.
 
-Current status:
-
-- Phase 0 complete: project direction, roadmap, task memory, and workflow docs.
-- Phase 1 complete: program-search skeleton, static checks, restricted
-  execution, mutation interface, evaluator records, archive, and lineage.
-- Phase 2 complete: online bin packing instances, baselines, evaluator, seed
-  candidate sweep, held-out report, and seed archive.
-- Phase 3 complete: deterministic mutation/crossover evolution loop,
-  tournament selection, novelty filtering, generation metrics, complexity
-  tracking, elite archive reporting, and rerunnable top candidates.
-- Phase 4 complete: simple routing instances, deterministic baselines,
-  `score_next_stop` evaluation, time-window penalties, 2-opt local search,
-  held-out instance sizes, and rerunnable top route programs.
-- Phase 5 complete: Amazon last-mile routing evaluator scaffold with local
-  route loading, route/stop/package features, similarity metrics, deterministic
-  baselines, and sandboxed `score_next_stop` evaluation.
-- Phase 6 complete: deterministic Amazon heuristic discovery with seed/mutated
-  `score_next_stop` programs, held-out route scoring, local-search variants,
-  feature contract reporting, and travel-time versus driver-likeness trade-off
-  callouts.
-- Phase 7 complete: cross-benchmark robustness reporting across held-out random
-  seeds, item distributions, routing sizes, and Amazon-style city, route-size,
-  density, and quality slices.
-- Phase 8 complete: failure-analysis reporting across invalid code, timeout,
-  hardcoded heuristic, overfitting, poor generalization, complexity, feasibility
-  boundaries, and metric trade-off patterns.
-- Final report packaging complete: structured and Markdown report around the
-  killer experiment, conservative claims, robustness evidence, failure
-  analysis, limitations, and next steps.
-- Report tables and plots / optional live LLM integration complete:
-  deterministic Markdown tables, plot-ready series, ASCII plot previews, and a
-  stdlib-only Gemini mutation provider behind `GEMINI_API_KEY`.
-- Hardening milestone complete: subprocess scoring-function isolation, wall
-  clock timeout handling, optional platform memory limits, rerun manifests,
-  exported report artifacts, top-program evidence files, and a deterministic
-  CLI.
-- Phase 9 complete: BPPLIB / OR-Library-style bin packing parser, external
-  train / validation / test split, external baseline comparison,
-  synthetic-to-external transfer gap, final report section,
-  `external_generalization.csv`, and `bin_packing_external` CLI support.
-- Phase 10 complete: TSPLIB-style routing parser, CVRPLIB-style capacitated and
-  time-window parser, distance matrix builder, external train / validation /
-  test split, nearest-neighbor / insertion / 2-opt baseline reuse,
-  `score_next_stop` candidate reruns, `routing_external_generalization.csv`,
-  final report section, and `routing_external` CLI support.
-- Phase 11 complete: controlled search-mechanism ablation across seed-only,
-  mutation, crossover, deterministic LLM-proxy mutation, deterministic
-  LLM-proxy repair, and mutation+repair under the same local budget, split,
-  timeout, and seeds.
-- Phase 12 complete: controlled live LLM mutation v1 with deterministic
-  fallback, repair provider, prompt versioning, hash-only response audit,
-  token / latency / cost tracking, static-check and sandbox outcomes,
-  `llm_operator_comparison.csv`, `llm_candidate_audit.csv`, and `live_llm` CLI
-  support.
-- Phase 13 complete: probe-based behavior fingerprinting, semantic novelty
-  scoring, feature usage summaries, complexity decomposition, duplicate
-  behavior clusters, `novelty_table.csv`, `behavior_fingerprint.json`, and
-  `duplicate_behavior_clusters.csv`.
-- Phase 14 complete: failure taxonomy v2 cards with example programs, trigger
-  conditions, validator/evaluator sources, score impact, repair strategies,
-  `failure_cards.md`, `failure_taxonomy_v2.csv`, and `repair_success_rate.csv`.
-- Phase 15 complete: Pareto frontier reporting across objective quality,
-  runtime, program complexity, failure rate, generalization gap, and
-  Amazon-style driver-likeness / operational realism.
-- Phase 18 complete: research-style technical report packaging the problem,
-  system design, sandbox boundary, benchmarks, search loop, external evidence,
-  ablation, generalization, failure analysis, limitations, and conclusion.
-- Phase 19 complete: README-first portfolio narrative, one-command demo,
-  architecture diagram, benchmark evidence table, safety boundary,
-  limitations, resume bullets, and portfolio brief artifact.
-- Phase 16 complete: deterministic reproduction profiles for `local_demo`,
-  `external_small`, and `llm_optional`, one-command `reproduce` CLI export,
-  reproduction manifest, reproduction summary, and Make targets.
-- Phase 17 complete: local process-parallel candidate evaluation,
-  checkpoint/resume, worker-failure isolation, cost-budget stop, dry-run cloud
-  adapter boundary, and Phase17 report artifacts.
-- Current phase: the job-search portfolio track, Phase 10A/10B/10C routing
-  evidence, Phase 12 live LLM mutation v1, Phase 13 semantic novelty, Phase 14
-  failure taxonomy v2, Phase 16 reproducibility package v2, and Phase 17 local
-  parallel runner are complete; no required roadmap phase remains.
+See [RELEASE_SUMMARY.md](RELEASE_SUMMARY.md) for the 3-minute portfolio summary.
 
 ## Setup
 

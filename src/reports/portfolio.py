@@ -5,11 +5,11 @@ from typing import Dict, Mapping, Optional
 from reports.final_report import build_final_report
 
 PORTFOLIO_README_REQUIRED_HEADINGS = (
-    "## What It Does",
+    "## What It Is",
     "## Why It Matters",
     "## One-Command Demo",
     "## Core Architecture",
-    "## Benchmark Results",
+    "## Benchmark Evidence",
     "## Safety Boundary",
     "## Limitations",
 )
@@ -77,7 +77,9 @@ def build_phase19_package(
             "evidence": "TSPLIB/CVRPLIB-style local fixtures",
             "top_program": final["routing_external"]["best_external_program_id"],
             "reported_metric": final["routing_external"]["best_external_test_score"],
-            "claim": "routing transfer evidence without LKH or CVRP-solver claim",
+            "claim": (
+                "routing transfer evidence without LKH or CVRP/VRPTW-solver claim"
+            ),
         },
         {
             "benchmark": "Simple Routing",
@@ -176,7 +178,9 @@ def build_phase19_package(
             "failure_cards": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "No required phase remains; optional broader crossover or release polish"
+            "No required phase remains; project is release-frozen and "
+            "portfolio-ready. Optional future work: broader crossover, paid "
+            "cloud execution, or larger public benchmark corpora."
         ),
     }
 

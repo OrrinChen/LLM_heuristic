@@ -101,4 +101,4 @@ deterministic local reproduction package only; no API key, paid service, large e
 
 ## Recommended Next Phase
 
-No required phase remains; optional broader crossover or release polish
+No required phase remains; project is release-frozen and portfolio-ready. Optional future work: broader crossover, paid cloud execution, or larger public benchmark corpora.

@@ -274,7 +274,9 @@ def build_phase18_report(
             "failure_card_count": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (
-            "No required phase remains; optional broader crossover or release polish"
+            "No required phase remains; project is release-frozen and "
+            "portfolio-ready. Optional future work: broader crossover, paid "
+            "cloud execution, or larger public benchmark corpora."
         ),
     }
 
@@ -325,7 +327,7 @@ def render_technical_report_markdown(report: Mapping[str, object]) -> str:
             "",
             "## Next Phase",
             "",
-            f"{report['recommended_next_phase']}.",
+            str(report["recommended_next_phase"]),
             "",
         ]
     )

@@ -3,10 +3,10 @@
 ## Latest Status
 
 Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `feat: add time-window routing evidence`
-Current phase: Phase 10C time-window routing evidence complete
-Main blocker: None for Phase 10C; paid cloud execution remains deferred
-Next recommended action: no required roadmap phase remains; optional broader crossover or release polish
+Latest commit: `docs: freeze portfolio release package`
+Current phase: Release polish only; project is release-frozen and portfolio-ready
+Main blocker: None; broader crossover, paid cloud execution, and larger public benchmark corpora remain optional future work
+Next recommended action: stop at the release-frozen portfolio package unless a future task explicitly requests an extension
 
 ## Current Project State
 
@@ -15,7 +15,7 @@ Project folder: `/Users/orynwilder/Documents/New project 2/llm-or-heuristic-disc
 Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
-This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style, CVRPLIB-style, and time-window external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 17 local parallel runner evidence, Phase 18 research-style technical report packaging, and Phase 19 resume / portfolio packaging.
+This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style, CVRPLIB-style, and time-window external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 17 local parallel runner evidence, Phase 18 research-style technical report packaging, Phase 19 resume / portfolio packaging, and release-frozen portfolio-ready summary docs.
 
 ## Roadmap Update
 
@@ -273,6 +273,46 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-phase10c-reproduce-external-final --top-k 2`
     passed with deterministic rerun checks and no API key or large external data
     requirement.
+
+2026-05-05 release polish:
+
+- Scope is final release polish only; no Phase 20, new benchmark feature,
+  broader crossover, cloud execution, or expanded live LLM experiment was added.
+- Added `RELEASE_SUMMARY.md` as the 3-minute portfolio summary covering thesis,
+  architecture, evidence artifacts, one-command reproduction, conservative
+  claim boundary, limitations, resume bullets, and interview talking points.
+- Tightened the README first screen around what O2 is, why it matters,
+  one-command demo, architecture, benchmark evidence, safety boundary, and
+  limitations without the long phase-by-phase dump at the top.
+- Added a release validation checklist covering pytest, ruff, format check,
+  `local_demo` reproduction, `external_small` reproduction, report export,
+  secret scan, and large-file scan.
+- Marked the project release-frozen and portfolio-ready in ROADMAP, RUNBOOK,
+  VALIDATION, and task memory.
+- Optional future work remains broader crossover, paid cloud execution, and
+  larger public benchmark corpora.
+- Validation:
+  - `python3 -m pytest tests/test_release_polish.py -q` failed first as
+    expected because `RELEASE_SUMMARY.md`, release-frozen status markers, and
+    release validation checklist were not present yet.
+  - `python3 -m pytest tests/test_release_polish.py tests/test_portfolio_packaging_phase19.py tests/test_final_report.py tests/test_technical_report_phase18.py tests/test_failure_taxonomy_v2_phase14.py tests/test_live_llm_phase12.py tests/test_pareto_frontier_phase15.py tests/test_semantic_novelty_phase13.py tests/test_search_ablation_phase11.py -q`
+    passed, 45 tests.
+  - `python3 -m pytest tests/test_release_polish.py -q` passed, 5 tests after
+    tightening the release secret-scan pattern.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir . --top-k 5`
+    passed and regenerated checked-in report and reproduction artifacts.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3`
+    passed with deterministic rerun checks and no API key or large external data
+    requirement.
+  - `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3`
+    passed and exported final report, tables, plot-ready JSON, portfolio brief,
+    technical report, top programs, and frontier programs.
+  - Release secret scan with key-shaped patterns passed with no matches.
+  - Release large-file scan passed with no files over 5 MB.
+  - `python3 -m ruff check .` passed.
+  - `python3 -m ruff format --check .` passed.
+  - `git diff --check -- .` passed.
+  - Final `python3 -m pytest -q` passed, 171 tests.
 
 ## Completed Phases
 

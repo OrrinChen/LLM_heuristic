@@ -74,13 +74,15 @@ Completed:
 - Phase 19: Resume / portfolio packaging with README-first narrative,
   one-command demo, architecture diagram, benchmark evidence table, safety
   boundary, limitations, resume bullets, and portfolio brief artifact.
+- Release polish: release-frozen portfolio summary, tightened README first
+  screen, conservative claim audit, and release validation checklist.
 
 Current phase:
 
 - Original roadmap and hardening milestone are complete.
 - Phase 9 external bin packing benchmark evidence is complete.
 - Phase 10 external routing benchmark evidence is complete for the TSPLIB-style
-  TSP slice and CVRPLIB-style capacitated routing slice.
+  TSP slice, CVRPLIB-style capacitated routing slice, and time-window evidence.
 - Phase 11 search mechanism ablation is complete.
 - Phase 12 live LLM mutation v1 is complete as a controlled, environment-gated
   experiment module with deterministic fallback.
@@ -98,6 +100,8 @@ Current phase:
 - Phase 19 resume / portfolio packaging is complete.
 - The job-search evidence, reproducibility, and local scale tracks are
   complete; no required roadmap phase remains.
+- The project is release-frozen and portfolio-ready. Future work should be
+  explicitly requested and kept separate from the release evidence package.
 
 Deferred:
 
@@ -105,12 +109,17 @@ Deferred:
 - Paid cloud execution beyond the dry-run adapter boundary.
 - Paid API usage.
 - Production live-LLM experiment campaigns beyond controlled local smoke checks.
+- Larger public benchmark corpora beyond small parser-backed fixtures.
+
+Optional future work is limited to broader crossover, paid cloud execution, and
+larger public benchmark corpora.
 
 Next autonomous action:
 
 ```text
-No required roadmap phase remains. If continuing, choose an optional extension
-explicitly: broader crossover or release polish.
+No required roadmap phase remains. The release-frozen portfolio package is the
+current stopping point. Optional future work is broader crossover, paid cloud
+execution, or larger public benchmark corpora.
 ```
 
 ## Project Positioning
