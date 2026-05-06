@@ -150,6 +150,10 @@ def test_export_report_artifacts_writes_evidence_package(tmp_path: Path) -> None
     assert (tmp_path / "reports" / "tables" / "benchmark_comparison.csv").is_file()
     assert (tmp_path / "reports" / "tables" / "failure_taxonomy.csv").is_file()
     assert (tmp_path / "reports" / "plots" / "plot_series.json").is_file()
+    assert (tmp_path / "reports" / "plots" / "pareto_frontier_main.svg").is_file()
+    assert summary["pareto_frontier_main_svg"].endswith(
+        "reports/plots/pareto_frontier_main.svg"
+    )
     assert (tmp_path / "artifacts" / "rerun_manifest.json").is_file()
     top_programs = sorted((tmp_path / "artifacts" / "top_programs").glob("*.py"))
     assert len(top_programs) == 3

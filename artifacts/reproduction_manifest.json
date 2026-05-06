@@ -38,6 +38,7 @@
     "reports/plots/behavior_fingerprint.json",
     "reports/plots/frontier_plot_series.json",
     "reports/plots/generation_curve_by_method.json",
+    "reports/plots/pareto_frontier_main.svg",
     "reports/plots/plot_series.json",
     "reports/portfolio_brief.md",
     "reports/tables/ablation_summary.csv",

@@ -78,7 +78,8 @@ ruff check passes
 ruff format check passes
 local_demo reproduction regenerates the evidence package
 external_small reproduction regenerates external evidence tables
-report export writes reports/final_report.md, CSV tables, and plot-ready JSON
+report export writes reports/final_report.md, CSV tables, plot-ready JSON, and
+reports/plots/pareto_frontier_main.svg
 Secret scan returns no committed credentials
 Large-file scan returns no unexpected large files
 Project remains release-frozen and portfolio-ready
@@ -718,7 +719,7 @@ print(len(package["benchmark_results"]))
 print(package["recommended_next_phase"])
 print("sandboxed LLM-driven OR heuristic discovery system" in markdown)
 print("PYTHONPATH=src python3 -m heuristic_discovery report" in readme)
-print("## Core Architecture" in readme)
+print("## Search Flow" in readme)
 print("does not claim universal dominance" in readme)
 PY
 ```
@@ -728,7 +729,7 @@ Expected result:
 ```text
 19
 10
-Optional Phase 16: Reproducibility Package v2
+No required phase remains; project is release-frozen and portfolio-ready. Optional future work: broader crossover, paid cloud execution, or larger public benchmark corpora.
 True
 True
 True
@@ -1109,7 +1110,8 @@ infinite loops fail by wall-clock timeout
 file access, imports, eval, and network/process names fail static validation
 memory-heavy programs fail safely when a memory limit is requested
 rerun manifests record code hashes, runtime, seeds, parent ids, and stable scores
-report artifacts export final markdown, CSV tables, JSON plot series, top programs, and manifest files
+report artifacts export final markdown, CSV tables, JSON plot series, a
+deterministic Pareto SVG, top programs, and manifest files
 CLI run, report, inspect, and rerun-manifest commands work with deterministic defaults
 ```
 
@@ -1126,7 +1128,10 @@ Expected result:
 ```text
 local_demo, external_small, and llm_optional profiles are deterministic
 no profile requires GEMINI_API_KEY, paid services, or large external data
-reproduce CLI writes reports/final_report.md, reports/tables/*.csv, reports/plots/*.json, artifacts/rerun_manifest.json, artifacts/reproduction_manifest.json, and artifacts/reproduction_summary.md
+reproduce CLI writes reports/final_report.md, reports/tables/*.csv,
+reports/plots/*.json, reports/plots/pareto_frontier_main.svg,
+artifacts/rerun_manifest.json, artifacts/reproduction_manifest.json, and
+artifacts/reproduction_summary.md
 rerun checks confirm stable scores and matching code hashes
 Make targets exist for reproduce, test, report, and demo
 ```

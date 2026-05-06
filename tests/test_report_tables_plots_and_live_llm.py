@@ -13,7 +13,11 @@ from llm.model_client import (
 )
 from llm.mutation_engine import MutationEngine
 from program_search.candidate_program import CandidateProgram
-from reports.plots import build_report_plots, render_report_plots_markdown
+from reports.plots import (
+    build_report_plots,
+    render_pareto_frontier_svg,
+    render_report_plots_markdown,
+)
 from reports.tables import build_report_tables, render_report_tables_markdown
 
 
@@ -121,6 +125,19 @@ def test_report_plots_markdown_contains_curve_and_gap_sections() -> None:
     assert "## Behavior Fingerprint" in markdown
     assert "routing-large-routes" in markdown
     assert "phase6-seed-000-travel_fast" in markdown
+
+
+def test_pareto_frontier_svg_is_deterministic_and_self_contained() -> None:
+    svg = render_pareto_frontier_svg(build_report_plots()["frontier_plot_series"])
+
+    assert svg.startswith("<svg")
+    assert 'role="img"' in svg
+    assert "Pareto Frontier" in svg
+    assert "runtime" in svg
+    assert "objective quality" in svg
+    assert "seed-001-load_balancer" in svg
+    assert "frontier" in svg
+    assert "dominated" in svg
 
 
 def test_extract_python_code_strips_markdown_fences() -> None:

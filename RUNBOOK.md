@@ -99,6 +99,7 @@ reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
 reports/plots/behavior_fingerprint.json
 reports/plots/frontier_plot_series.json
+reports/plots/pareto_frontier_main.svg
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
 artifacts/rerun_manifest.json
@@ -163,11 +164,14 @@ Expected release artifacts:
 ```text
 RELEASE_SUMMARY.md
 README.md
+docs/safety_boundary.md
+examples/top_program_before_after.md
 reports/final_report.md
 reports/technical_report.md
 reports/portfolio_brief.md
 reports/tables/*.csv
 reports/plots/*.json
+reports/plots/pareto_frontier_main.svg
 artifacts/reproduction_manifest.json
 artifacts/reproduction_summary.md
 ```

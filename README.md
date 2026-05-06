@@ -28,17 +28,17 @@ trade-offs under strict evaluator constraints. It does not claim universal
 dominance, SOTA solver performance, superiority on Amazon data, or LKH/CVRP/
 VRPTW solver comparison.
 
+O2 does not claim universal dominance.
+
 ## One-Command Demo
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
 ```
 
-This regenerates a local evidence package: `reports/final_report.md`,
-`reports/technical_report.md`, `reports/portfolio_brief.md`,
-`reports/failure_cards.md`, CSV tables, plot-ready JSON, top programs,
-frontier programs, a rerun manifest, `artifacts/reproduction_manifest.json`,
-and `artifacts/reproduction_summary.md`.
+This regenerates the local evidence package: reports, CSV tables,
+JSON/SVG plots, top/frontier programs, rerun/reproduction manifests, and a
+summary. Default reproduction is local, deterministic, and does not require an API key.
 
 For a report-only export, run:
 
@@ -46,7 +46,48 @@ For a report-only export, run:
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
 ```
 
-## Core Architecture
+Key release docs: [release summary](RELEASE_SUMMARY.md), [top program
+before/after](examples/top_program_before_after.md), and [safety boundary](docs/safety_boundary.md).
+
+## Benchmark Evidence
+
+Core artifacts include `external_generalization.csv`,
+`routing_external_generalization.csv`, `ablation_summary.csv`,
+`pareto_frontier.csv`, and `reproduction_manifest.json`.
+
+Coverage spans Online Bin Packing, External Bin Packing, External Routing,
+search ablation, Pareto evidence, failure taxonomy, and deterministic
+reproduction. These are evidence slices, not SOTA solver claims.
+
+## Representative Heuristic
+
+Before: choose the feasible bin with the smallest leftover capacity.
+
+After: archived top program `seed-001-load_balancer`:
+
+```python
+def score_bin(item_size, bin_remaining_capacity, bin_features):
+    projected = bin_remaining_capacity - item_size
+    if projected < 0:
+        return 1000000
+    return abs(projected - 0.01)
+```
+
+This is a scoring function evaluated under sandbox and benchmark constraints,
+not a full solver. See
+[examples/top_program_before_after.md](examples/top_program_before_after.md).
+
+## Pareto Evidence
+
+Main visual: [reports/plots/pareto_frontier_main.svg](reports/plots/pareto_frontier_main.svg)
+
+| Benchmark | Frontier program | Objective quality | Runtime | Complexity | Trade-off |
+| --- | --- | --- | --- | --- | --- |
+| bin_packing | `seed-001-load_balancer` | 7.75 | 0.023680 | 32 | quality/runtime/generalization |
+| simple_routing | `route-seed-002-window_guard` | 15.617200 | 0.009996 | 49 | quality/runtime/generalization |
+| amazon_routing | `phase6-seed-000-travel_fast` | 10.833333 | 0.000022 | 11 | quality/runtime/driver-likeness |
+
+## Search Flow
 
 ```mermaid
 flowchart LR
@@ -58,40 +99,32 @@ flowchart LR
     F --> G["report artifacts and portfolio evidence"]
 ```
 
-## Benchmark Evidence
+## Safety Boundary
+
+Static checks reject imports, file/network/process access, unsafe builtins,
+dunder access, and bad interfaces before subprocess sandbox execution.
+Failures are structured. See [docs/safety_boundary.md](docs/safety_boundary.md).
+
+## Limitations
+
+- Default runs are deterministic and local; live Gemini mutation is optional,
+  environment-gated, and never bypasses validation or sandboxing.
+- External fixtures are intentionally small and parser-backed; larger public
+  benchmark corpora remain optional future work.
+- Amazon-style routing uses deterministic local fixtures, not proprietary or
+  public Amazon route data.
+- O2 reports selected trade-offs and does not claim universal dominance.
+
+## Evidence Artifact Index
 
 | Evidence area | Key artifact | Claim boundary |
 | --- | --- | --- |
 | Online Bin Packing | `benchmark_comparison.csv` | compact `score_bin` evidence |
 | External Bin Packing | `external_generalization.csv` | external transfer, not SOTA |
 | External Routing | `routing_external_generalization.csv` | no LKH/CVRP/VRPTW comparison |
-| Search Ablation | `ablation_summary.csv` | mechanism evidence, not live LLM superiority |
+| Search Ablation | `ablation_summary.csv` | not live LLM superiority |
 | Pareto Frontier | `pareto_frontier.csv` | selected trade-offs |
-| Failure Analysis | `failure_cards.md` | transparent limits |
 | Reproducibility | `reproduction_manifest.json` | deterministic local rerun |
-
-## Safety Boundary
-
-Static checks reject imports, file access, network/process names, dangerous
-builtins, disallowed globals, dunder access, and non-approved function
-interfaces before sandbox execution. Hardened scoring calls run in a subprocess
-with wall-clock timeout handling and optional platform memory limits. Failures
-are recorded as structured reasons instead of being hidden.
-
-## Limitations
-
-- Default runs are deterministic and local; live Gemini mutation is optional,
-  environment-gated, and never bypasses validation or sandboxing.
-- External benchmark fixtures are intentionally small and parser-backed; larger
-  public benchmark corpora remain optional future work.
-- Amazon-style routing uses deterministic local fixtures, not proprietary or
-  public Amazon route data.
-- Semantic novelty is based on fixed probe behavior fingerprints.
-- Failure repair evidence is deterministic and local.
-- Local parallel evidence uses process parallelism and a dry-run cloud adapter;
-  paid cloud execution is optional future work.
-- Broader crossover remains optional future work.
-- O2 reports selected trade-offs and does not claim universal dominance.
 
 See [RELEASE_SUMMARY.md](RELEASE_SUMMARY.md) for the 3-minute portfolio summary.
 

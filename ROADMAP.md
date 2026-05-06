@@ -76,6 +76,9 @@ Completed:
   boundary, limitations, resume bullets, and portfolio brief artifact.
 - Release polish: release-frozen portfolio summary, tightened README first
   screen, conservative claim audit, and release validation checklist.
+- S-level portfolio polish: representative before/after heuristic evidence,
+  short safety-boundary doc, README Pareto evidence table, deterministic
+  stdlib-only Pareto SVG, and explicit API-key-free reproduction boundary.
 
 Current phase:
 
@@ -102,6 +105,9 @@ Current phase:
   complete; no required roadmap phase remains.
 - The project is release-frozen and portfolio-ready. Future work should be
   explicitly requested and kept separate from the release evidence package.
+- The S-level portfolio polish is presentation-only; it does not add a new
+  roadmap phase, benchmark feature, crossover operator, cloud execution path,
+  or expanded live LLM experiment.
 
 Deferred:
 
