@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440" role="img" aria-labelledby="title desc">
+<title id="title">Pareto Frontier Quality Runtime</title>
+<desc id="desc">Runtime on the x-axis, objective quality on the y-axis, with frontier and dominated candidates shown by marker style.</desc>
+<style>
+text { font-family: Arial, sans-serif; fill: #0f172a; }
+.title { font-size: 20px; font-weight: 700; }
+.axis { font-size: 12px; fill: #475569; }
+.legend { font-size: 12px; fill: #334155; }
+.note { font-size: 11px; fill: #64748b; }
+line { stroke: #94a3b8; stroke-width: 1; }
+</style>
+<rect width="100%" height="100%" fill="#ffffff" />
+<text x="80" y="30" class="title">Pareto Frontier Quality Runtime</text>
+<line x1="80" y1="364" x2="720" y2="364" />
+<line x1="80" y1="52" x2="80" y2="364" />
+<text x="330.00" y="416" class="axis">runtime, log scale</text>
+<text x="18" y="280.00" class="axis" transform="rotate(-90 18 280.00)">objective quality</text>
+<text x="80" y="394" class="note">runtime range 2.2e-05 to 0.02664; objective quality range 7.75 to 18.4077</text>
+<circle cx="80" cy="62" r="5" fill="#2563eb" />
+<text x="90" y="66" class="legend">amazon_routing</text>
+<circle cx="230" cy="62" r="5" fill="#059669" />
+<text x="240" y="66" class="legend">bin_packing</text>
+<circle cx="380" cy="62" r="5" fill="#d97706" />
+<text x="390" y="66" class="legend">simple_routing</text>
+<circle cx="80.00" cy="273.74" r="6" fill="#2563eb" stroke="#2563eb" stroke-width="2" opacity="1.0"><title>phase6-seed-000-travel_fast | amazon_routing | runtime=2.2e-05 | objective quality=10.833333333333332 | frontier</title></circle>
+<circle cx="80.00" cy="273.74" r="6" fill="#2563eb" stroke="#2563eb" stroke-width="2" opacity="1.0"><title>phase6-seed-006-travel_fast | amazon_routing | runtime=2.2e-05 | objective quality=10.833333333333332 | frontier</title></circle>
+<circle cx="138.29" cy="273.74" r="4" fill="#ffffff" stroke="#2563eb" stroke-width="1.5" opacity="0.58"><title>az-g01-m002-phase6-seed-004-return_aware | amazon_routing | runtime=4.2e-05 | objective quality=10.833333333333332 | dominated</title></circle>
+<circle cx="138.29" cy="273.74" r="4" fill="#ffffff" stroke="#2563eb" stroke-width="1.5" opacity="0.58"><title>az-g01-m004-phase6-seed-003-dense_cluster | amazon_routing | runtime=4.2e-05 | objective quality=10.833333333333332 | dominated</title></circle>
+<circle cx="709.38" cy="364.00" r="6" fill="#059669" stroke="#059669" stroke-width="2" opacity="1.0"><title>seed-001-load_balancer | bin_packing | runtime=0.02368 | objective quality=7.75 | frontier</title></circle>
+<circle cx="709.38" cy="364.00" r="6" fill="#059669" stroke="#059669" stroke-width="2" opacity="1.0"><title>seed-005-load_balancer | bin_packing | runtime=0.02368 | objective quality=7.75 | frontier</title></circle>
+<circle cx="720.00" cy="364.00" r="4" fill="#ffffff" stroke="#059669" stroke-width="1.5" opacity="0.58"><title>seed-000-tight_fit | bin_packing | runtime=0.02664 | objective quality=7.75 | dominated</title></circle>
+<circle cx="720.00" cy="364.00" r="4" fill="#ffffff" stroke="#059669" stroke-width="1.5" opacity="0.58"><title>seed-002-prefer_used_bins | bin_packing | runtime=0.02664 | objective quality=7.75 | dominated</title></circle>
+<circle cx="720.00" cy="364.00" r="4" fill="#ffffff" stroke="#059669" stroke-width="1.5" opacity="0.58"><title>seed-004-tight_fit | bin_packing | runtime=0.02664 | objective quality=7.75 | dominated</title></circle>
+<circle cx="720.00" cy="364.00" r="4" fill="#ffffff" stroke="#059669" stroke-width="1.5" opacity="0.58"><title>seed-006-prefer_used_bins | bin_packing | runtime=0.02664 | objective quality=7.75 | dominated</title></circle>
+<circle cx="496.95" cy="90.18" r="6" fill="#d97706" stroke="#d97706" stroke-width="2" opacity="1.0"><title>route-seed-000-nearest | simple_routing | runtime=0.002244 | objective quality=17.103554625000005 | frontier</title></circle>
+<circle cx="631.63" cy="133.69" r="6" fill="#d97706" stroke="#d97706" stroke-width="2" opacity="1.0"><title>route-seed-002-window_guard | simple_routing | runtime=0.009996 | objective quality=15.617200124999993 | frontier</title></circle>
+<circle cx="496.95" cy="90.18" r="6" fill="#d97706" stroke="#d97706" stroke-width="2" opacity="1.0"><title>route-seed-005-nearest | simple_routing | runtime=0.002244 | objective quality=17.103554625000005 | frontier</title></circle>
+<circle cx="631.63" cy="133.69" r="6" fill="#d97706" stroke="#d97706" stroke-width="2" opacity="1.0"><title>route-seed-007-window_guard | simple_routing | runtime=0.009996 | objective quality=15.617200124999993 | frontier</title></circle>
+<circle cx="555.24" cy="90.18" r="4" fill="#ffffff" stroke="#d97706" stroke-width="1.5" opacity="0.58"><title>route-seed-001-return_aware | simple_routing | runtime=0.004284 | objective quality=17.103554625000005 | dominated</title></circle>
+<circle cx="595.99" cy="52.00" r="4" fill="#ffffff" stroke="#d97706" stroke-width="1.5" opacity="0.58"><title>route-seed-003-slack_aware | simple_routing | runtime=0.006732 | objective quality=18.407699375000004 | dominated</title></circle>
+<circle cx="555.24" cy="90.18" r="4" fill="#ffffff" stroke="#d97706" stroke-width="1.5" opacity="0.58"><title>route-seed-006-return_aware | simple_routing | runtime=0.004284 | objective quality=17.103554625000005 | dominated</title></circle>
+<circle cx="592" cy="388" r="6" fill="#334155" stroke="#334155" stroke-width="2" />
+<text x="606" y="392" class="legend">frontier</text>
+<circle cx="672" cy="388" r="4" fill="#ffffff" stroke="#334155" stroke-width="1.5" opacity="0.58" />
+<text x="684" y="392" class="legend">dominated</text>
+</svg>

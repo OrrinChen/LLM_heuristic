@@ -9,7 +9,7 @@ from program_search.parallel_runner import build_phase17_report
 from program_search.rerun_manifest import build_bin_packing_rerun_manifest
 from reports.failure_taxonomy_v2 import render_failure_cards_markdown
 from reports.final_report import build_final_report, render_final_report_markdown
-from reports.plots import build_report_plots
+from reports.plots import build_report_plots, render_pareto_frontier_svg
 from reports.portfolio import build_phase19_package, render_portfolio_brief_markdown
 from reports.tables import build_report_tables
 from reports.technical_report import (
@@ -79,6 +79,11 @@ def export_report_artifacts(
         encoding="utf-8",
     )
     extra_plot_paths = _write_extra_plot_series(plots, plots_dir)
+    pareto_frontier_main_svg_path = plots_dir / "pareto_frontier_main.svg"
+    pareto_frontier_main_svg_path.write_text(
+        render_pareto_frontier_svg(plots["frontier_plot_series"]),
+        encoding="utf-8",
+    )
 
     manifest = build_bin_packing_rerun_manifest(top_k=top_k)
     manifest_path = artifacts_dir / "rerun_manifest.json"
@@ -114,6 +119,7 @@ def export_report_artifacts(
         "tables": [str(path) for path in table_paths],
         "plot_series": str(plot_series_path),
         "extra_plot_series": [str(path) for path in extra_plot_paths],
+        "pareto_frontier_main_svg": str(pareto_frontier_main_svg_path),
         "top_programs": [str(path) for path in top_program_paths],
         "frontier_programs": [str(path) for path in frontier_program_paths],
         "phase17_checkpoint": str(phase17_checkpoint_path),

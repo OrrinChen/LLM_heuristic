@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import math
+from html import escape
 from typing import Dict, List, Mapping, Optional, Sequence
 
 from benchmarks.amazon_routing.discovery import (
@@ -101,6 +103,169 @@ def render_report_plots_markdown(plots: Mapping[str, object]) -> str:
             ]
         )
     return "\n".join(lines)
+
+
+def render_pareto_frontier_svg(
+    plot: Mapping[str, object],
+    *,
+    width: int = 760,
+    height: int = 440,
+) -> str:
+    points = list(plot["points"])
+    margin_left = 80
+    margin_right = 40
+    margin_top = 52
+    margin_bottom = 76
+    plot_width = width - margin_left - margin_right
+    plot_height = height - margin_top - margin_bottom
+    runtimes = [float(point["runtime"]) for point in points]
+    qualities = [float(point["objective_quality"]) for point in points]
+    min_runtime = min(runtimes) if runtimes else 0.0
+    max_runtime = max(runtimes) if runtimes else 1.0
+    min_quality = min(qualities) if qualities else 0.0
+    max_quality = max(qualities) if qualities else 1.0
+    min_log_runtime = math.log10(max(min_runtime, 1e-9))
+    max_log_runtime = math.log10(max(max_runtime, 1e-9))
+    benchmark_colors = {
+        "amazon_routing": "#2563eb",
+        "bin_packing": "#059669",
+        "simple_routing": "#d97706",
+    }
+
+    def scale_x(runtime: float) -> float:
+        value = math.log10(max(runtime, 1e-9))
+        if max_log_runtime == min_log_runtime:
+            return margin_left + plot_width / 2
+        return (
+            margin_left
+            + ((value - min_log_runtime) / (max_log_runtime - min_log_runtime))
+            * plot_width
+        )
+
+    def scale_y(quality: float) -> float:
+        if max_quality == min_quality:
+            return margin_top + plot_height / 2
+        return (
+            margin_top
+            + ((max_quality - quality) / (max_quality - min_quality)) * plot_height
+        )
+
+    point_elements = []
+    for point in sorted(
+        points,
+        key=lambda row: (
+            str(row["benchmark"]),
+            not bool(row["is_pareto_frontier"]),
+            str(row["program_id"]),
+        ),
+    ):
+        benchmark = str(point["benchmark"])
+        color = benchmark_colors.get(benchmark, "#64748b")
+        is_frontier = bool(point["is_pareto_frontier"])
+        radius = 6 if is_frontier else 4
+        fill = color if is_frontier else "#ffffff"
+        opacity = "1.0" if is_frontier else "0.58"
+        stroke_width = "2" if is_frontier else "1.5"
+        title = (
+            f"{point['program_id']} | {benchmark} | runtime={point['runtime']} | "
+            f"objective quality={point['objective_quality']} | "
+            f"{'frontier' if is_frontier else 'dominated'}"
+        )
+        point_elements.append(
+            f'<circle cx="{scale_x(float(point["runtime"])):.2f}" '
+            f'cy="{scale_y(float(point["objective_quality"])):.2f}" '
+            f'r="{radius}" fill="{fill}" stroke="{color}" '
+            f'stroke-width="{stroke_width}" opacity="{opacity}">'
+            f"<title>{escape(title)}</title></circle>"
+        )
+
+    legend_y = margin_top + 10
+    legend_items = []
+    for index, (benchmark, color) in enumerate(benchmark_colors.items()):
+        x = margin_left + index * 150
+        legend_items.extend(
+            [
+                f'<circle cx="{x}" cy="{legend_y}" r="5" fill="{color}" />',
+                (
+                    f'<text x="{x + 10}" y="{legend_y + 4}" '
+                    f'class="legend">{escape(benchmark)}</text>'
+                ),
+            ]
+        )
+
+    return "\n".join(
+        [
+            (
+                f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" '
+                f'height="{height}" viewBox="0 0 {width} {height}" '
+                'role="img" aria-labelledby="title desc">'
+            ),
+            '<title id="title">Pareto Frontier Quality Runtime</title>',
+            (
+                '<desc id="desc">Runtime on the x-axis, objective quality on '
+                "the y-axis, with frontier and dominated candidates shown by "
+                "marker style.</desc>"
+            ),
+            "<style>",
+            "text { font-family: Arial, sans-serif; fill: #0f172a; }",
+            ".title { font-size: 20px; font-weight: 700; }",
+            ".axis { font-size: 12px; fill: #475569; }",
+            ".legend { font-size: 12px; fill: #334155; }",
+            ".note { font-size: 11px; fill: #64748b; }",
+            "line { stroke: #94a3b8; stroke-width: 1; }",
+            "</style>",
+            '<rect width="100%" height="100%" fill="#ffffff" />',
+            (
+                f'<text x="{margin_left}" y="30" class="title">Pareto Frontier '
+                "Quality Runtime</text>"
+            ),
+            (
+                f'<line x1="{margin_left}" y1="{margin_top + plot_height}" '
+                f'x2="{margin_left + plot_width}" '
+                f'y2="{margin_top + plot_height}" />'
+            ),
+            (
+                f'<line x1="{margin_left}" y1="{margin_top}" x2="{margin_left}" '
+                f'y2="{margin_top + plot_height}" />'
+            ),
+            (
+                f'<text x="{margin_left + plot_width / 2 - 70:.2f}" '
+                f'y="{height - 24}" class="axis">runtime, log scale</text>'
+            ),
+            (
+                f'<text x="18" y="{margin_top + plot_height / 2 + 72:.2f}" '
+                'class="axis" transform="rotate(-90 18 '
+                f'{margin_top + plot_height / 2 + 72:.2f})">'
+                "objective quality</text>"
+            ),
+            (
+                f'<text x="{margin_left}" y="{height - 46}" class="note">'
+                f"runtime range {min_runtime:.6g} to {max_runtime:.6g}; "
+                f"objective quality range {min_quality:.6g} to {max_quality:.6g}"
+                "</text>"
+            ),
+            *legend_items,
+            *point_elements,
+            (
+                f'<circle cx="{width - 168}" cy="{height - 52}" r="6" '
+                'fill="#334155" stroke="#334155" stroke-width="2" />'
+            ),
+            (
+                f'<text x="{width - 154}" y="{height - 48}" class="legend">'
+                "frontier</text>"
+            ),
+            (
+                f'<circle cx="{width - 88}" cy="{height - 52}" r="4" '
+                'fill="#ffffff" stroke="#334155" stroke-width="1.5" '
+                'opacity="0.58" />'
+            ),
+            (
+                f'<text x="{width - 76}" y="{height - 48}" class="legend">'
+                "dominated</text>"
+            ),
+            "</svg>",
+        ]
+    )
 
 
 def render_ascii_bar_plot(

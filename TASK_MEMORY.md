@@ -3,8 +3,8 @@
 ## Latest Status
 
 Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `docs: freeze portfolio release package`
-Current phase: Release polish only; project is release-frozen and portfolio-ready
+Latest commit: `docs: add s-level portfolio visuals`
+Current phase: S-level portfolio polish only; project is release-frozen and portfolio-ready
 Main blocker: None; broader crossover, paid cloud execution, and larger public benchmark corpora remain optional future work
 Next recommended action: stop at the release-frozen portfolio package unless a future task explicitly requests an extension
 
@@ -16,6 +16,12 @@ Project identity: O2 Heuristic Discovery
 Project name: LLM-Driven Program Search for OR Heuristics
 
 This folder is the O2 project root. It now contains the Codex workflow skeleton, Python package scaffold, Phase 1 program-search modules, sandbox tests, Phase 2 bin packing benchmark modules, bin packing evaluator tests, Phase 3 evolution-loop modules, evolution-loop tests, Phase 4 simple routing modules, routing validity tests, Phase 5 Amazon routing evaluator modules, Amazon evaluator tests, Phase 6 Amazon discovery modules, Amazon discovery tests, Phase 7 robustness reporting modules, robustness reporting tests, Phase 8 failure-analysis reporting modules, failure-analysis tests, final report packaging modules, final report tests, report table/plot artifacts, an optional Gemini live-mutation provider, subprocess sandbox isolation, rerun manifests, artifact export, generated evidence files, a deterministic CLI, Phase 9 BPPLIB / OR-Library-style external bin packing evidence, Phase 10 TSPLIB-style, CVRPLIB-style, and time-window external routing evidence, Phase 11 search mechanism ablation evidence, Phase 12 controlled live LLM mutation evidence, Phase 13 semantic novelty evidence, Phase 14 failure taxonomy v2 evidence, Phase 15 Pareto frontier evidence, Phase 16 reproducibility package profiles, Phase 17 local parallel runner evidence, Phase 18 research-style technical report packaging, Phase 19 resume / portfolio packaging, and release-frozen portfolio-ready summary docs.
+
+It now also includes S-level portfolio polish artifacts: a README-first
+representative heuristic snippet, `examples/top_program_before_after.md`, a
+short `docs/safety_boundary.md`, a deterministic stdlib-only
+`reports/plots/pareto_frontier_main.svg`, and release-summary language making
+clear that default reproduction does not require an API key.
 
 ## Roadmap Update
 
@@ -313,6 +319,53 @@ This folder is the O2 project root. It now contains the Codex workflow skeleton,
   - `python3 -m ruff format --check .` passed.
   - `git diff --check -- .` passed.
   - Final `python3 -m pytest -q` passed, 171 tests.
+
+2026-05-06 S-level portfolio polish:
+
+- Scope is presentation-only S-level portfolio polish; no Phase 20, new
+  benchmark feature, broader crossover, cloud execution, or expanded live LLM
+  experiment was added.
+- Tightened the README first screen with a representative before/after
+  heuristic snippet, a compact Pareto evidence table, a retitled Search Flow
+  diagram, links to the release summary, top-program example, safety-boundary
+  doc, and an explicit API-key-free default reproduction statement.
+- Added `examples/top_program_before_after.md` to show the selected archived
+  `seed-001-load_balancer` `score_bin` program and explain it line by line as a
+  scoring function rather than a full solver.
+- Added `docs/safety_boundary.md` as a short interviewer-friendly explanation
+  of interface restrictions, static validation, subprocess sandbox execution,
+  timeout/memory limits, structured failures, and no file/network/import/
+  credential access.
+- Added deterministic stdlib-only Pareto SVG export at
+  `reports/plots/pareto_frontier_main.svg` from existing Pareto rows; this is
+  a rendered evidence artifact, not a new experiment.
+- Updated `RELEASE_SUMMARY.md`, ROADMAP, RUNBOOK, VALIDATION, and tests to keep
+  the release-frozen claim boundary conservative and make clear that default
+  reproduction does not require an API key.
+- Validation:
+  - `python3 -m pytest tests/test_release_polish.py tests/test_hardening_milestone.py tests/test_report_tables_plots_and_live_llm.py -q`
+    failed first as expected before the SVG renderer and release-polish docs
+    were implemented.
+  - `python3 -m pytest tests/test_release_polish.py tests/test_hardening_milestone.py tests/test_report_tables_plots_and_live_llm.py -q`
+    passed, 29 tests.
+  - `python3 -m pytest tests/test_release_polish.py tests/test_portfolio_packaging_phase19.py -q`
+    passed, 13 tests.
+  - `python3 -m pytest -q` passed, 175 tests.
+  - `python3 -m ruff check .` passed.
+  - `python3 -m ruff format --check .` passed after formatting
+    `src/reports/plots.py`.
+  - `git diff --check -- .` passed.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir . --top-k 5`
+    passed and regenerated checked-in evidence, including
+    `reports/plots/pareto_frontier_main.svg`.
+  - `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-s-polish-report --top-k 3`
+    passed and exported final report, tables, JSON plot series, top programs,
+    frontier programs, and the deterministic Pareto SVG.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-s-polish-external --top-k 3`
+    passed with deterministic rerun checks and no API key or large external
+    data requirement.
+  - Release secret scan with key-shaped patterns passed with no matches.
+  - Release large-file scan passed with no files over 5 MB.
 
 ## Completed Phases
 

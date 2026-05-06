@@ -41,16 +41,68 @@ def test_readme_first_screen_is_release_focused_not_phase_dump() -> None:
         "## What It Is",
         "## Why It Matters",
         "## One-Command Demo",
-        "## Core Architecture",
+        "## Representative Heuristic",
+        "## Pareto Evidence",
+        "## Search Flow",
         "## Benchmark Evidence",
         "## Safety Boundary",
         "## Limitations",
     ):
         assert heading in first_screen
+    assert "seed-001-load_balancer" in first_screen
+    assert "def score_bin" in first_screen
+    assert "does not require an API key" in first_screen
+    assert "examples/top_program_before_after.md" in first_screen
+    assert "docs/safety_boundary.md" in first_screen
+    assert "reports/plots/pareto_frontier_main.svg" in first_screen
     assert "Current status:" not in first_screen
     assert "Phase 0 complete" not in first_screen
     assert "Phase 10A/10B/10C" not in first_screen
     assert "does not claim universal dominance" in first_screen
+
+
+def test_before_after_example_shows_archived_heuristic_not_solver() -> None:
+    example = _read("examples/top_program_before_after.md")
+
+    assert example.startswith("# Top Program Before / After")
+    assert "## Before" in example
+    assert "## After" in example
+    assert "seed-001-load_balancer" in example
+    assert "def score_bin" in example
+    assert "return abs(projected - 0.01)" in example
+    assert "Line-by-line" in example
+    assert "archived scoring function" in example
+    assert "not a full solver" in example
+
+
+def test_short_safety_boundary_doc_frontloads_llm_constraints() -> None:
+    safety = _read("docs/safety_boundary.md")
+
+    assert safety.startswith("# Safety Boundary")
+    for phrase in (
+        "narrow scoring-function interface",
+        "static validation",
+        "subprocess sandbox",
+        "wall-clock timeout",
+        "memory limit",
+        "structured failure",
+        "No file access",
+        "No network access",
+        "No unrestricted imports",
+        "No credential access",
+        "not letting an LLM write arbitrary code",
+    ):
+        assert phrase in safety
+
+
+def test_release_summary_links_visual_evidence_and_api_key_boundary() -> None:
+    summary = _read("RELEASE_SUMMARY.md")
+
+    assert "## What The Heuristic Looks Like" in summary
+    assert "examples/top_program_before_after.md" in summary
+    assert "reports/plots/pareto_frontier_main.svg" in summary
+    assert "default reproduction does not require an API key" in summary
+    assert "superiority on Amazon data is not claimed" in summary
 
 
 def test_release_validation_checklist_is_documented() -> None:
@@ -91,6 +143,11 @@ def test_release_claim_language_avoids_unsafe_shortcuts() -> None:
             "RUNBOOK.md",
             "VALIDATION.md",
             "TASK_MEMORY.md",
+            "docs/safety_boundary.md",
+            "examples/top_program_before_after.md",
+            "reports/final_report.md",
+            "reports/portfolio_brief.md",
+            "reports/technical_report.md",
         )
     ).lower()
 

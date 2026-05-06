@@ -46,6 +46,8 @@ constrained system, not an unrestricted solver.
   mutation, crossover, deterministic LLM-proxy, and repair operators.
 - `reports/tables/pareto_frontier.csv`: quality-runtime-complexity-
   generalization trade-off rows.
+- `reports/plots/pareto_frontier_main.svg`: deterministic stdlib-only main
+  Pareto visual.
 - `reports/failure_cards.md` and `reports/tables/failure_taxonomy_v2.csv`:
   failure modes, trigger conditions, detector source, score impact, and repair
   strategy.
@@ -55,6 +57,23 @@ constrained system, not an unrestricted solver.
 - `artifacts/top_programs/*.py` and `artifacts/frontier_programs/*.py`:
   standalone discovered or frontier scoring programs.
 
+## What The Heuristic Looks Like
+
+The release includes a before/after example at
+`examples/top_program_before_after.md`. The representative archived program is
+`seed-001-load_balancer`:
+
+```python
+def score_bin(item_size, bin_remaining_capacity, bin_features):
+    projected = bin_remaining_capacity - item_size
+    if projected < 0:
+        return 1000000
+    return abs(projected - 0.01)
+```
+
+This is a compact scoring function evaluated under constraints, not a full
+solver.
+
 ## One-Command Reproduction
 
 ```bash
@@ -62,7 +81,7 @@ PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --o
 ```
 
 The default reproduction path is deterministic, local, and does not require an
-API key or large external benchmark corpus.
+API key or large external benchmark corpus. In short: default reproduction does not require an API key.
 
 ## Conservative Claim Boundary
 
@@ -73,9 +92,9 @@ The system discovers compact heuristic programs that improve selected
 quality-runtime-generalization trade-offs under strict evaluator constraints.
 ```
 
-O2 does not claim universal dominance, SOTA solver performance, real Amazon
-superiority, live LLM superiority, production routing capability, or LKH/CVRP/
-VRPTW solver comparison.
+O2 does not claim universal dominance, SOTA solver performance, live LLM
+superiority, production routing capability, or LKH/CVRP/VRPTW solver
+comparison; superiority on Amazon data is not claimed.
 
 ## Known Limitations
 

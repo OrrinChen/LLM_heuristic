@@ -72,6 +72,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/plots/behavior_fingerprint.json`
 - `reports/plots/frontier_plot_series.json`
 - `reports/plots/generation_curve_by_method.json`
+- `reports/plots/pareto_frontier_main.svg`
 - `reports/plots/plot_series.json`
 - `reports/portfolio_brief.md`
 - `reports/tables/ablation_summary.csv`
