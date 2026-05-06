@@ -141,7 +141,7 @@ def test_reproducibility_docs_and_make_targets_are_present() -> None:
     assert command in readme
     assert command in validation
     assert command in runbook
-    for target in ("reproduce:", "test:", "report:", "demo:"):
+    for target in ("reproduce:", "test:", "report:", "demo:", "portfolio-demo:"):
         assert target in makefile
 
 

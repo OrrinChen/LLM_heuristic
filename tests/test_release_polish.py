@@ -38,6 +38,7 @@ def test_readme_first_screen_is_release_focused_not_phase_dump() -> None:
     first_screen = readme[:4200]
 
     for heading in (
+        "## Recruiter Snapshot",
         "## What It Is",
         "## Why It Matters",
         "## One-Command Demo",
@@ -49,9 +50,18 @@ def test_readme_first_screen_is_release_focused_not_phase_dump() -> None:
         "## Limitations",
     ):
         assert heading in first_screen
+    assert "make portfolio-demo" in first_screen
+    assert "AI agent infra" in first_screen
+    assert "optimization tooling" in first_screen
     assert "seed-001-load_balancer" in first_screen
     assert "def score_bin" in first_screen
     assert "does not require an API key" in first_screen
+    assert "Live Gemini mutation is optional" in first_screen
+    assert "Before heuristic" in first_screen
+    assert "Discovered heuristic" in first_screen
+    assert "Score/runtime trade-off" in first_screen
+    assert "7.75" in first_screen
+    assert "0.023680" in first_screen
     assert "examples/top_program_before_after.md" in first_screen
     assert "docs/safety_boundary.md" in first_screen
     assert "reports/plots/pareto_frontier_main.svg" in first_screen
@@ -113,6 +123,7 @@ def test_release_validation_checklist_is_documented() -> None:
         "python3 -m pytest -q",
         "python3 -m ruff check .",
         "python3 -m ruff format --check .",
+        "make portfolio-demo",
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo",
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
         "external_small",
@@ -121,6 +132,23 @@ def test_release_validation_checklist_is_documented() -> None:
         "Large-file scan",
     ):
         assert required in validation
+
+
+def test_portfolio_demo_make_target_is_short_and_api_key_free() -> None:
+    makefile = _read("Makefile")
+    readme = _read("README.md")
+    runbook = _read("RUNBOOK.md")
+
+    assert ".PHONY:" in makefile
+    assert "portfolio-demo" in makefile
+    assert "portfolio-demo:" in makefile
+    assert (
+        "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
+        "local_demo --output-dir /tmp/o2-portfolio-demo --top-k 3"
+    ) in makefile
+    assert "GEMINI_API_KEY" not in makefile
+    assert "make portfolio-demo" in readme
+    assert "make portfolio-demo" in runbook
 
 
 def test_release_freeze_status_and_future_work_are_explicit() -> None:

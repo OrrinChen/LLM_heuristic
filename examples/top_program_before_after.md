@@ -24,6 +24,10 @@ Archived top program: `seed-001-load_balancer`
 
 Source artifact: `artifacts/top_programs/seed-001-load_balancer.py`
 
+| Before heuristic | Discovered heuristic | Score/runtime trade-off |
+| --- | --- | --- |
+| choose the feasible bin with the smallest leftover capacity | `seed-001-load_balancer` | score `7.75`, runtime `0.023680`, complexity `32`; selected Pareto evidence, not a universal claim |
+
 ```python
 def score_bin(item_size, bin_remaining_capacity, bin_features):
     projected = bin_remaining_capacity - item_size

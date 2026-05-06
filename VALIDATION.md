@@ -46,6 +46,7 @@ python3 -m pytest -q
 python3 -m ruff check .
 python3 -m ruff format --check .
 git diff --check -- .
+make portfolio-demo
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3
@@ -76,6 +77,8 @@ Release checklist result:
 pytest passes
 ruff check passes
 ruff format check passes
+portfolio-demo runs the shortest local recruiter demo
+portfolio-demo and default reproduction do not require an API key
 local_demo reproduction regenerates the evidence package
 external_small reproduction regenerates external evidence tables
 report export writes reports/final_report.md, CSV tables, plot-ready JSON, and

@@ -74,7 +74,19 @@ def score_bin(item_size, bin_remaining_capacity, bin_features):
 This is a compact scoring function evaluated under constraints, not a full
 solver.
 
+Portfolio shorthand:
+
+| Before heuristic | Discovered heuristic | Score/runtime trade-off |
+| --- | --- | --- |
+| choose the feasible bin with the smallest leftover capacity | `seed-001-load_balancer` | score `7.75`, runtime `0.023680`, complexity `32`; selected trade-off evidence, not a solver-level claim |
+
 ## One-Command Reproduction
+
+```bash
+make portfolio-demo
+```
+
+Manual equivalent:
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
@@ -82,6 +94,8 @@ PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --o
 
 The default reproduction path is deterministic, local, and does not require an
 API key or large external benchmark corpus. In short: default reproduction does not require an API key.
+Live Gemini mutation is optional, environment-gated, and never part of the
+default reproduction path.
 
 ## Conservative Claim Boundary
 

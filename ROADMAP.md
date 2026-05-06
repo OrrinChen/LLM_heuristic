@@ -79,6 +79,9 @@ Completed:
 - S-level portfolio polish: representative before/after heuristic evidence,
   short safety-boundary doc, README Pareto evidence table, deterministic
   stdlib-only Pareto SVG, and explicit API-key-free reproduction boundary.
+- Recruiter-entry polish: README recruiter snapshot, before/discovered/
+  score-runtime trade-off example, and `make portfolio-demo` shortest
+  deterministic demo path.
 
 Current phase:
 

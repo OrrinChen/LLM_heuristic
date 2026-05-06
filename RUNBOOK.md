@@ -73,6 +73,16 @@ Generate the local evidence package:
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir . --top-k 5
 ```
 
+Fast portfolio demo path for reviewers:
+
+```bash
+make portfolio-demo
+```
+
+This writes a deterministic local evidence bundle to
+`/tmp/o2-portfolio-demo`. It does not require `GEMINI_API_KEY`; live Gemini
+mutation remains an optional environment-gated experiment path.
+
 Expected generated files:
 
 ```text
@@ -136,6 +146,7 @@ make reproduce
 make test
 make report
 make demo
+make portfolio-demo
 ```
 
 ## Release-Frozen Portfolio Package
@@ -152,6 +163,7 @@ python3 -m pytest -q
 python3 -m ruff check .
 python3 -m ruff format --check .
 git diff --check -- .
+make portfolio-demo
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3
