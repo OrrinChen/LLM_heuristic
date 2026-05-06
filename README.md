@@ -1,36 +1,40 @@
 # LLM-Driven Program Search for OR Heuristics
 
-O2 is a release-frozen, portfolio-ready research system for discovering compact
-operations-research heuristic scoring programs under strict evaluator and
-sandbox constraints.
+O2 is a release-frozen portfolio project for sandboxed program search over
+operations-research heuristics. It is designed for AI agent infra, LLM systems,
+optimization tooling, OR tooling, and research-engineer interviews.
+
+## Recruiter Snapshot
+
+| Signal | Evidence |
+| --- | --- |
+| What it is | constrained LLM/deterministic program search for compact OR scoring heuristics |
+| Why it is credible | static validation, sandbox, held-out tests, archive, rerun manifest |
+| Fastest demo | `make portfolio-demo`; default path is local and does not require an API key |
+| Best visual proof | before/discovered/tradeoff example plus Pareto SVG |
 
 ## What It Is
 
-O2 treats heuristic design as constrained program search. It mutates compact
-`score_bin` and `score_next_stop` functions, validates them statically, executes
-them in a subprocess sandbox, scores them on OR benchmark evaluators, archives
-the results, and exports a reproducible evidence package.
-
-Generated code fills a narrow scoring-function interface only. It is not allowed
-to write a full solver, access hidden labels, read files, use network calls,
-touch credentials, or import arbitrary packages.
+O2 mutates compact `score_bin` and `score_next_stop` functions, validates them
+statically, executes them in a subprocess sandbox, scores them on OR benchmark
+evaluators, archives the results, and exports a reproducible evidence package.
+Generated code fills a narrow scoring-function interface only.
 
 ## Why It Matters
 
-Hand-designed OR heuristics are compact, auditable, and fast, but they are often
-tuned by manual iteration. O2 shows how part of that design loop can be
-automated while preserving a safety boundary, held-out evaluation, failure
-analysis, rerun manifests, and conservative claims.
-
-The supported claim is deliberately narrow: the system discovers compact
-heuristic programs that improve selected quality-runtime-generalization
-trade-offs under strict evaluator constraints. It does not claim universal
-dominance, SOTA solver performance, superiority on Amazon data, or LKH/CVRP/
-VRPTW solver comparison.
-
-O2 does not claim universal dominance.
+Hand-designed OR heuristics are auditable and fast, but they are tuned by manual
+iteration. O2 shows how part of that loop can be automated while preserving a
+safety boundary, held-out evaluation, failure analysis, rerun manifests, and
+conservative claims. It does not claim universal dominance, SOTA solver
+performance, superiority on Amazon data, or LKH/CVRP/VRPTW solver comparison.
 
 ## One-Command Demo
+
+```bash
+make portfolio-demo
+```
+
+Manual equivalent:
 
 ```bash
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-demo --top-k 3
@@ -39,15 +43,11 @@ PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --o
 This regenerates the local evidence package: reports, CSV tables,
 JSON/SVG plots, top/frontier programs, rerun/reproduction manifests, and a
 summary. Default reproduction is local, deterministic, and does not require an API key.
+Live Gemini mutation is optional, environment-gated, and never used by default.
 
-For a report-only export, run:
-
-```bash
-PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
-```
-
-Key release docs: [release summary](RELEASE_SUMMARY.md), [top program
-before/after](examples/top_program_before_after.md), and [safety boundary](docs/safety_boundary.md).
+Key docs: [release summary](RELEASE_SUMMARY.md),
+[top program before/after](examples/top_program_before_after.md), and
+[safety boundary](docs/safety_boundary.md).
 
 ## Benchmark Evidence
 
@@ -55,15 +55,17 @@ Core artifacts include `external_generalization.csv`,
 `routing_external_generalization.csv`, `ablation_summary.csv`,
 `pareto_frontier.csv`, and `reproduction_manifest.json`.
 
-Coverage spans Online Bin Packing, External Bin Packing, External Routing,
-search ablation, Pareto evidence, failure taxonomy, and deterministic
-reproduction. These are evidence slices, not SOTA solver claims.
+Coverage: Online Bin Packing, External Bin Packing, External Routing, search
+ablation, Pareto, failure taxonomy, and deterministic reproduction. These are
+evidence slices, not SOTA solver claims.
 
 ## Representative Heuristic
 
-Before: choose the feasible bin with the smallest leftover capacity.
+| Before heuristic | Discovered heuristic | Score/runtime trade-off |
+| --- | --- | --- |
+| choose the feasible bin with the smallest leftover capacity | archived `seed-001-load_balancer` `score_bin` | score `7.75`, runtime `0.023680`, complexity `32`; Pareto evidence, not SOTA claim |
 
-After: archived top program `seed-001-load_balancer`:
+Discovered code:
 
 ```python
 def score_bin(item_size, bin_remaining_capacity, bin_features):
@@ -89,21 +91,13 @@ Main visual: [reports/plots/pareto_frontier_main.svg](reports/plots/pareto_front
 
 ## Search Flow
 
-```mermaid
-flowchart LR
-    A["seed heuristic library"] --> B["deterministic or LLM mutation operator"]
-    B --> C["static validation"]
-    C --> D["subprocess sandbox"]
-    D --> E["OR benchmark evaluator"]
-    E --> F["archive and rerun manifest"]
-    F --> G["report artifacts and portfolio evidence"]
-```
+`seed heuristic library -> mutation -> static validation -> subprocess sandbox -> evaluator -> archive -> reports`
 
 ## Safety Boundary
 
 Static checks reject imports, file/network/process access, unsafe builtins,
-dunder access, and bad interfaces before subprocess sandbox execution.
-Failures are structured. See [docs/safety_boundary.md](docs/safety_boundary.md).
+dunder access, and bad interfaces before sandbox execution. See
+[docs/safety_boundary.md](docs/safety_boundary.md).
 
 ## Limitations
 

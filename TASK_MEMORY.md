@@ -2,11 +2,11 @@
 
 ## Latest Status
 
-Current branch: `codex/financial-evidence-release-packaging`
-Latest commit: `docs: add s-level portfolio visuals`
-Current phase: S-level portfolio polish only; project is release-frozen and portfolio-ready
+Current branch: `codex/sandboxed-agent-eval-freeze`
+Latest commit: `docs: polish O2 recruiter landing`
+Current phase: public portfolio polish only; project is release-frozen and portfolio-ready
 Main blocker: None; broader crossover, paid cloud execution, and larger public benchmark corpora remain optional future work
-Next recommended action: stop at the release-frozen portfolio package unless a future task explicitly requests an extension
+Next recommended action: use the release-frozen portfolio package for applications; only reopen after interview feedback or an explicit extension request
 
 ## Current Project State
 
@@ -21,7 +21,28 @@ It now also includes S-level portfolio polish artifacts: a README-first
 representative heuristic snippet, `examples/top_program_before_after.md`, a
 short `docs/safety_boundary.md`, a deterministic stdlib-only
 `reports/plots/pareto_frontier_main.svg`, and release-summary language making
-clear that default reproduction does not require an API key.
+clear that default reproduction does not require an API key. The README now
+also exposes a recruiter snapshot, a before/discovered/score-runtime trade-off
+example, and `make portfolio-demo` as the shortest deterministic review path.
+
+2026-05-06 public portfolio landing polish:
+
+- Tightened the README first screen into a recruiter-oriented entry point with
+  a snapshot table, one-command `make portfolio-demo` path, role-fit framing,
+  before/discovered/trade-off example, Pareto visual link, safety boundary, and
+  limitations visible early.
+- Added `make portfolio-demo` to release validation and runbook paths so the
+  shortest reproduction path is documented with the same local deterministic
+  boundary as the CLI profile.
+- Preserved conservative claim boundaries: default runs do not require an API
+  key, Live Gemini mutation remains optional, and the project still does not
+  claim universal solver dominance, Amazon superiority, or large-corpus scale.
+- Validation run: `python3 -m pytest` passed with 176 tests, release-polish
+  subset passed with 15 tests, `python3 -m ruff check .`,
+  `python3 -m ruff format --check .`, `git diff --check -- .`,
+  `make portfolio-demo`, local/external reproduction profiles, report export,
+  secret scan, large-file scan, and Markdown trailing-whitespace scan all
+  passed.
 
 ## Roadmap Update
 
@@ -366,6 +387,38 @@ clear that default reproduction does not require an API key.
     data requirement.
   - Release secret scan with key-shaped patterns passed with no matches.
   - Release large-file scan passed with no files over 5 MB.
+
+2026-05-06 recruiter-entry polish:
+
+- Scope is presentation-only release polish; no Phase 20, new benchmark,
+  broader crossover, cloud execution, or expanded live LLM experiment was
+  added.
+- Tightened README first screen for recruiter/interviewer scanning with a
+  recruiter snapshot, explicit target roles, `make portfolio-demo`, and a
+  before heuristic -> discovered heuristic -> score/runtime trade-off table.
+- Added `portfolio-demo` Make target that writes the deterministic local demo to
+  `/tmp/o2-portfolio-demo` without requiring `GEMINI_API_KEY`.
+- Updated release summary, runbook, validation docs, and top-program example so
+  the API-key-free default and optional live Gemini boundary are explicit.
+- Validation:
+  - `python3 -m pytest tests/test_release_polish.py tests/test_reproducibility_package_phase16.py -q`
+    failed first as expected before README/Makefile/docs were updated.
+  - `python3 -m pytest tests/test_release_polish.py tests/test_reproducibility_package_phase16.py -q`
+    passed, 15 tests.
+  - `python3 -m pytest` passed, 176 tests.
+  - `python3 -m ruff check .` passed.
+  - `python3 -m ruff format --check .` passed.
+  - `git diff --check -- .` passed.
+  - `make portfolio-demo` passed and wrote the deterministic evidence bundle
+    to `/tmp/o2-portfolio-demo` with `requires_api_key=false`.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3`
+    passed.
+  - `PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3`
+    passed.
+  - `PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3`
+    passed.
+  - Release secret scan, large-file scan, and Markdown trailing-whitespace scan
+    passed.
 
 ## Completed Phases
 
