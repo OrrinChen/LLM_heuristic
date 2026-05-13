@@ -38,6 +38,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
         "novelty_table",
         "duplicate_behavior_clusters",
         "pareto_frontier",
+        "trading_signal_summary",
+        "trading_signal_pareto",
         "failure_taxonomy",
         "failure_taxonomy_v2",
         "repair_success_rate",
@@ -58,6 +60,8 @@ def test_report_tables_cover_benchmarks_robustness_failures_and_steps() -> None:
     assert len(tables["novelty_table"]["rows"]) == 24
     assert len(tables["duplicate_behavior_clusters"]["rows"]) == 4
     assert len(tables["pareto_frontier"]["rows"]) >= 3
+    assert len(tables["trading_signal_summary"]["rows"]) == 1
+    assert len(tables["trading_signal_pareto"]["rows"]) == 8
     assert len(tables["failure_taxonomy"]["rows"]) == 9
     assert len(tables["failure_taxonomy_v2"]["rows"]) == 11
     assert len(tables["repair_success_rate"]["rows"]) == 11
@@ -87,6 +91,8 @@ def test_report_tables_markdown_renders_publication_ready_sections() -> None:
     assert "## Novelty Table" in markdown
     assert "## Duplicate Behavior Clusters" in markdown
     assert "## Pareto Frontier" in markdown
+    assert "## Trading Signal Summary" in markdown
+    assert "## Trading Signal Pareto" in markdown
     assert "## Failure Taxonomy v2" in markdown
     assert "## Parallel Runner Summary" in markdown
     assert "## Checkpoint Resume" in markdown
@@ -103,6 +109,7 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
         "generation_curve_by_method",
         "behavior_fingerprint",
         "frontier_plot_series",
+        "trading_signal_frontier",
         "failure_rate_by_generation",
     )
     assert len(plots["bin_packing_evolution_best_score"]["points"]) == 4
@@ -111,6 +118,7 @@ def test_report_plots_return_plot_ready_series_and_ascii_rendering() -> None:
     assert len(plots["generation_curve_by_method"]["points"]) == 32
     assert len(plots["behavior_fingerprint"]["points"]) == 24
     assert len(plots["frontier_plot_series"]["points"]) >= 3
+    assert len(plots["trading_signal_frontier"]["points"]) == 8
     assert len(plots["failure_rate_by_generation"]["points"]) == 7
     assert plots["bin_packing_evolution_best_score"]["ascii"]
     assert "generation=0" in plots["bin_packing_evolution_best_score"]["ascii"]

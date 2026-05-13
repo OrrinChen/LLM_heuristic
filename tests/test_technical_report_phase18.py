@@ -40,6 +40,12 @@ def test_phase18_report_sections_map_to_existing_evidence() -> None:
         "amazon_routing",
         "external_bin_packing",
         "external_routing",
+        "trading_signal",
+    )
+    assert section_by_id["trading_signal_rule_search"]["evidence_refs"][:3] == (
+        "trading_signal_summary.csv",
+        "trading_signal_pareto.csv",
+        "trading_signal_frontier.json",
     )
     assert section_by_id["ablation"]["evidence_refs"] == (
         "ablation_summary.csv",
@@ -74,6 +80,7 @@ def test_phase18_markdown_renders_required_paper_structure() -> None:
         "System Design",
         "Sandbox and Safety Boundary",
         "Benchmarks",
+        "Trading Signal Rule Search",
         "Search Loop",
         "External Benchmark Evidence",
         "Ablation",

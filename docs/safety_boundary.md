@@ -6,11 +6,11 @@ checks and runs that function inside a constrained evaluator.
 
 ## What Generated Code Can Do
 
-- Fill a narrow scoring-function interface such as `score_bin` or
-  `score_next_stop`.
+- Fill a narrow scoring-function interface such as `score_bin`,
+  `score_next_stop`, or `score_signal`.
 - Read only the explicit state and candidate fields passed by the evaluator.
 - Return a numeric score used by a benchmark-specific route or packing
-  constructor.
+  constructor, or a bounded trading signal position in `[-1, 1]`.
 
 ## What Generated Code Cannot Do
 
@@ -20,6 +20,8 @@ checks and runs that function inside a constrained evaluator.
 - No process spawning.
 - No credential access.
 - No hidden labels, private data, or benchmark answer keys.
+- No trading lookahead fields such as future returns, labels, future midprices,
+  or post-trade PnL.
 - No full solver generation.
 
 ## Enforcement Layers
@@ -34,6 +36,9 @@ checks and runs that function inside a constrained evaluator.
 - memory limit: supported platforms can apply a subprocess memory limit.
 - structured failure: invalid, unsafe, timed-out, or runtime-failing programs are
   recorded with explicit failure reasons instead of being hidden.
+- trading-specific gates: `score_signal` programs fail closed on hallucinated
+  features, lookahead feature access, invalid positions, leverage violations,
+  or excessive turnover.
 
 ## Why This Matters
 

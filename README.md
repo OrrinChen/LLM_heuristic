@@ -1,24 +1,27 @@
-# LLM-Driven Program Search for OR Heuristics
+# O2: LLM-Guided Program Search for OR Heuristics and Trading Rules
 
 O2 is a release-frozen portfolio project for sandboxed program search over
-operations-research heuristics. It is designed for AI agent infra, LLM systems,
-optimization tooling, OR tooling, and research-engineer interviews.
+operations-research heuristics, now extended with a PIT-constrained trading
+signal rule-search benchmark. It is designed for AI agent infra, LLM systems,
+optimization tooling, OR tooling, trading infra, and research-engineer
+interviews.
 
 ## Recruiter Snapshot
 
 | Signal | Evidence |
 | --- | --- |
-| What it is | constrained LLM/deterministic program search for compact OR scoring heuristics |
+| What it is | constrained LLM/deterministic program search for compact OR and trading-rule scoring functions |
 | Why it is credible | static validation, sandbox, held-out tests, archive, rerun manifest |
 | Fastest demo | `make portfolio-demo`; default path is local and does not require an API key |
-| Best visual proof | before/discovered/tradeoff example plus Pareto SVG |
+| Best visual proof | before/discovered/tradeoff example, Pareto SVG, and trading signal Pareto CSV |
 
 ## What It Is
 
-O2 mutates compact `score_bin` and `score_next_stop` functions, validates them
-statically, executes them in a subprocess sandbox, scores them on OR benchmark
-evaluators, archives the results, and exports a reproducible evidence package.
-Generated code fills a narrow scoring-function interface only.
+O2 mutates compact `score_bin`, `score_next_stop`, and `score_signal`
+functions, validates them statically, executes them in a subprocess sandbox,
+scores them on benchmark evaluators, archives the results, and exports a
+reproducible evidence package. Generated code fills a narrow scoring-function
+interface only.
 
 ## Why It Matters
 
@@ -26,7 +29,8 @@ Hand-designed OR heuristics are auditable and fast, but they are tuned by manual
 iteration. O2 shows how part of that loop can be automated while preserving a
 safety boundary, held-out evaluation, failure analysis, rerun manifests, and
 conservative claims. It does not claim universal dominance, SOTA solver
-performance, superiority on Amazon data, or LKH/CVRP/VRPTW solver comparison.
+performance, superiority on Amazon data, LKH/CVRP/VRPTW solver comparison,
+tradable alpha, investment advice, or live trading readiness.
 
 ## One-Command Demo
 
@@ -45,27 +49,57 @@ JSON/SVG plots, top/frontier programs, rerun/reproduction manifests, and a
 summary. Default reproduction is local, deterministic, and does not require an API key.
 Live Gemini mutation is optional, environment-gated, and never used by default.
 
+Trading signal smoke path:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark trading_signal --candidate-count 8 --output-dir /tmp/o2-trading-signal
+```
+
 Key docs: [release summary](RELEASE_SUMMARY.md),
 [top program before/after](examples/top_program_before_after.md), and
 [safety boundary](docs/safety_boundary.md).
 
+## Search Flow
+
+`seed heuristic library -> mutation -> static validation -> subprocess sandbox -> evaluator -> archive -> reports`
+
+## Safety Boundary
+
+Static checks reject imports, file/network/process access, unsafe builtins,
+dunder access, bad interfaces, trading lookahead fields, and hallucinated
+features before sandbox execution. See
+[docs/safety_boundary.md](docs/safety_boundary.md).
+
+## Limitations
+
+- Default runs are deterministic and local; live Gemini mutation is optional
+  and never bypasses validation or sandboxing.
+- Trading signal evidence is PIT-constrained benchmark evidence; it does not
+  claim tradable alpha, investment advice, or live execution readiness.
+- Local LOB artifact loading is optional; default reproduction uses a small
+  fixture and requires no pandas, pyarrow, or external data.
+- O2 reports selected trade-offs and does not claim universal dominance.
+
 ## Benchmark Evidence
 
-Core artifacts include `external_generalization.csv`,
+Coverage includes Online Bin Packing, External Routing, Search Ablation, Trading
+Signal, and Pareto Frontier. Key artifacts: `external_generalization.csv`,
 `routing_external_generalization.csv`, `ablation_summary.csv`,
-`pareto_frontier.csv`, and `reproduction_manifest.json`.
-
-Coverage: Online Bin Packing, External Bin Packing, External Routing, search
-ablation, Pareto, failure taxonomy, and deterministic reproduction. These are
-evidence slices, not SOTA solver claims.
+`reports/plots/pareto_frontier_main.svg`, `trading_signal_pareto.csv`, and
+`reproduction_manifest.json`. These are evidence slices, not SOTA solver or
+trading claims.
 
 ## Representative Heuristic
 
-| Before heuristic | Discovered heuristic | Score/runtime trade-off |
-| --- | --- | --- |
-| choose the feasible bin with the smallest leftover capacity | archived `seed-001-load_balancer` `score_bin` | score `7.75`, runtime `0.023680`, complexity `32`; Pareto evidence, not SOTA claim |
+Before heuristic -> Discovered heuristic -> Score/runtime trade-off:
+choose the feasible bin with the smallest leftover capacity -> archived
+`seed-001-load_balancer` `def score_bin(...)` -> score `7.75`, runtime
+`0.023680`, complexity `32`; Pareto evidence, not SOTA claim.
 
-Discovered code:
+## Pareto Evidence
+
+Main visual: [reports/plots/pareto_frontier_main.svg](reports/plots/pareto_frontier_main.svg).
+Trading signal frontier: `reports/tables/trading_signal_pareto.csv`.
 
 ```python
 def score_bin(item_size, bin_remaining_capacity, bin_features):
@@ -79,36 +113,6 @@ This is a scoring function evaluated under sandbox and benchmark constraints,
 not a full solver. See
 [examples/top_program_before_after.md](examples/top_program_before_after.md).
 
-## Pareto Evidence
-
-Main visual: [reports/plots/pareto_frontier_main.svg](reports/plots/pareto_frontier_main.svg)
-
-| Benchmark | Frontier program | Objective quality | Runtime | Complexity | Trade-off |
-| --- | --- | --- | --- | --- | --- |
-| bin_packing | `seed-001-load_balancer` | 7.75 | 0.023680 | 32 | quality/runtime/generalization |
-| simple_routing | `route-seed-002-window_guard` | 15.617200 | 0.009996 | 49 | quality/runtime/generalization |
-| amazon_routing | `phase6-seed-000-travel_fast` | 10.833333 | 0.000022 | 11 | quality/runtime/driver-likeness |
-
-## Search Flow
-
-`seed heuristic library -> mutation -> static validation -> subprocess sandbox -> evaluator -> archive -> reports`
-
-## Safety Boundary
-
-Static checks reject imports, file/network/process access, unsafe builtins,
-dunder access, and bad interfaces before sandbox execution. See
-[docs/safety_boundary.md](docs/safety_boundary.md).
-
-## Limitations
-
-- Default runs are deterministic and local; live Gemini mutation is optional,
-  environment-gated, and never bypasses validation or sandboxing.
-- External fixtures are intentionally small and parser-backed; larger public
-  benchmark corpora remain optional future work.
-- Amazon-style routing uses deterministic local fixtures, not proprietary or
-  public Amazon route data.
-- O2 reports selected trade-offs and does not claim universal dominance.
-
 ## Evidence Artifact Index
 
 | Evidence area | Key artifact | Claim boundary |
@@ -117,10 +121,25 @@ dunder access, and bad interfaces before sandbox execution. See
 | External Bin Packing | `external_generalization.csv` | external transfer, not SOTA |
 | External Routing | `routing_external_generalization.csv` | no LKH/CVRP/VRPTW comparison |
 | Search Ablation | `ablation_summary.csv` | not live LLM superiority |
+| Trading Signal | `trading_signal_pareto.csv` | PIT rule search, not tradable alpha |
 | Pareto Frontier | `pareto_frontier.csv` | selected trade-offs |
 | Reproducibility | `reproduction_manifest.json` | deterministic local rerun |
 
 See [RELEASE_SUMMARY.md](RELEASE_SUMMARY.md) for the 3-minute portfolio summary.
+
+## Representative Program Details
+
+```python
+def score_bin(item_size, bin_remaining_capacity, bin_features):
+    projected = bin_remaining_capacity - item_size
+    if projected < 0:
+        return 1000000
+    return abs(projected - 0.01)
+```
+
+This is a scoring function evaluated under sandbox and benchmark constraints,
+not a full solver. See
+[examples/top_program_before_after.md](examples/top_program_before_after.md).
 
 ## Setup
 

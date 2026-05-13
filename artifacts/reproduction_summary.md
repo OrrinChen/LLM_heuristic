@@ -28,7 +28,10 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/tables/routing_external_generalization.csv`
 - `reports/tables/ablation_summary.csv`
 - `reports/tables/pareto_frontier.csv`
+- `reports/tables/trading_signal_summary.csv`
+- `reports/tables/trading_signal_pareto.csv`
 - `reports/plots/plot_series.json`
+- `reports/plots/trading_signal_frontier.json`
 - `artifacts/rerun_manifest.json`
 - `artifacts/top_programs`
 - `artifacts/reproduction_manifest.json`
@@ -38,6 +41,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 
 - `reports/final_report.md`
 - `reports/tables/benchmark_comparison.csv`
+- `reports/tables/trading_signal_summary.csv`
 - `reports/plots/plot_series.json`
 - `artifacts/top_programs`
 
@@ -74,6 +78,7 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/plots/generation_curve_by_method.json`
 - `reports/plots/pareto_frontier_main.svg`
 - `reports/plots/plot_series.json`
+- `reports/plots/trading_signal_frontier.json`
 - `reports/portfolio_brief.md`
 - `reports/tables/ablation_summary.csv`
 - `reports/tables/benchmark_comparison.csv`
@@ -93,6 +98,8 @@ python3 -m pytest tests/test_reproducibility_package_phase16.py -q
 - `reports/tables/repair_success_rate.csv`
 - `reports/tables/robustness_summary.csv`
 - `reports/tables/routing_external_generalization.csv`
+- `reports/tables/trading_signal_pareto.csv`
+- `reports/tables/trading_signal_summary.csv`
 - `reports/tables/worst_generalization_gaps.csv`
 - `reports/technical_report.md`
 

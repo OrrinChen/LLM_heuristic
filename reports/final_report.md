@@ -97,6 +97,17 @@ Frontier rows: `8`.
 Benchmarks covered: `amazon_routing`, `bin_packing`, `simple_routing`.
 Claim boundary: The system discovers compact heuristic programs that improve selected quality-runtime-generalization trade-offs, rather than universally dominating classical baselines.
 
+## Trading Signal Rule Search
+
+Trading signal evidence evaluates compact `score_signal(features)` programs on point-in-time market features only. Labels and future returns stay inside the evaluator, while static checks, subprocess execution, leverage gates, turnover gates, and Pareto trade-offs bound the generated-code behavior.
+
+Benchmark: `trading_signal`.
+Interface: `def score_signal(features): return position_score`.
+Best validation net return: `0.005419600000000001`.
+Best program: `signal-seed-003-spread_guard`.
+Pareto rows: `7` frontier candidates.
+Claim boundary: sandboxed PIT trading-rule search evidence only; does not claim tradable alpha, investment advice, live execution readiness, SOTA, or production risk control.
+
 ## Generalization And Robustness
 
 The robustness report covers 3 benchmarks and 15 held-out slices.
@@ -127,6 +138,7 @@ The report includes repair success evidence for deterministic syntax, unsafe-cod
 - The current routing generated-program interface ranks next stops rather than emitting full routes.
 - Subprocess memory limits are applied only on platforms that expose compatible resource limits.
 - Semantic novelty is probe-based and detects behavior equivalence on fixed probe states; it does not prove human-level semantic understanding.
+- Trading signal evidence is PIT-constrained benchmark evidence only; it does not claim tradable alpha, investment advice, live execution readiness, or production risk control.
 - Failure taxonomy v2 repair rows are deterministic evidence records, not proof that arbitrary LLM failures can be repaired automatically.
 
 ## Recommended Next Steps

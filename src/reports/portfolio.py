@@ -36,6 +36,13 @@ BENCHMARK_RESUME_BULLET = (
     "external benchmark-style instances."
 )
 
+TRADING_RESUME_BULLET = (
+    "Extended O2 into sandboxed trading-rule program search, constraining "
+    "generated strategies to PIT market features and evaluating them with "
+    "lookahead validators, turnover/leverage gates, and "
+    "net-return/turnover/drawdown/complexity Pareto frontiers."
+)
+
 ARCHITECTURE_DIAGRAM = """seed heuristic library
 -> deterministic or LLM mutation operator
 -> static validation
@@ -56,6 +63,7 @@ def build_phase19_package(
     live_llm = final["live_llm"]
     semantic = final["semantic_novelty"]
     frontier = final["pareto_frontier"]
+    trading_signal = final["trading_signal"]
     failure_v2 = final["failure_taxonomy_v2"]
     evidence = final["evidence"]
 
@@ -126,6 +134,13 @@ def build_phase19_package(
             "claim": "selected trade-offs, not universal dominance",
         },
         {
+            "benchmark": "Trading Signal",
+            "evidence": "PIT-only signal fixture with optional LOB adapter",
+            "top_program": trading_signal["best_program_id"],
+            "reported_metric": trading_signal["best_validation_net_return"],
+            "claim": "sandboxed rule search, not tradable-alpha claim",
+        },
+        {
             "benchmark": "Failure Taxonomy v2",
             "evidence": "failure cards and deterministic repair rows",
             "top_program": f"{failure_v2['failure_card_count']} failure cards",
@@ -137,7 +152,11 @@ def build_phase19_package(
     return {
         "phase": 19,
         "title": "O2 Portfolio Packaging",
-        "resume_bullets": (PRIMARY_RESUME_BULLET, BENCHMARK_RESUME_BULLET),
+        "resume_bullets": (
+            PRIMARY_RESUME_BULLET,
+            BENCHMARK_RESUME_BULLET,
+            TRADING_RESUME_BULLET,
+        ),
         "demo_command": PORTFOLIO_DEMO_COMMAND,
         "architecture_diagram": ARCHITECTURE_DIAGRAM,
         "benchmark_results": benchmark_rows,
@@ -162,6 +181,9 @@ def build_phase19_package(
             "universal dominance or SOTA solver performance.",
             "Failure repair evidence is deterministic and local; it does not "
             "prove arbitrary LLM-generated failures can be repaired.",
+            "Trading signal evidence is a PIT-constrained benchmark extension; "
+            "it does not claim investment advice, tradable alpha, or live "
+            "execution readiness.",
         ),
         "claim_boundaries": {
             "supports": final["claims"]["conservative"],
@@ -176,6 +198,7 @@ def build_phase19_package(
                 "failure_category_count"
             ],
             "pareto_frontier_rows": frontier["frontier_count"],
+            "trading_signal_frontier_rows": trading_signal["pareto_frontier_count"],
             "semantic_behavior_clusters": semantic["behavior_cluster_count"],
             "failure_cards": failure_v2["failure_card_count"],
         },

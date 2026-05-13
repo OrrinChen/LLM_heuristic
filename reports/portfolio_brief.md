@@ -4,6 +4,7 @@
 
 - Built a sandboxed LLM-driven OR heuristic discovery system that evolves compact bin-packing and routing scoring programs through subprocess-isolated execution, evolutionary selection, external benchmark evaluation, rerun manifests, robustness analysis, and failure taxonomy reporting.
 - Benchmarked discovered heuristics against First Fit, Best Fit, FFD/BFD, nearest-neighbor, insertion, and 2-opt baselines, reporting quality-runtime-generalization Pareto frontiers across synthetic and external benchmark-style instances.
+- Extended O2 into sandboxed trading-rule program search, constraining generated strategies to PIT market features and evaluating them with lookahead validators, turnover/leverage gates, and net-return/turnover/drawdown/complexity Pareto frontiers.
 
 ## Interview Demo
 
@@ -36,6 +37,7 @@ seed heuristic library
 | LLM Live Mutation v1 | hash-only candidate audit with deterministic fallback | deterministic_fallback | 5.8 | LLM as one sandboxed mutation operator, not a solver |
 | Program Semantics | behavior fingerprints and duplicate behavior clusters | 7 behavior clusters | 21 | semantic novelty is probe-based, not human-level meaning |
 | Pareto Frontier | quality-runtime-complexity-generalization rows | 8 frontier rows | 17 | selected trade-offs, not universal dominance |
+| Trading Signal | PIT-only signal fixture with optional LOB adapter | signal-seed-003-spread_guard | 0.005419600000000001 | sandboxed rule search, not tradable-alpha claim |
 | Failure Taxonomy v2 | failure cards and deterministic repair rows | 11 failure cards | 11 | explains failure modes, not arbitrary auto-repair |
 
 ## Safety Boundary
@@ -57,6 +59,7 @@ Does not claim: universal dominance, SOTA solver performance, or live LLM superi
 - Amazon-style routing uses deterministic local fixtures, not proprietary or public Amazon route data.
 - The project reports selected trade-offs and does not claim universal dominance or SOTA solver performance.
 - Failure repair evidence is deterministic and local; it does not prove arbitrary LLM-generated failures can be repaired.
+- Trading signal evidence is a PIT-constrained benchmark extension; it does not claim investment advice, tradable alpha, or live execution readiness.
 
 ## Recommended Next Phase
 

@@ -50,6 +50,7 @@ make portfolio-demo
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo --output-dir /tmp/o2-release-local --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile external_small --output-dir /tmp/o2-release-external --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-release-report --top-k 3
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark trading_signal --candidate-count 8 --output-dir /tmp/o2-trading-signal
 ```
 
 Secret scan:
@@ -83,6 +84,9 @@ local_demo reproduction regenerates the evidence package
 external_small reproduction regenerates external evidence tables
 report export writes reports/final_report.md, CSV tables, plot-ready JSON, and
 reports/plots/pareto_frontier_main.svg
+reports/tables/trading_signal_summary.csv
+reports/tables/trading_signal_pareto.csv
+reports/plots/trading_signal_frontier.json
 Secret scan returns no committed credentials
 Large-file scan returns no unexpected large files
 Project remains release-frozen and portfolio-ready
@@ -258,6 +262,30 @@ True
 0.0
 15.205163
 external routing-style evidence only; no LKH, CVRP/VRPTW solver, Amazon, SOTA, or universal dominance claim
+```
+
+## Trading Signal Rule-Search Validation
+
+Run this after the trading signal benchmark exists:
+
+```bash
+python3 -m pytest tests/test_trading_signal_extension.py -v
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark trading_signal --candidate-count 8 --output-dir /tmp/o2-trading-signal
+```
+
+Expected result:
+
+```text
+score_signal(features) candidates use only point-in-time market features
+future returns, labels, future midprices, post-trade PnL, unknown features,
+imports, file access, and network access fail safely
+invalid position output, leverage violation, and turnover-too-high programs
+record structured failure reasons
+reports/tables/trading_signal_summary.csv is exported
+reports/tables/trading_signal_pareto.csv is exported
+reports/plots/trading_signal_frontier.json is exported
+claim boundary states no tradable alpha, investment advice, live execution,
+SOTA, or production risk-control claim
 ```
 
 ## Phase 2 Smoke Validation

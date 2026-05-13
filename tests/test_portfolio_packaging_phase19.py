@@ -20,6 +20,7 @@ def test_phase19_package_contains_resume_demo_and_claim_boundaries() -> None:
         "sandboxed LLM-driven OR heuristic discovery system"
         in (package["resume_bullets"][0])
     )
+    assert "trading-rule program search" in package["resume_bullets"][2]
     assert package["demo_command"] == (
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
         "local_demo --output-dir /tmp/o2-demo --top-k 3"
@@ -38,13 +39,14 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
     package = build_phase19_package()
 
     assert "seed heuristic library" in package["architecture_diagram"]
-    assert len(package["benchmark_results"]) >= 10
+    assert len(package["benchmark_results"]) >= 11
     assert {
         "Online Bin Packing",
         "External Bin Packing",
         "External Routing",
         "Simple Routing",
         "Amazon-Style Routing",
+        "Trading Signal",
     }.issubset({row["benchmark"] for row in package["benchmark_results"]})
     assert "subprocess" in package["safety_boundary"]
     assert "file access" in package["safety_boundary"]
@@ -56,6 +58,7 @@ def test_phase19_package_summarizes_architecture_results_and_safety() -> None:
         "TSPLIB/CVRPLIB-style" in limitation for limitation in package["limitations"]
     )
     assert any("Failure repair" in limitation for limitation in package["limitations"])
+    assert any("tradable alpha" in limitation for limitation in package["limitations"])
 
 
 def test_portfolio_brief_markdown_is_interview_ready() -> None:

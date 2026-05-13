@@ -12,6 +12,7 @@ TECHNICAL_REPORT_SECTIONS = (
     "system_design",
     "sandbox_and_safety_boundary",
     "benchmarks",
+    "trading_signal_rule_search",
     "search_loop",
     "external_benchmark_evidence",
     "ablation",
@@ -30,9 +31,10 @@ TECHNICAL_REPORT_ABSTRACT = (
     "deterministic mutation operators, static validation, subprocess sandboxing, "
     "benchmark evaluators, evolutionary selection, rerun manifests, and "
     "held-out generalization tests. Results show that generated heuristics can "
-    "improve selected trade-offs on bin packing and routing-style benchmarks, "
-    "while failure analysis shows clear limits under external transfer and "
-    "strong classical baselines."
+    "improve selected trade-offs on bin packing and routing-style benchmarks. "
+    "The same constrained interface is extended to PIT trading-rule search "
+    "without claiming tradable alpha, while failure analysis shows clear limits "
+    "under external transfer and strong classical baselines."
 )
 
 
@@ -49,6 +51,7 @@ def build_phase18_report(
     live_llm = source["live_llm"]
     semantic = source["semantic_novelty"]
     frontier = source["pareto_frontier"]
+    trading_signal = source["trading_signal"]
     failure_v2 = source["failure_taxonomy_v2"]
 
     sections = (
@@ -104,8 +107,9 @@ def build_phase18_report(
                 "Evidence covers online bin packing, simple routing, "
                 "Amazon-style routing fixtures, and parser-backed external "
                 "bin-packing and TSPLIB-style routing benchmark-style "
-                "instances. Each benchmark is compared against deterministic "
-                "classical baselines."
+                "instances. The trading signal extension adds a separate "
+                "PIT-constrained scoring benchmark. OR benchmarks are compared "
+                "against deterministic classical baselines."
             ),
             (
                 "bin_packing",
@@ -113,6 +117,25 @@ def build_phase18_report(
                 "amazon_routing",
                 "external_bin_packing",
                 "external_routing",
+                "trading_signal",
+            ),
+        ),
+        _section(
+            "trading_signal_rule_search",
+            "Trading Signal Rule Search",
+            (
+                "The trading extension keeps the generated-code interface "
+                "narrow: `score_signal(features)` returns a finite target "
+                "position in [-1, 1]. Static checks block future returns, "
+                "labels, future midprices, post-trade PnL, and hallucinated "
+                "features, while evaluator gates track leverage, turnover, "
+                "drawdown, net return, and program complexity."
+            ),
+            (
+                "trading_signal_summary.csv",
+                "trading_signal_pareto.csv",
+                "trading_signal_frontier.json",
+                trading_signal["benchmark"],
             ),
         ),
         _section(
@@ -271,6 +294,7 @@ def build_phase18_report(
             "live_llm_best_method": live_llm["best_method"],
             "semantic_behavior_clusters": semantic["behavior_cluster_count"],
             "pareto_frontier_count": frontier["frontier_count"],
+            "trading_signal_frontier_count": trading_signal["pareto_frontier_count"],
             "failure_card_count": failure_v2["failure_card_count"],
         },
         "recommended_next_phase": (

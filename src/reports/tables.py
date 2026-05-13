@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Mapping, Optional, Sequence
 
+from benchmarks.trading_signal import build_trading_signal_report
 from program_search.parallel_runner import build_phase17_report
 from reports.failure_analysis import build_phase8_report
 from reports.failure_taxonomy_v2 import build_phase14_report
@@ -18,6 +19,7 @@ def build_report_tables(
     failure_report: Optional[Mapping[str, object]] = None,
     phase14_report: Optional[Mapping[str, object]] = None,
     phase17_report: Optional[Mapping[str, object]] = None,
+    trading_signal_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
     final = final_report or build_final_report()
     robustness = robustness_report or build_phase7_report()
@@ -26,6 +28,7 @@ def build_report_tables(
         phase14_report or final.get("failure_taxonomy_v2") or build_phase14_report()
     )
     phase17 = phase17_report or build_phase17_report()
+    trading_signal = trading_signal_report or build_trading_signal_report()
 
     tables = {
         "benchmark_comparison": {
@@ -226,6 +229,39 @@ def build_report_tables(
                 "selected_tradeoff",
             ),
             "rows": _pareto_frontier_rows(final),
+        },
+        "trading_signal_summary": {
+            "title": "Trading Signal Summary",
+            "columns": (
+                "benchmark",
+                "source",
+                "feature_schema",
+                "best_program_id",
+                "best_validation_net_return",
+                "best_test_net_return",
+                "best_turnover",
+                "best_max_drawdown",
+                "pareto_frontier_count",
+                "claim",
+            ),
+            "rows": _trading_signal_summary_rows(trading_signal),
+        },
+        "trading_signal_pareto": {
+            "title": "Trading Signal Pareto",
+            "columns": (
+                "program_id",
+                "net_return",
+                "turnover",
+                "max_drawdown",
+                "program_complexity",
+                "runtime",
+                "is_pareto_frontier",
+                "dominance_count",
+                "failure_reason",
+                "selected_tradeoff",
+                "claim",
+            ),
+            "rows": _trading_signal_pareto_rows(trading_signal),
         },
         "failure_taxonomy": {
             "title": "Failure Taxonomy",
@@ -633,6 +669,44 @@ def _pareto_frontier_rows(final_report: Mapping[str, object]) -> TableRows:
             "selected_tradeoff": row["selected_tradeoff"],
         }
         for row in final_report["pareto_frontier"]["candidate_rows"]
+    ]
+
+
+def _trading_signal_summary_rows(report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "benchmark": report["benchmark"],
+            "source": report["source"],
+            "feature_schema": ";".join(str(name) for name in report["feature_schema"]),
+            "best_program_id": report["best_program_id"],
+            "best_validation_net_return": _format_number(
+                report["best_validation_net_return"]
+            ),
+            "best_test_net_return": _format_number(report["best_test_net_return"]),
+            "best_turnover": _format_number(report["best_turnover"]),
+            "best_max_drawdown": _format_number(report["best_max_drawdown"]),
+            "pareto_frontier_count": report["pareto_frontier_count"],
+            "claim": report["claim_boundary"],
+        }
+    ]
+
+
+def _trading_signal_pareto_rows(report: Mapping[str, object]) -> TableRows:
+    return [
+        {
+            "program_id": row["program_id"],
+            "net_return": _format_number(row["net_return"]),
+            "turnover": _format_number(row["turnover"]),
+            "max_drawdown": _format_number(row["max_drawdown"]),
+            "program_complexity": row["program_complexity"],
+            "runtime": _format_number(row["runtime"]),
+            "is_pareto_frontier": row["is_pareto_frontier"],
+            "dominance_count": row["dominance_count"],
+            "failure_reason": row["failure_reason"],
+            "selected_tradeoff": row["selected_tradeoff"],
+            "claim": row["claim"],
+        }
+        for row in report["candidate_rows"]
     ]
 
 

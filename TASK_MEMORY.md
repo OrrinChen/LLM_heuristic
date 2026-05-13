@@ -2,11 +2,11 @@
 
 ## Latest Status
 
-Current branch: `codex/sandboxed-agent-eval-freeze`
-Latest commit: `docs: polish O2 recruiter landing`
-Current phase: public portfolio polish only; project is release-frozen and portfolio-ready
+Current branch: `codex/inventoryflowopt-phase9`
+Latest commit before this extension: `docs: polish O2 recruiter landing`
+Current phase: trading signal rule-search extension complete; project remains release-frozen and portfolio-ready
 Main blocker: None; broader crossover, paid cloud execution, and larger public benchmark corpora remain optional future work
-Next recommended action: use the release-frozen portfolio package for applications; only reopen after interview feedback or an explicit extension request
+Next recommended action: use the expanded portfolio package for applications; only reopen after interview feedback or an explicit extension request
 
 ## Current Project State
 
@@ -24,6 +24,35 @@ short `docs/safety_boundary.md`, a deterministic stdlib-only
 clear that default reproduction does not require an API key. The README now
 also exposes a recruiter snapshot, a before/discovered/score-runtime trade-off
 example, and `make portfolio-demo` as the shortest deterministic review path.
+The explicit trading signal extension adds PIT-constrained `score_signal`
+benchmark evidence, optional local LOB artifact loading, and
+net-return/turnover/drawdown/complexity Pareto artifacts without changing the
+default no-API-key reproduction path.
+
+2026-05-14 trading signal rule-search extension:
+
+- Extended O2 from OR-only evidence into a sandboxed trading-rule program
+  search benchmark without adding a new numbered roadmap phase.
+- Added `score_signal(features)` as a narrow generated-program interface that
+  returns a finite target position in `[-1, 1]`.
+- Added a deterministic local PIT fixture and an optional local LOB artifact
+  adapter. Default reproduction does not require API keys, pandas, pyarrow,
+  external data, or large market-data files.
+- Restricted generated programs to PIT feature fields: `imbalance`, `ofi`,
+  `trade_imbalance`, `spread`, `microprice`, and `realized_volatility`.
+- Added trading-specific validators for lookahead fields, hallucinated
+  features, invalid position output, leverage violations, and excessive
+  turnover while preserving subprocess sandbox execution and structured
+  failure reasons.
+- Added trading signal report artifacts:
+  `reports/tables/trading_signal_summary.csv`,
+  `reports/tables/trading_signal_pareto.csv`, and
+  `reports/plots/trading_signal_frontier.json`.
+- Added `python3 -m heuristic_discovery run --benchmark trading_signal` CLI
+  support with optional `--trading-data` for local LOB artifacts.
+- Kept claims conservative: this is PIT-constrained rule-search evidence, not
+  investment advice, tradable-alpha evidence, live execution readiness, SOTA,
+  or production risk control.
 
 2026-05-06 public portfolio landing polish:
 

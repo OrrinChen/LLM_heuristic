@@ -82,6 +82,11 @@ Completed:
 - Recruiter-entry polish: README recruiter snapshot, before/discovered/
   score-runtime trade-off example, and `make portfolio-demo` shortest
   deterministic demo path.
+- Trading signal rule-search extension: PIT-constrained `score_signal(features)`
+  benchmark with deterministic local fixture, optional local LOB artifact
+  adapter, feature allowlist, lookahead/hallucination validation,
+  leverage/turnover/position gates, net-return / turnover / drawdown /
+  complexity Pareto evidence, CLI support, and report artifacts.
 
 Current phase:
 
@@ -104,13 +109,14 @@ Current phase:
   cloud adapter boundary.
 - Phase 18 research-style technical report is complete.
 - Phase 19 resume / portfolio packaging is complete.
-- The job-search evidence, reproducibility, and local scale tracks are
-  complete; no required roadmap phase remains.
+- The job-search evidence, reproducibility, local scale track, and explicitly
+  requested trading signal extension are complete; no required roadmap phase
+  remains.
 - The project is release-frozen and portfolio-ready. Future work should be
   explicitly requested and kept separate from the release evidence package.
-- The S-level portfolio polish is presentation-only; it does not add a new
-  roadmap phase, benchmark feature, crossover operator, cloud execution path,
-  or expanded live LLM experiment.
+- The S-level portfolio polish was presentation-only. The trading signal work is
+  a separate explicitly requested extension milestone, not a new numbered phase,
+  crossover operator, cloud execution path, or expanded live LLM experiment.
 
 Deferred:
 
@@ -126,9 +132,9 @@ larger public benchmark corpora.
 Next autonomous action:
 
 ```text
-No required roadmap phase remains. The release-frozen portfolio package is the
-current stopping point. Optional future work is broader crossover, paid cloud
-execution, or larger public benchmark corpora.
+No required roadmap phase remains. The release-frozen portfolio package now
+includes the explicitly requested trading signal extension. Optional future work
+is broader crossover, paid cloud execution, or larger public benchmark corpora.
 ```
 
 ## Project Positioning

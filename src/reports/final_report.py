@@ -10,6 +10,7 @@ from benchmarks.bin_packing.evaluator import build_phase2_report
 from benchmarks.bin_packing.external import build_phase9_report
 from benchmarks.routing.evaluator import build_phase4_report
 from benchmarks.routing.external import build_phase10_report
+from benchmarks.trading_signal import build_trading_signal_report
 from llm.live_experiment import build_phase12_report
 from program_search.ablation import build_phase11_report
 from program_search.semantic_novelty import build_phase13_report
@@ -29,6 +30,7 @@ FINAL_REPORT_SECTIONS = (
     "llm_live_mutation_v1",
     "program_semantics_and_novelty",
     "pareto_frontier_report",
+    "trading_signal_rule_search",
     "generalization_and_robustness",
     "failure_analysis",
     "failure_taxonomy_v2",
@@ -68,6 +70,7 @@ def build_final_report() -> Dict[str, object]:
     )
     phase12 = build_phase12_report()
     phase13 = build_phase13_report()
+    trading_signal = build_trading_signal_report()
     phase15 = build_phase15_report()
     phase14 = build_phase14_report(
         phase8_report=phase8,
@@ -121,6 +124,7 @@ def build_final_report() -> Dict[str, object]:
         "live_llm": _live_llm_summary(phase12),
         "semantic_novelty": _semantic_novelty_summary(phase13),
         "pareto_frontier": _pareto_frontier_summary(phase15),
+        "trading_signal": _trading_signal_summary(trading_signal),
         "failure_taxonomy_v2": _failure_taxonomy_v2_summary(phase14),
         "evidence": _evidence_summary(phase6, phase7, phase8),
         "limitations": (
@@ -147,6 +151,9 @@ def build_final_report() -> Dict[str, object]:
             "Semantic novelty is probe-based and detects behavior equivalence on "
             "fixed probe states; it does not prove human-level semantic "
             "understanding.",
+            "Trading signal evidence is PIT-constrained benchmark evidence only; "
+            "it does not claim tradable alpha, investment advice, live execution "
+            "readiness, or production risk control.",
             "Failure taxonomy v2 repair rows are deterministic evidence records, "
             "not proof that arbitrary LLM failures can be repaired automatically.",
         ),
@@ -175,6 +182,7 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
     live_llm = report["live_llm"]
     semantic = report["semantic_novelty"]
     frontier = report["pareto_frontier"]
+    trading_signal = report["trading_signal"]
     failure_v2 = report["failure_taxonomy_v2"]
     evidence = report["evidence"]
 
@@ -351,6 +359,27 @@ def render_final_report_markdown(report: Mapping[str, object]) -> str:
                 + "."
             ),
             f"Claim boundary: {frontier['claim_boundary']}",
+            "",
+        ]
+    )
+    lines.extend(
+        [
+            "## Trading Signal Rule Search",
+            "",
+            trading_signal["summary"],
+            "",
+            f"Benchmark: `{trading_signal['benchmark']}`.",
+            f"Interface: `{trading_signal['interface']}`.",
+            (
+                "Best validation net return: "
+                f"`{trading_signal['best_validation_net_return']}`."
+            ),
+            f"Best program: `{trading_signal['best_program_id']}`.",
+            (
+                "Pareto rows: "
+                f"`{trading_signal['pareto_frontier_count']}` frontier candidates."
+            ),
+            f"Claim boundary: {trading_signal['claim_boundary']}.",
             "",
         ]
     )
@@ -639,6 +668,27 @@ def _pareto_frontier_summary(phase15: Mapping[str, object]) -> Mapping[str, obje
             "included for Amazon-style routing where that operational metric "
             "is available."
         ),
+    }
+
+
+def _trading_signal_summary(report: Mapping[str, object]) -> Mapping[str, object]:
+    return {
+        "benchmark": report["benchmark"],
+        "source": report["source"],
+        "feature_schema": report["feature_schema"],
+        "interface": report["interface"],
+        "best_program_id": report["best_program_id"],
+        "best_validation_net_return": report["best_validation_net_return"],
+        "best_test_net_return": report["best_test_net_return"],
+        "best_turnover": report["best_turnover"],
+        "best_max_drawdown": report["best_max_drawdown"],
+        "pareto_frontier_count": report["pareto_frontier_count"],
+        "candidate_rows": report["candidate_rows"],
+        "pareto_rows": report["pareto_rows"],
+        "requires_api_key": report["requires_api_key"],
+        "requires_lob_artifacts": report["requires_lob_artifacts"],
+        "claim_boundary": report["claim_boundary"],
+        "summary": report["summary"],
     }
 
 
