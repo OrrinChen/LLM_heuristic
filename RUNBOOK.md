@@ -105,10 +105,13 @@ reports/tables/repair_success_rate.csv
 reports/tables/pareto_frontier.csv
 reports/tables/parallel_runner_summary.csv
 reports/tables/checkpoint_resume.csv
+reports/tables/trading_signal_summary.csv
+reports/tables/trading_signal_pareto.csv
 reports/plots/plot_series.json
 reports/plots/generation_curve_by_method.json
 reports/plots/behavior_fingerprint.json
 reports/plots/frontier_plot_series.json
+reports/plots/trading_signal_frontier.json
 reports/plots/pareto_frontier_main.svg
 artifacts/top_programs/*.py
 artifacts/frontier_programs/*.py
@@ -128,6 +131,7 @@ PYTHONPATH=src python3 -m heuristic_discovery run --benchmark search_ablation --
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark live_llm --candidate-count 4 --output-dir /tmp/o2-live-llm
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark semantic_novelty --candidate-count 24 --output-dir /tmp/o2-semantic
 PYTHONPATH=src python3 -m heuristic_discovery run --benchmark parallel_runner --candidate-count 12 --max-workers 2 --output-dir /tmp/o2-parallel
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark trading_signal --candidate-count 8 --output-dir /tmp/o2-trading-signal
 PYTHONPATH=src python3 -m heuristic_discovery report --output-dir /tmp/o2-report --top-k 3
 PYTHONPATH=src python3 -m heuristic_discovery inspect --top-k 5
 PYTHONPATH=src python3 -m heuristic_discovery rerun-manifest --output-dir . --top-k 5
@@ -191,6 +195,47 @@ artifacts/reproduction_summary.md
 Optional future work is limited to broader crossover, paid cloud execution, and
 larger public benchmark corpora. Keep those out of the release-frozen package
 unless a new task explicitly asks for them.
+
+## Trading Signal Rule Search
+
+The trading signal extension evaluates compact `score_signal(features)`
+programs over point-in-time market features only:
+
+```text
+imbalance
+ofi
+trade_imbalance
+spread
+microprice
+realized_volatility
+```
+
+Generated programs do not receive labels, future returns, future midprices, or
+post-trade PnL. The evaluator uses those held-out labels internally to compute
+net return after a simple turnover cost, turnover, max drawdown, and complexity.
+Leverage and turnover gates are structured failures, not silent clipping.
+
+Default smoke path:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run --benchmark trading_signal --candidate-count 8 --output-dir /tmp/o2-trading-signal
+```
+
+Optional local LOB artifact path:
+
+```bash
+PYTHONPATH=src python3 -m heuristic_discovery run \
+  --benchmark trading_signal \
+  --trading-data path/to/local/lob/artifacts \
+  --candidate-count 8 \
+  --output-dir /tmp/o2-trading-signal-lob
+```
+
+The optional adapter may read CSV/JSON/JSONL via the stdlib and parquet only if
+the local pandas/pyarrow stack is already installed. Do not commit raw market
+data, API keys, secrets, or large LOB artifacts. Trading evidence is sandboxed
+rule-search evidence only; it is not investment advice, tradable-alpha evidence,
+or live execution readiness.
 
 ## External Bin Packing Evidence
 

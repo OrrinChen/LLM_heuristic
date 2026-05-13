@@ -17,7 +17,7 @@
         "item_count": 20,
         "train_validation_test_suites": "default"
       },
-      "runtime": 0.00481724999999944,
+      "runtime": 0.005371750999998426,
       "score": 7.75,
       "train_score": 7.866666666666666,
       "validation_score": 7.1
@@ -38,7 +38,7 @@
         "item_count": 20,
         "train_validation_test_suites": "default"
       },
-      "runtime": 0.0064601679999984896,
+      "runtime": 0.005224625999998622,
       "score": 7.75,
       "train_score": 7.866666666666666,
       "validation_score": 7.1
@@ -59,7 +59,7 @@
         "item_count": 20,
         "train_validation_test_suites": "default"
       },
-      "runtime": 0.005052625999999449,
+      "runtime": 0.0054446249999990926,
       "score": 7.75,
       "train_score": 7.866666666666666,
       "validation_score": 7.1
@@ -82,7 +82,7 @@
         "item_count": 20,
         "train_validation_test_suites": "default"
       },
-      "runtime": 0.008516039999999059,
+      "runtime": 0.005151790999999406,
       "score": 7.75,
       "train_score": 7.866666666666666,
       "validation_score": 7.1
@@ -105,7 +105,7 @@
         "item_count": 20,
         "train_validation_test_suites": "default"
       },
-      "runtime": 0.0051049160000005145,
+      "runtime": 0.005186125999998126,
       "score": 7.75,
       "train_score": 7.866666666666666,
       "validation_score": 7.1

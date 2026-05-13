@@ -2,7 +2,7 @@
 
 O2 is release-frozen and portfolio-ready. The project is packaged as a
 defensible evidence bundle for interviews, resume review, and technical
-discussion rather than as a production solver.
+discussion rather than as a production solver or trading system.
 
 ## Project Thesis
 
@@ -12,7 +12,8 @@ heuristic design can be automated as constrained program search
 
 The system studies whether compact heuristic scoring programs can be generated,
 validated, sandboxed, evaluated, selected, and rerun across OR-style benchmark
-slices.
+slices. The trading extension applies the same constrained-program-search idea
+to PIT market-feature scoring rules without claiming tradable alpha.
 
 ## System Architecture
 
@@ -27,8 +28,9 @@ seed heuristic library
 ```
 
 Generated code is restricted to narrow scoring functions such as `score_bin` and
-`score_next_stop`. The LLM path is one optional mutation operator inside this
-constrained system, not an unrestricted solver.
+`score_next_stop`; the trading extension adds `score_signal(features)` returning
+a bounded position in `[-1, 1]`. The LLM path is one optional mutation operator
+inside this constrained system, not an unrestricted solver.
 
 ## Main Evidence Artifacts
 
@@ -46,6 +48,11 @@ constrained system, not an unrestricted solver.
   mutation, crossover, deterministic LLM-proxy, and repair operators.
 - `reports/tables/pareto_frontier.csv`: quality-runtime-complexity-
   generalization trade-off rows.
+- `reports/tables/trading_signal_summary.csv` and
+  `reports/tables/trading_signal_pareto.csv`: PIT trading-rule evidence over
+  net return, turnover, drawdown, and complexity.
+- `reports/plots/trading_signal_frontier.json`: plot-ready trading signal
+  frontier series.
 - `reports/plots/pareto_frontier_main.svg`: deterministic stdlib-only main
   Pareto visual.
 - `reports/failure_cards.md` and `reports/tables/failure_taxonomy_v2.csv`:
@@ -108,7 +115,9 @@ quality-runtime-generalization trade-offs under strict evaluator constraints.
 
 O2 does not claim universal dominance, SOTA solver performance, live LLM
 superiority, production routing capability, or LKH/CVRP/VRPTW solver
-comparison; superiority on Amazon data is not claimed.
+comparison; superiority on Amazon data is not claimed. Trading signal evidence
+does not claim tradable alpha, investment advice, live execution readiness, or
+production risk control.
 
 ## Known Limitations
 
@@ -118,6 +127,11 @@ comparison; superiority on Amazon data is not claimed.
   proprietary or public Amazon route data.
 - Live Gemini mutation is optional and environment-gated; deterministic fallback
   providers are the default.
+- Trading signal runs use point-in-time features only; labels, future returns,
+  future midprices, and post-trade PnL are not exposed to generated programs.
+- Local LOB artifact loading is optional; the default demo uses a small
+  deterministic fixture and requires no API key, pandas, pyarrow, or external
+  data.
 - Semantic novelty uses fixed behavior probes, not full semantic equivalence.
 - Failure repair evidence is deterministic and local; it does not prove
   arbitrary generated failures can be repaired.
@@ -135,6 +149,10 @@ comparison; superiority on Amazon data is not claimed.
   FFD/BFD, nearest-neighbor, insertion, and 2-opt baselines, reporting
   quality-runtime-generalization Pareto frontiers across synthetic and
   benchmark-style external fixtures.
+- Extended O2 into sandboxed trading-rule program search, constraining
+  generated strategies to PIT market features and evaluating them with
+  lookahead validators, turnover/leverage gates, and
+  net-return/turnover/drawdown/complexity Pareto frontiers.
 
 ## Interview Talking Points
 
@@ -148,5 +166,7 @@ comparison; superiority on Amazon data is not claimed.
   LLM-proxy, and repair operators under the same local budget.
 - How failure cards and Pareto frontiers make the project defensible by showing
   limits instead of only successes.
+- Why the trading signal extension is evidence of constrained rule search, not
+  a live trading or investment claim.
 - What to do next if the project becomes research work: broader crossover,
   larger public benchmark corpora, or optional paid cloud execution.

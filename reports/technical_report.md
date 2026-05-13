@@ -2,7 +2,7 @@
 
 ## Abstract
 
-This project studies whether compact heuristic scoring programs can be discovered through constrained program search. The system uses LLM or deterministic mutation operators, static validation, subprocess sandboxing, benchmark evaluators, evolutionary selection, rerun manifests, and held-out generalization tests. Results show that generated heuristics can improve selected trade-offs on bin packing and routing-style benchmarks, while failure analysis shows clear limits under external transfer and strong classical baselines.
+This project studies whether compact heuristic scoring programs can be discovered through constrained program search. The system uses LLM or deterministic mutation operators, static validation, subprocess sandboxing, benchmark evaluators, evolutionary selection, rerun manifests, and held-out generalization tests. Results show that generated heuristics can improve selected trade-offs on bin packing and routing-style benchmarks. The same constrained interface is extended to PIT trading-rule search without claiming tradable alpha, while failure analysis shows clear limits under external transfer and strong classical baselines.
 
 ## Claim Boundary
 
@@ -36,9 +36,15 @@ Evidence references: `tests/test_program_sandbox.py`, `tests/test_hardening_mile
 
 ## Benchmarks
 
-Evidence covers online bin packing, simple routing, Amazon-style routing fixtures, and parser-backed external bin-packing and TSPLIB-style routing benchmark-style instances. Each benchmark is compared against deterministic classical baselines.
+Evidence covers online bin packing, simple routing, Amazon-style routing fixtures, and parser-backed external bin-packing and TSPLIB-style routing benchmark-style instances. The trading signal extension adds a separate PIT-constrained scoring benchmark. OR benchmarks are compared against deterministic classical baselines.
 
-Evidence references: `bin_packing`, `simple_routing`, `amazon_routing`, `external_bin_packing`, `external_routing`.
+Evidence references: `bin_packing`, `simple_routing`, `amazon_routing`, `external_bin_packing`, `external_routing`, `trading_signal`.
+
+## Trading Signal Rule Search
+
+The trading extension keeps the generated-code interface narrow: `score_signal(features)` returns a finite target position in [-1, 1]. Static checks block future returns, labels, future midprices, post-trade PnL, and hallucinated features, while evaluator gates track leverage, turnover, drawdown, net return, and program complexity.
+
+Evidence references: `trading_signal_summary.csv`, `trading_signal_pareto.csv`, `trading_signal_frontier.json`, `trading_signal`.
 
 ## Search Loop
 

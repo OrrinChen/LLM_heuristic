@@ -2281,6 +2281,7 @@
     "generation_curve_by_method",
     "behavior_fingerprint",
     "frontier_plot_series",
+    "trading_signal_frontier",
     "failure_rate_by_generation"
   ],
   "robustness_generalization_gaps": {
@@ -2395,5 +2396,101 @@
     "title": "Robustness Generalization Gaps",
     "x": "slice_name",
     "y": "generalization_gap"
+  },
+  "trading_signal_frontier": {
+    "ascii": "trading_signal signal-seed-003-spread_guard: ################################ 0.00542\ntrading_signal signal-seed-001-imbalance: ############################### 0.005328\ntrading_signal signal-seed-004-vol_scaled: ############################# 0.004943\ntrading_signal signal-seed-005-microprice_tilt: ######################### 0.004162\ntrading_signal signal-seed-006-flow_blend: ####################### 0.003813\ntrading_signal signal-seed-002-ofi: ########### 0.001917\ntrading_signal signal-seed-000-flat:  0",
+    "points": [
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-003-spread_guard",
+        "max_drawdown": 0.0,
+        "net_return": 0.005419600000000001,
+        "program_complexity": 49,
+        "program_id": "signal-seed-003-spread_guard",
+        "turnover": 0.6775000000000001
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-001-imbalance",
+        "max_drawdown": 0.0,
+        "net_return": 0.005328000000000001,
+        "program_complexity": 25,
+        "program_id": "signal-seed-001-imbalance",
+        "turnover": 0.6016666666666667
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-004-vol_scaled",
+        "max_drawdown": 0.0,
+        "net_return": 0.004942514512113204,
+        "program_complexity": 47,
+        "program_id": "signal-seed-004-vol_scaled",
+        "turnover": 0.5600624598981295
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-005-microprice_tilt",
+        "max_drawdown": 0.0,
+        "net_return": 0.004162400000000111,
+        "program_complexity": 43,
+        "program_id": "signal-seed-005-microprice_tilt",
+        "turnover": 0.48375000000001894
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-006-flow_blend",
+        "max_drawdown": 0.0,
+        "net_return": 0.003812500000000001,
+        "program_complexity": 52,
+        "program_id": "signal-seed-006-flow_blend",
+        "turnover": 0.4253333333333334
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-002-ofi",
+        "max_drawdown": 0.0,
+        "net_return": 0.0019166,
+        "program_complexity": 28,
+        "program_id": "signal-seed-002-ofi",
+        "turnover": 0.21233333333333335
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "",
+        "is_pareto_frontier": true,
+        "label": "trading_signal signal-seed-000-flat",
+        "max_drawdown": 0.0,
+        "net_return": 0.0,
+        "program_complexity": 6,
+        "program_id": "signal-seed-000-flat",
+        "turnover": 0.0
+      },
+      {
+        "benchmark": "trading_signal",
+        "failure_reason": "turnover_too_high",
+        "is_pareto_frontier": false,
+        "label": "trading_signal signal-seed-007-turnover_stress",
+        "max_drawdown": 0.0,
+        "net_return": 0.013700000000000002,
+        "program_complexity": 19,
+        "program_id": "signal-seed-007-turnover_stress",
+        "turnover": 1.5
+      }
+    ],
+    "title": "Trading Signal Net Return Turnover Frontier",
+    "x": "turnover",
+    "y": "net_return"
   }
 }

@@ -26,7 +26,10 @@ REQUIRED_OUTPUTS = (
     "reports/tables/routing_external_generalization.csv",
     "reports/tables/ablation_summary.csv",
     "reports/tables/pareto_frontier.csv",
+    "reports/tables/trading_signal_summary.csv",
+    "reports/tables/trading_signal_pareto.csv",
     "reports/plots/plot_series.json",
+    "reports/plots/trading_signal_frontier.json",
     "artifacts/rerun_manifest.json",
     "artifacts/top_programs",
     "artifacts/reproduction_manifest.json",
@@ -205,6 +208,7 @@ def _profile_config(profile: str) -> Mapping[str, object]:
             "evidence_focus": (
                 "reports/final_report.md",
                 "reports/tables/benchmark_comparison.csv",
+                "reports/tables/trading_signal_summary.csv",
                 "reports/plots/plot_series.json",
                 "artifacts/top_programs",
             ),

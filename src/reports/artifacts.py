@@ -138,6 +138,7 @@ def _write_extra_plot_series(
         "generation_curve_by_method",
         "behavior_fingerprint",
         "frontier_plot_series",
+        "trading_signal_frontier",
     ):
         if plot_name not in plots:
             continue

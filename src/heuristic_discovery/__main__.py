@@ -13,6 +13,10 @@ from benchmarks.routing.external import (
     build_phase10_report,
     load_external_routing_instances,
 )
+from benchmarks.trading_signal import (
+    build_trading_signal_report,
+    load_lob_feature_artifacts,
+)
 from llm.live_experiment import LLMExperimentConfig, build_phase12_report
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
@@ -64,6 +68,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "live_llm",
             "semantic_novelty",
             "parallel_runner",
+            "trading_signal",
         ),
         default="bin_packing",
     )
@@ -76,6 +81,7 @@ def _build_parser() -> argparse.ArgumentParser:
     run.add_argument("--random-seed", type=int, default=23)
     run.add_argument("--max-workers", type=int, default=2)
     run.add_argument("--external-path")
+    run.add_argument("--trading-data")
     run.add_argument(
         "--external-format",
         choices=("auto", "or_library", "bpplib", "tsplib", "cvrplib"),
@@ -170,6 +176,14 @@ def _run(args: argparse.Namespace) -> int:
             item_count=args.item_count,
             max_workers=args.max_workers,
         )
+    elif args.benchmark == "trading_signal":
+        splits = None
+        if args.trading_data:
+            splits = load_lob_feature_artifacts(args.trading_data)
+        report = build_trading_signal_report(
+            candidate_count=args.candidate_count,
+            splits=splits,
+        )
     else:
         report = build_phase3_report(
             config=EvolutionConfig(
@@ -223,6 +237,14 @@ def _run(args: argparse.Namespace) -> int:
             "parallel_matches_sequential": report["parallel_matches_sequential"],
             "checkpoint_resume_matches_full": report["checkpoint_resume_matches_full"],
             "cloud_adapter_status": report["cloud_adapter_status"],
+            "path": str(output_path),
+        }
+    elif args.benchmark == "trading_signal":
+        payload = {
+            "benchmark": args.benchmark,
+            "best_program_id": report["best_program_id"],
+            "best_validation_net_return": report["best_validation_net_return"],
+            "pareto_frontier_count": report["pareto_frontier_count"],
             "path": str(output_path),
         }
     else:

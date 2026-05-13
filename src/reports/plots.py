@@ -8,6 +8,7 @@ from benchmarks.amazon_routing.discovery import (
     AmazonDiscoveryConfig,
     build_phase6_report,
 )
+from benchmarks.trading_signal import build_trading_signal_report
 from program_search.ablation import build_phase11_report
 from program_search.evolution_loop import EvolutionConfig, build_phase3_report
 from program_search.semantic_novelty import build_phase13_report
@@ -25,6 +26,7 @@ def build_report_plots(
     phase11_report: Optional[Mapping[str, object]] = None,
     phase13_report: Optional[Mapping[str, object]] = None,
     phase15_report: Optional[Mapping[str, object]] = None,
+    trading_signal_report: Optional[Mapping[str, object]] = None,
     robustness_report: Optional[Mapping[str, object]] = None,
     failure_report: Optional[Mapping[str, object]] = None,
 ) -> Dict[str, object]:
@@ -57,6 +59,7 @@ def build_report_plots(
     )
     phase13 = phase13_report or build_phase13_report()
     phase15 = phase15_report or build_phase15_report()
+    trading_signal = trading_signal_report or build_trading_signal_report()
     robustness = robustness_report or build_phase7_report()
     failures = failure_report or build_phase8_report()
 
@@ -77,6 +80,9 @@ def build_report_plots(
         ),
         "behavior_fingerprint": _behavior_fingerprint_plot(phase13),
         "frontier_plot_series": _frontier_plot(phase15["candidate_rows"]),
+        "trading_signal_frontier": _trading_signal_frontier_plot(
+            trading_signal["candidate_rows"]
+        ),
         "failure_rate_by_generation": _failure_rate_plot(
             failures["failure_rate_by_generation"]
         ),
@@ -447,6 +453,44 @@ def _frontier_plot(rows: Sequence[Mapping[str, object]]) -> Mapping[str, object]
             ),
             label_key="label",
             value_key="objective_quality",
+        ),
+    }
+
+
+def _trading_signal_frontier_plot(
+    rows: Sequence[Mapping[str, object]],
+) -> Mapping[str, object]:
+    points: PlotPoints = [
+        {
+            "benchmark": "trading_signal",
+            "program_id": row["program_id"],
+            "net_return": row["net_return"],
+            "turnover": row["turnover"],
+            "max_drawdown": row["max_drawdown"],
+            "program_complexity": row["program_complexity"],
+            "is_pareto_frontier": row["is_pareto_frontier"],
+            "failure_reason": row["failure_reason"],
+            "label": f"trading_signal {row['program_id']}",
+        }
+        for row in rows
+    ]
+    frontier_points = [point for point in points if bool(point["is_pareto_frontier"])]
+    return {
+        "title": "Trading Signal Net Return Turnover Frontier",
+        "x": "turnover",
+        "y": "net_return",
+        "points": points,
+        "ascii": render_ascii_bar_plot(
+            sorted(
+                frontier_points,
+                key=lambda point: (
+                    -float(point["net_return"]),
+                    float(point["turnover"]),
+                    str(point["program_id"]),
+                ),
+            ),
+            label_key="label",
+            value_key="net_return",
         ),
     }
 

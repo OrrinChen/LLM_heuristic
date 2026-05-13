@@ -1,0 +1,2 @@
+benchmark,source,feature_schema,best_program_id,best_validation_net_return,best_test_net_return,best_turnover,best_max_drawdown,pareto_frontier_count,claim
+trading_signal,built_in_small_deterministic,imbalance;ofi;trade_imbalance;spread;microprice;realized_volatility,signal-seed-003-spread_guard,0.005420,0.005040,0.677500,0.000000,7,"sandboxed PIT trading-rule search evidence only; does not claim tradable alpha, investment advice, live execution readiness, SOTA, or production risk control"
