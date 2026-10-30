@@ -131,16 +131,12 @@ def test_cli_reproduce_exports_local_demo_profile(tmp_path: Path) -> None:
 
 def test_reproducibility_docs_and_make_targets_are_present() -> None:
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    validation = (PROJECT_ROOT / "VALIDATION.md").read_text(encoding="utf-8")
-    runbook = (PROJECT_ROOT / "RUNBOOK.md").read_text(encoding="utf-8")
     makefile = (PROJECT_ROOT / "Makefile").read_text(encoding="utf-8")
 
     command = (
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile local_demo"
     )
     assert command in readme
-    assert command in validation
-    assert command in runbook
     for target in ("reproduce:", "test:", "report:", "demo:", "portfolio-demo:"):
         assert target in makefile
 

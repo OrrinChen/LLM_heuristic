@@ -5,14 +5,9 @@ from typing import Dict, Mapping, Optional
 from reports.final_report import build_final_report
 
 PORTFOLIO_README_REQUIRED_HEADINGS = (
-    "## What It Is",
-    "## Why It Matters",
-    "## One-Command Demo",
-    "## Representative Heuristic",
-    "## Pareto Evidence",
-    "## Search Flow",
-    "## Benchmark Evidence",
-    "## Safety Boundary",
+    "## Key Results",
+    "## Quickstart",
+    "## Reproduction",
     "## Limitations",
 )
 

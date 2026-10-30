@@ -35,40 +35,27 @@ def test_release_summary_is_concise_and_interview_ready() -> None:
 
 def test_readme_first_screen_is_release_focused_not_phase_dump() -> None:
     readme = _read("README.md")
-    first_screen = readme[:4200]
 
     for heading in (
-        "## Recruiter Snapshot",
-        "## What It Is",
-        "## Why It Matters",
-        "## One-Command Demo",
-        "## Representative Heuristic",
-        "## Pareto Evidence",
-        "## Search Flow",
-        "## Benchmark Evidence",
-        "## Safety Boundary",
+        "## Key Results",
+        "## Quickstart",
+        "## Reproduction",
         "## Limitations",
     ):
-        assert heading in first_screen
-    assert "make portfolio-demo" in first_screen
-    assert "AI agent infra" in first_screen
-    assert "optimization tooling" in first_screen
-    assert "seed-001-load_balancer" in first_screen
-    assert "def score_bin" in first_screen
-    assert "does not require an API key" in first_screen
-    assert "Live Gemini mutation is optional" in first_screen
-    assert "Before heuristic" in first_screen
-    assert "Discovered heuristic" in first_screen
-    assert "Score/runtime trade-off" in first_screen
-    assert "7.75" in first_screen
-    assert "0.023680" in first_screen
-    assert "examples/top_program_before_after.md" in first_screen
-    assert "docs/safety_boundary.md" in first_screen
-    assert "reports/plots/pareto_frontier_main.svg" in first_screen
-    assert "Current status:" not in first_screen
-    assert "Phase 0 complete" not in first_screen
-    assert "Phase 10A/10B/10C" not in first_screen
-    assert "does not claim universal dominance" in first_screen
+        assert heading in readme
+    assert "make portfolio-demo" in readme
+    assert "https://github.com/OrrinChen/Sandbox" in readme
+    assert "seed-001-load_balancer" in readme
+    assert "9.333333333333334" in readme
+    assert "0.023680" in readme
+    assert "0.005419600000000001" in readme
+    assert "does not require an API key" in readme
+    assert "Live Gemini mutation is optional" in readme
+    assert "docs/safety_boundary.md" in readme
+    assert "Current status:" not in readme
+    assert "Phase 0 complete" not in readme
+    assert "Phase 10A/10B/10C" not in readme
+    assert "does not claim universal dominance" in readme
 
 
 def test_before_after_example_shows_archived_heuristic_not_solver() -> None:
@@ -116,11 +103,11 @@ def test_release_summary_links_visual_evidence_and_api_key_boundary() -> None:
 
 
 def test_release_validation_checklist_is_documented() -> None:
-    validation = _read("VALIDATION.md")
+    readme = _read("README.md")
 
-    assert "## Release Validation Checklist" in validation
+    assert "## Reproduction" in readme
     for required in (
-        "python3 -m pytest -q",
+        "python3 -m pytest",
         "python3 -m ruff check .",
         "python3 -m ruff format --check .",
         "make portfolio-demo",
@@ -128,16 +115,13 @@ def test_release_validation_checklist_is_documented() -> None:
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
         "external_small",
         "PYTHONPATH=src python3 -m heuristic_discovery report",
-        "Secret scan",
-        "Large-file scan",
     ):
-        assert required in validation
+        assert required in readme
 
 
 def test_portfolio_demo_make_target_is_short_and_api_key_free() -> None:
     makefile = _read("Makefile")
     readme = _read("README.md")
-    runbook = _read("RUNBOOK.md")
 
     assert ".PHONY:" in makefile
     assert "portfolio-demo" in makefile
@@ -148,11 +132,10 @@ def test_portfolio_demo_make_target_is_short_and_api_key_free() -> None:
     ) in makefile
     assert "GEMINI_API_KEY" not in makefile
     assert "make portfolio-demo" in readme
-    assert "make portfolio-demo" in runbook
 
 
 def test_release_freeze_status_and_future_work_are_explicit() -> None:
-    for path in ("ROADMAP.md", "TASK_MEMORY.md", "RUNBOOK.md", "VALIDATION.md"):
+    for path in ("RELEASE_SUMMARY.md", "reports/final_report.md"):
         text = _read(path)
         assert "release-frozen" in text
         assert "portfolio-ready" in text
@@ -161,16 +144,46 @@ def test_release_freeze_status_and_future_work_are_explicit() -> None:
         assert "larger public benchmark corpora" in text
 
 
+def test_agent_working_files_and_local_home_paths_are_absent() -> None:
+    for relative in (
+        "AGENTS.md",
+        "TASK_MEMORY.md",
+        "ROADMAP.md",
+        "RUNBOOK.md",
+        "VALIDATION.md",
+        "docs/superpowers",
+    ):
+        assert not (PROJECT_ROOT / relative).exists()
+    license_text = _read("LICENSE")
+    assert license_text.startswith("MIT License")
+    assert "Copyright (c) 2026 Orrin Chen" in license_text
+    home_markers = ("/" + "Users/", "C:/" + "Users/", "C:\\" + "Users\\")
+    skip_dirs = {
+        ".git",
+        ".pytest_cache",
+        ".ruff_cache",
+        ".mypy_cache",
+        ".venv",
+        "__pycache__",
+        "htmlcov",
+    }
+    for path in PROJECT_ROOT.rglob("*"):
+        if not path.is_file() or skip_dirs.intersection(path.parts):
+            continue
+        if path.suffix == ".pyc":
+            continue
+        text = path.read_text(encoding="utf-8", errors="ignore")
+        for marker in home_markers:
+            assert marker not in text, path
+
+
 def test_release_claim_language_avoids_unsafe_shortcuts() -> None:
     checked_text = "\n".join(
         _read(path)
         for path in (
             "README.md",
             "RELEASE_SUMMARY.md",
-            "ROADMAP.md",
-            "RUNBOOK.md",
-            "VALIDATION.md",
-            "TASK_MEMORY.md",
+            "LICENSE",
             "docs/safety_boundary.md",
             "examples/top_program_before_after.md",
             "reports/final_report.md",
