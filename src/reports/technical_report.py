@@ -257,7 +257,7 @@ def build_phase18_report(
                 "optional, and runtime frontier values use a deterministic "
                 "proxy."
             ),
-            ("README.md", "TASK_MEMORY.md", "ROADMAP.md"),
+            ("README.md", "RELEASE_SUMMARY.md"),
         ),
         _section(
             "conclusion",

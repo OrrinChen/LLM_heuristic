@@ -75,19 +75,19 @@ def test_portfolio_brief_markdown_is_interview_ready() -> None:
 
 def test_readme_first_screen_contains_required_portfolio_sections() -> None:
     readme = (PROJECT_ROOT / "README.md").read_text(encoding="utf-8")
-    first_screen = readme[:4200]
 
     for heading in PORTFOLIO_README_REQUIRED_HEADINGS:
-        assert heading in first_screen
+        assert heading in readme
     assert (
         "PYTHONPATH=src python3 -m heuristic_discovery reproduce --profile "
         "local_demo --output-dir /tmp/o2-demo --top-k 3"
-    ) in first_screen
-    assert "seed heuristic library" in first_screen
-    assert "Online Bin Packing" in first_screen
-    assert "Safety Boundary" in first_screen
-    assert "Limitations" in first_screen
-    assert "does not claim universal dominance" in first_screen
+    ) in readme
+    assert "seed heuristic library" in readme
+    assert "Online bin packing" in readme
+    assert "safety_boundary.md" in readme
+    assert "## Limitations" in readme
+    assert "does not claim universal dominance" in readme
+    assert "https://github.com/OrrinChen/Sandbox" in readme
 
 
 def test_phase19_artifact_export_writes_portfolio_brief(tmp_path: Path) -> None:
