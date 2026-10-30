@@ -65,6 +65,10 @@ def test_phase18_report_sections_map_to_existing_evidence() -> None:
         "failure_taxonomy_v2.csv",
         "repair_success_rate.csv",
     )
+    assert section_by_id["limitations"]["evidence_refs"] == (
+        "README.md",
+        "RELEASE_SUMMARY.md",
+    )
 
 
 def test_phase18_markdown_renders_required_paper_structure() -> None:

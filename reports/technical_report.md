@@ -98,7 +98,7 @@ Evidence references: `failure_cards.md`, `failure_taxonomy_v2.csv`, `repair_succ
 
 The evidence package is deterministic and local by default. Live Gemini mutation remains environment-gated, external fixtures are intentionally small, broader crossover remains optional, and runtime frontier values use a deterministic proxy.
 
-Evidence references: `README.md`, `TASK_MEMORY.md`, `ROADMAP.md`.
+Evidence references: `README.md`, `RELEASE_SUMMARY.md`.
 
 ## Conclusion
 
